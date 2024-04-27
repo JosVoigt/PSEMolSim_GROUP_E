@@ -1,0 +1,13 @@
+doxys_documentation/
+Release/
+debug/
+MinSizeRel/
+RelWithDebInfo/
+
+build/
+!build/
+!build/CMakeLists.txt
+!build/Doxyfile.in
+!build/cmake/modules/*.cmake
+
+Makefile
