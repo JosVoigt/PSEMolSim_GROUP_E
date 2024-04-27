@@ -8,6 +8,6 @@ build/
 !build/
 !build/CMakeLists.txt
 !build/Doxyfile.in
-!build/cmake/modules/*.cmake
+!build/cmake/modules/doxygen.cmake
 
 Makefile
