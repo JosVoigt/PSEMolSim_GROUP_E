@@ -10,6 +10,9 @@ Required libraries
 
 Building with cmake
 ---
+The cmake file is located in the build folder.
+Execute all commands below there.
+
 To build:
 ```bash
     cmake -DCMAKE_BUILD_TYPE=release . 
@@ -30,7 +33,7 @@ For a minimal size release (not implemented):
     cmake -DCMAKE_BUILD_TYPE=minsizerel . 
     cmake --build
 ```
-The resulting executable is located at **{version}/MolSim**
+The resulting executable is located at **PSEMolSim_GROUP_E/{version}/MolSim**
 
 Options
 ---

@@ -3,9 +3,9 @@
 #include <list>
 
 #include "FileReader.h"
+#include "Parser.h"
 #include "outputWriter/XYZWriter.h"
 #include "utils/ArrayUtils.h"
-#include "utils/Parser.h"
 
 /**** forward declaration of the calculation functions ****/
 

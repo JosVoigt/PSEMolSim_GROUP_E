@@ -23,11 +23,14 @@ options parse(int ac, char* av[]) {
 
         po::options_description desc("Allowed options");
 
-        desc.add_options()
-            ("help,h", "produce help message")
-            ("delta,dt", po::value<double>(&o.delta_t)->default_value(DEFAULT_DELTA), "set step size")
-            ("end,e", po::value<double>(&o.end)->default_value(DEFAULT_END), "set end point")
-            ("file,f", po::value<std::string>(&o.filepath), "set the path to the file containing initial state of the molecules");
+        desc.add_options()("help,h", "produce help message")(
+            "delta,dt",
+            po::value<double>(&o.delta_t)->default_value(DEFAULT_DELTA),
+            "set step size")(
+            "end,e", po::value<double>(&o.end)->default_value(DEFAULT_END),
+            "set end point")("file,f", po::value<std::string>(&o.filepath),
+                             "set the path to the file containing initial "
+                             "state of the molecules");
 
         po::variables_map vm;
         po::store(po::parse_command_line(ac, av, desc), vm);
@@ -39,22 +42,19 @@ options parse(int ac, char* av[]) {
             std::exit(0);
         }
 
-        std::cout << o.filepath << std::endl;
-
         // check if file is present
         if (!vm.count("file")) {
-            std::cerr << "error: option '--file' required but missing" << std::endl;
+            std::cerr << "error: option '--file' required but missing"
+                      << std::endl;
             std::exit(1);
         }
 
         return o;
 
-    }
-    catch (exception& e) {
+    } catch (exception& e) {
         cerr << "error: " << e.what() << "\n";
         std::exit(1);
-    }
-    catch (...) {
+    } catch (...) {
         cerr << "Exception of unknown type!\n";
         std::exit(1);
     }

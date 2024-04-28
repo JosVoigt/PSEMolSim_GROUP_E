@@ -6,8 +6,6 @@ project(PSEMolDyn VERSION 0.0.1)
 #set source dir
 set (CMAKE_CURRENT_SOURCE_DIR "..")
 
-set (BUILD_DOC OFF)
-
 #define compile flags
 set (FLAGS "-Wall -Werror -Wpedantic")
 
