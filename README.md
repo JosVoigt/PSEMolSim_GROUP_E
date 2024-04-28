@@ -35,6 +35,12 @@ For a minimal size release (not implemented):
 ```
 The resulting executable is located at **PSEMolSim_GROUP_E/{version}/MolSim**
 
+To disable the Doxygen build:
+```bash
+    cmake -DCMAKE_BUILD_TYPE={type} -DBUILD_DOC=OFF .
+    cmake --build
+```
+
 Options
 ---
 
