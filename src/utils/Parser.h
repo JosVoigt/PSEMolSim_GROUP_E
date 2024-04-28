@@ -23,14 +23,11 @@ options parse(int ac, char* av[]) {
 
         po::options_description desc("Allowed options");
 
-        desc.add_options()("help,h", "produce help message")(
-            "delta,dt",
-            po::value<double>(&o.delta_t)->default_value(DEFAULT_DELTA),
-            "set step size")(
-            "end,e", po::value<double>(&o.end)->default_value(DEFAULT_END),
-            "set end point")("file,f", po::value<std::string>(&o.filepath),
-                             "set the path to the file containing initial "
-                             "state of the molecules");
+        desc.add_options()
+        ("help,h", "produce help message")
+        ("delta,dt",po::value<double>(&o.delta_t)->default_value(DEFAULT_DELTA),"set step size")
+        ("end,e", po::value<double>(&o.end)->default_value(DEFAULT_END),"set end point")
+        ("file,f", po::value<std::string>(&o.filepath),"set the path to the file containing initial state of the molecules");
 
         po::variables_map vm;
         po::store(po::parse_command_line(ac, av, desc), vm);
