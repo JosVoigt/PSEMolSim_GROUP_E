@@ -3,7 +3,7 @@
 #include <cmath>
 
 std::array<double, 3> Planet::calculateForce(Particle& forcePartner) {
-    double massProduct = m * forcePartner.getM();
+    double massProduct = getM() * forcePartner.getM();
     double distanceCubed = std::pow(distance(forcePartner), 3);
     std::array<double, 3> forceDirectionVector = positionVector(forcePartner);
 
