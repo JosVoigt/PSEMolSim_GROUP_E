@@ -1,6 +1,6 @@
 
 #include <iostream>
-#include <list>
+#include <vector>
 
 #include "FileReader.h"
 #include "Parser.h"
@@ -27,14 +27,13 @@ void calculateV();
 /**
  * plot the particles to a xyz-file
  */
-void plotParticles(int iteration);
+void plotParticles(int iteration, writer* w);
 
 constexpr double start_time = 0;
 double end_time = 1000;
 double delta_t = 0.014;
 
-// TODO: what data structure to pick?
-std::list<Particle> particles;
+std::vector<Particle> particles;
 
 int main(int argc, char* argv[]) {
     options result = parse(argc, argv);
@@ -65,7 +64,7 @@ int main(int argc, char* argv[]) {
 
         iteration++;
         if (iteration % 10 == 0) {
-            plotParticles(iteration);
+            plotParticles(iteration, result.output_method);
         }
         // std::cout << "Iteration " << iteration << " finished." << std::endl;
 
@@ -77,9 +76,6 @@ int main(int argc, char* argv[]) {
 }
 
 void calculateF() {
-    std::list<Particle>::iterator iterator;
-    iterator = particles.begin();
-
     // prepare the current particles for next iteration
     for (auto& p : particles) {
         p.nextIteration();
@@ -87,27 +83,25 @@ void calculateF() {
 
     // iterate over the particle pairs
     bool reachedParticle = false;
-    for (auto& p1 : particles) {
-        for (auto& p2 : particles) {
+    for (int i = 0; i < particles.size(); i++) {
+        for (int j = i + 1; i < particles.size(); j++) {
             // check if particle combination has not been calculated
-            if (!reachedParticle) {
-                reachedParticle = (p1 == p2);
-            } else {
-                // calculate force
-                std::array<double, 3> force_p1_to_p2 = p1.calculateForce(p2);
-                // add to 1st particle
-                p1.addF(force_p1_to_p2);
+            auto p1 = particles[i];
+            auto p2 = particles[j];
 
-                // Usage of Newton's 3rd law
-                for (int i = 0; i < 3; i++) {
-                    force_p1_to_p2[i] *= -1;
-                }
+            // calculate force
+            std::array<double, 3> force_p1_to_p2 = p1.calculateForce(p2);
+            // add to 1st particle
+            p1.addF(force_p1_to_p2);
 
-                // add inverse to second particle
-                p2.addF(force_p1_to_p2);
+            // Usage of Newton's 3rd law
+            for (int i = 0; i < 3; i++) {
+                force_p1_to_p2[i] *= -1;
             }
+
+            // add inverse to second particle
+            p2.addF(force_p1_to_p2);
         }
-        reachedParticle = false;
     }
 }
 
@@ -131,9 +125,8 @@ void calculateV() {
     }
 }
 
-void plotParticles(int iteration) {
+void plotParticles(int iteration, writer* w) {
     std::string out_name("MD_vtk");
 
-    outputWriter::XYZWriter writer;
-    writer.plotParticles(particles, out_name, iteration);
+    w->plotParticles(particles, out_name, iteration);
 }

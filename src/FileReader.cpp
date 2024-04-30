@@ -16,7 +16,7 @@ FileReader::FileReader() = default;
 
 FileReader::~FileReader() = default;
 
-void FileReader::readFile(std::list<Particle>& particles,
+void FileReader::readFile(std::vector<Particle>& particles,
                           const char* filename) {
     std::array<double, 3> x;
     std::array<double, 3> v;
