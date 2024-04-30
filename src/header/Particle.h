@@ -43,10 +43,6 @@ class Particle {
      */
     int type;
 
-    double distance(Particle& p);
-
-    std::array<double, 3> positionVector(Particle& p);
-
    public:
     explicit Particle(int type = 0);
 
@@ -73,11 +69,15 @@ class Particle {
 
     const void nextIteration();
 
-    std::array<double, 3> calculateForce(Particle& forcePartner);
+    virtual std::array<double, 3> calculateForce(Particle& forcePartner);
 
     void calculateX(double dt);
 
     void calculateV(double dt);
+
+    double distance(Particle& p);
+
+    std::array<double, 3> positionVector(Particle& p);
 
     bool operator==(Particle& other);
 
