@@ -45,7 +45,7 @@ class VTKWriter : writer {
      */
     void writeFile(const std::string &filename, int iteration);
 
-    void plotParticles(std::vector<Particle> &particles,
+    void plotParticles(std::vector<Particle *> &particles,
                        const std::string &filename, int iteration) override;
 
    private:

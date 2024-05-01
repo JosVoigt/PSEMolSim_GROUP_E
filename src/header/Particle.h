@@ -69,7 +69,9 @@ class Particle {
 
     const void nextIteration();
 
-    virtual std::array<double, 3> calculateForce(Particle& forcePartner);
+    virtual std::array<double, 3> calculateForce(Particle& forcePartner) {
+        return {0, 0, 0};
+    };
 
     void calculateX(double dt);
 

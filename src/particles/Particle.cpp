@@ -52,20 +52,36 @@ const std::array<double, 3>& Particle::getOldF() const { return old_f; }
 double Particle::getM() const { return m; }
 int Particle::getType() const { return type; }
 
+/**
+ * \brief
+ *   adds a force to the total force in the particle
+ *
+ * \param aF
+ *   The force to be added (a 3D vector)
+ */
 const void Particle::addF(std::array<double, 3>& aF) {
     for (int i = 0; i < 3; i++) {
         f[i] += aF[i];
     }
 }
-/*
+/**
+ * \brief
  *   Prepare the single particle for the next iteration
  *   The current force becomes the old force and the current force is set to 0
+ *
  */
 const void Particle::nextIteration() {
     old_f = f;
     f = {0, 0, 0};
 }
 
+/**
+ * \brief
+ *   Calculates distance between this and the passed particle
+ *
+ * \param p
+ *   The other particle the distance is to be calculated with
+ */
 double Particle::distance(Particle& p) {
     std::array<double, 3> pos_other = p.getX();
 
@@ -81,6 +97,15 @@ double Particle::distance(Particle& p) {
     return result;
 }
 
+/**
+ * \brief
+ *   Calculates the vector that points from this particles position to the other
+ *   particles position
+ * \param p
+ *  The other particle in the calculation
+ * \return
+ *  The vector that points from this particle to p
+ */
 std::array<double, 3> Particle::positionVector(Particle& p) {
     std::array<double, 3> result;
 
@@ -91,26 +116,24 @@ std::array<double, 3> Particle::positionVector(Particle& p) {
     return result;
 }
 
-std::array<double, 3> Particle::calculateForce(Particle& forcePartner) {
-    double massProduct = m * forcePartner.getM();
-    double distanceCubed = std::pow(distance(forcePartner), 3);
-    std::array<double, 3> forceDirectionVector = positionVector(forcePartner);
-
-    std::array<double, 3> forceVector;
-
-    for (int i = 0; i < 3; i++) {
-        forceVector[i] = forceDirectionVector[i] * massProduct / distanceCubed;
-    }
-
-    return forceVector;
-}
-
+/**
+ * \brief
+ *   Calculates the new position vector based on Störmer-Verlet
+ * \param dt
+ *   The time between steps
+ */
 void Particle::calculateX(double dt) {
     for (int i = 0; i < 3; i++) {
         x[i] = x[i] + dt * v[i] + std::pow(dt, 2) * old_f[i] / (2 * m);
     }
 }
 
+/**
+ * \brief
+ *   Calculates the new velocity vector based on Störmer-Verlet
+ * \param dt
+ *   The time between steps
+ */
 void Particle::calculateV(double dt) {
     for (int i = 0; i < 3; i++) {
         v[i] = v[i] + dt * (f[i] + old_f[i]) / (2 * m);

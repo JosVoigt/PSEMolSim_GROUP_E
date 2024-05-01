@@ -21,7 +21,7 @@ class XYZWriter : writer {
 
     ~XYZWriter();
 
-    void plotParticles(std::vector<Particle> &particles,
+    void plotParticles(std::vector<Particle *> &particles,
                        const std::string &filename, int iteration) override;
 };
 

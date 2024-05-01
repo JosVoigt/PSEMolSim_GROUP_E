@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 # define project name, version
-project(PSEMolDyn VERSION 0.0.1)
+project(PSEMolDyn_GroupE VERSION 0.0.1)
 
 #set source dir
 set (CMAKE_CURRENT_SOURCE_DIR "..")

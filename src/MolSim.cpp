@@ -1,9 +1,12 @@
 
+#include <algorithm>
 #include <iostream>
 #include <vector>
 
 #include "FileReader.h"
 #include "Parser.h"
+#include "Particle.h"
+#include "Planet.h"
 #include "outputWriter/XYZWriter.h"
 #include "utils/ArrayUtils.h"
 
@@ -27,19 +30,41 @@ void calculateV();
 /**
  * plot the particles to a xyz-file
  */
-void plotParticles(int iteration, writer* w);
+void plotParticles(int iteration, outputType type);
 
 constexpr double start_time = 0;
-double end_time = 1000;
-double delta_t = 0.014;
+double end_time;
+double delta_t;
 
-std::vector<Particle> particles;
+std::vector<Particle*> particles;
 
 int main(int argc, char* argv[]) {
     options result = parse(argc, argv);
 
     FileReader fileReader;
-    fileReader.readFile(particles, result.filepath.c_str());
+    std::vector<Particle> partReadin;
+    fileReader.readFile(partReadin, result.filepath.c_str());
+
+    particles.reserve(partReadin.size());
+
+    writer* w;
+
+    switch (result.type) {
+        case planet:
+            for (auto& p : partReadin) {
+                auto pl = Planet(p);
+                particles.push_back(&pl);
+            }
+            break;
+    }
+
+    if (result.output_method = vtk) {
+        auto vtk = outputWriter::VTKWriter();
+        w = (writer*)&vtk;
+    } else if (result.output_method = xyz) {
+        auto xyz = outputWriter::XYZWriter();
+        w = (writer*)&xyz;
+    }
 
     end_time = result.end;
     delta_t = result.delta_t;
@@ -75,24 +100,28 @@ int main(int argc, char* argv[]) {
     return 0;
 }
 
+/**
+ * \brief
+ *  Calculates the forces between every particle in the particle list.
+ */
 void calculateF() {
     // prepare the current particles for next iteration
     for (auto& p : particles) {
-        p.nextIteration();
+        p->nextIteration();
     }
 
     // iterate over the particle pairs
     bool reachedParticle = false;
     for (int i = 0; i < particles.size(); i++) {
-        for (int j = i + 1; i < particles.size(); j++) {
+        for (int j = i + 1; j < particles.size(); j++) {
             // check if particle combination has not been calculated
             auto p1 = particles[i];
             auto p2 = particles[j];
 
             // calculate force
-            std::array<double, 3> force_p1_to_p2 = p1.calculateForce(p2);
+            std::array<double, 3> force_p1_to_p2 = p1->calculateForce(*p2);
             // add to 1st particle
-            p1.addF(force_p1_to_p2);
+            p1->addF(force_p1_to_p2);
 
             // Usage of Newton's 3rd law
             for (int i = 0; i < 3; i++) {
@@ -100,33 +129,39 @@ void calculateF() {
             }
 
             // add inverse to second particle
-            p2.addF(force_p1_to_p2);
+            p2->addF(force_p1_to_p2);
         }
     }
 }
 
-/*
-    Calculate the new x for every particle based on its NEW FORCE and old
-   postition
-*/
+/**
+ * \brief
+ *  Calculate the new x for every particle based on its force postition
+ */
 void calculateX() {
     for (auto& p : particles) {
-        p.calculateX(delta_t);
+        p->calculateX(delta_t);
     }
 }
 
-/*
-    Calculate the new v for every particle based on NEW LOCATION and NEW FORCE
-   and old velocity
-*/
+/**
+ * \brief
+ * Calculate the new v for every particle based on force and velocity
+ */
 void calculateV() {
     for (auto& p : particles) {
-        p.calculateV(delta_t);
+        p->calculateV(delta_t);
     }
 }
 
-void plotParticles(int iteration, writer* w) {
+void plotParticles(int iteration, outputType type) {
     std::string out_name("MD_vtk");
 
-    w->plotParticles(particles, out_name, iteration);
+    if (type = vtk) {
+        auto w = outputWriter::VTKWriter();
+        w.plotParticles(particles, out_name, iteration);
+    } else if (type = xyz) {
+        auto w = outputWriter::XYZWriter();
+        w.plotParticles(particles, out_name, iteration);
+    }
 }

@@ -15,13 +15,27 @@ using namespace std;
 double const DEFAULT_DELTA = 0.00001;
 double const DEFAULT_END = 1;
 
+enum particleTypes { planet };
+
+enum outputType {xyz, vtk};
+
 struct options {
     double delta_t;
     double end;
     std::string filepath;
-    writer* output_method;
+    outputType output_method;
+    particleTypes type;
 };
 
+/**
+ *\brief
+ *   parses the program options for the molecular simulation
+ *\param ac
+ *   The amount of arguments (usally called argc) provided to the main function
+ *\param av
+ *   The arguments (usally called argv) provided to the main function
+ *\return an options struct containing the read options and settings
+ */
 options parse(int ac, char* av[]) {
     try {
         options o;
@@ -30,10 +44,11 @@ options parse(int ac, char* av[]) {
 
         desc.add_options()
         ("help,h", "produce help message")
-        ("delta,dt",po::value<double>(&o.delta_t)->default_value(DEFAULT_DELTA),"set step size")
+        ("delta,dt", po::value<double>(&o.delta_t)->default_value(DEFAULT_DELTA),"set step size")
         ("end,e", po::value<double>(&o.end)->default_value(DEFAULT_END),"set end point")
         ("file,f", po::value<std::string>(&o.filepath),"set the path to the file containing initial state of the molecules")
-        ("output,o", po::value<std::string>()->default_value("vtk"),"set the output method");
+        ("output,o", po::value<std::string>()->default_value("vtk"),"set the output method")
+        ("type,t", po::value<std::string>()->default_value("planet", "sets the type of particle"));
 
         po::variables_map vm;
         po::store(po::parse_command_line(ac, av, desc), vm);
@@ -54,12 +69,22 @@ options parse(int ac, char* av[]) {
 
         if (vm["output"].as<string>() == "vtk") {
             auto w = outputWriter::VTKWriter();
-            o.output_method = (writer*)&w;
+            o.output_method = vtk;
         } else if (vm["output"].as<string>() == "xyz") {
             auto w = outputWriter::XYZWriter();
-            o.output_method = (writer*)&w;
-        }else {
-            std::cerr << vm["output"].as<string>() << " is not a valid output type" << std::endl;
+            o.output_method = xyz;
+        } else {
+            std::cerr << vm["output"].as<string>()
+                      << " is not a valid output type" << std::endl;
+            exit(1);
+        }
+
+        if(vm["type"].as<std::string>() == "planet") {
+            o.type = planet;
+        }
+        else {
+            std::cerr << vm["type"].as<string>()
+                      << " is not a valid type" << std::endl;
             exit(1);
         }
 
