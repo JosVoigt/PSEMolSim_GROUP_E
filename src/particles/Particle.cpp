@@ -110,7 +110,7 @@ std::array<double, 3> Particle::positionVector(Particle& p) {
     std::array<double, 3> result;
 
     for (int i = 0; i < 3; i++) {
-        result[i] = x[i] - p.getX()[i];
+        result[i] = p.getX()[i] - x[i];
     }
 
     return result;

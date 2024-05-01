@@ -52,8 +52,8 @@ int main(int argc, char* argv[]) {
     switch (result.type) {
         case planet:
             for (auto& p : partReadin) {
-                auto pl = Planet(p);
-                particles.push_back(&pl);
+                auto* pl = new Planet(p);
+                particles.push_back(pl);
             }
             break;
     }
