@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <string>
 
 #include "container/ParticleContainer.h"
@@ -18,7 +19,7 @@ class Simulation {
     std::string filename;
 
    public:
-    Simulation(ParticleContainer& container_, Force* method_, Writer* writer,
+    Simulation(ParticleContainer& container_, Force* method_, Writer* writer_,
                double dt_, std::string filename_);
 
     void run(double start, double end);

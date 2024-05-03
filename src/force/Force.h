@@ -10,5 +10,5 @@ class Force {
    public:
     virtual ~Force() = default;
     virtual std::array<double, 3> calculateForce(Particle &p1,
-                                                 Particle &p2) = 0;
+                                                 Particle &p2) const = 0;
 };

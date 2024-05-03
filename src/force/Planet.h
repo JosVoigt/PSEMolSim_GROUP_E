@@ -7,5 +7,6 @@
 class Planet : public Force {
    public:
     Planet() = default;
-    std::array<double, 3> calculateForce(Particle &p1, Particle &p2) override;
+    std::array<double, 3> calculateForce(Particle &p1,
+                                         Particle &p2) const override;
 };

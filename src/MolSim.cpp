@@ -13,7 +13,8 @@ int main(int argc, char *argv[]) {
 
     ParticleContainer container = ParticleContainer(init.size(), init);
 
-    Simulation sim(container, o.force_, o.writer_, o.delta_t, o.outfile);
+    Simulation sim(container, o.force_.get(), o.writer_.get(), o.delta_t,
+                   o.outfile);
 
     sim.run(o.start, o.end);
 }

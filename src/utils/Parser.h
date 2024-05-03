@@ -5,6 +5,7 @@ namespace po = boost::program_options;
 
 #include <iostream>
 #include <iterator>
+#include <memory>
 #include <string>
 using namespace std;
 
@@ -23,8 +24,8 @@ struct options {
     double end;
     std::string filepath;
     std::string outfile;
-    Writer* writer_;
-    Force* force_;
+    unique_ptr<Writer> writer_;
+    unique_ptr<Force> force_;
 };
 
 /**
@@ -78,11 +79,9 @@ options parse(int ac, char* av[]) {
         }
 
         if (vm["outformat"].as<string>() == "vtk") {
-            auto w = outputWriter::VTKWriter();
-            o.writer_ = (Writer*)&w;
+            o.writer_ = unique_ptr<Writer>(new outputWriter::VTKWriter());
         } else if (vm["output"].as<string>() == "xyz") {
-            outputWriter::XYZWriter w = outputWriter::XYZWriter();
-            o.writer_ = (Writer*)&w;
+            o.writer_ = unique_ptr<Writer>(new outputWriter::XYZWriter());
         } else {
             std::cerr << vm["output"].as<string>()
                       << " is not a valid output type" << std::endl;
@@ -90,8 +89,7 @@ options parse(int ac, char* av[]) {
         }
 
         if (vm["type"].as<std::string>() == "planet") {
-            Planet pl = Planet();
-            o.force_ = (Force*)&pl;
+            o.force_ = unique_ptr<Force>(new Planet());
         } else {
             std::cerr << vm["type"].as<string>() << " is not a valid type"
                       << std::endl;

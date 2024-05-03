@@ -18,7 +18,7 @@ namespace outputWriter {
  * This class implements the functionality to generate vtk output from
  * particles.
  */
-class VTKWriter : Writer {
+class VTKWriter : public Writer {
    public:
     VTKWriter();
 

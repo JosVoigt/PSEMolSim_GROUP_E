@@ -59,14 +59,19 @@ void calculateV(ParticleContainer &container, double dt) {
  *  The force equation that describes the system
  *
  */
-void calculateF(ParticleContainer &container, Force *method) {
-    auto end = container.end();
-    for (auto p1 = container.begin(); p1 < end; p1++) {
-        for (auto p2 = (p1 + 1); p2 < end; p2++) {
-            std::array<double, 3> force = method->calculateForce(*p1, *p2);
-            p1->addF(force);
-            force = -1 * force;
-            p2->addF(force);
+void calculateF(ParticleContainer &container, const Force *method) {
+    bool newParticle = false;
+
+    for (Particle &p1 : container) {
+        for (Particle &p2 : container) {
+            if (newParticle) {
+                std::array<double, 3> f = method->calculateForce(p1, p2);
+                p1.addF(f);
+                std::array<double, 3> invF = -1 * f;
+                p2.addF(invF);
+            } else {
+                newParticle = (p1 == p2);
+            }
         }
     }
 }

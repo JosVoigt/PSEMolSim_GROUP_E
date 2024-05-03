@@ -11,9 +11,4 @@ ParticleContainer::ParticleContainer(int length_, std::list<Particle>& init)
     }
 }
 
-ParticleContainer::~ParticleContainer() { particleArray.~vector(); }
-
 int ParticleContainer::size() const { return length; }
-Particle& ParticleContainer::getParticleAt(int idx) {
-    return particleArray[idx];
-}

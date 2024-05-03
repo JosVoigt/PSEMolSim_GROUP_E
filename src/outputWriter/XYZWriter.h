@@ -14,7 +14,7 @@
 
 namespace outputWriter {
 
-class XYZWriter : Writer {
+class XYZWriter : public Writer {
    public:
     XYZWriter();
 

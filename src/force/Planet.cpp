@@ -22,8 +22,7 @@
  *  The force vector with |F| as described above and pointing from this
  *  planet to the other one
  */
-std::array<double, 3> Planet::calculateForce(Particle& p1, Particle& p2) {
-    std::cout << "halo" << std::endl;
+std::array<double, 3> Planet::calculateForce(Particle& p1, Particle& p2) const {
     double massProduct = p1.getM() * p2.getM();
     double distance = ArrayUtils::L2Norm(p2.getX() - p1.getX());
     std::array<double, 3> force =

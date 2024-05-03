@@ -12,11 +12,10 @@ class ParticleContainer {
 
    public:
     ParticleContainer(int count, std::list<Particle>& init);
-    ~ParticleContainer();
+    ~ParticleContainer() = default;
 
-    auto begin() { return particleArray.begin(); }
-    auto end() { return particleArray.end(); }
+    std::vector<Particle>::iterator begin() { return particleArray.begin(); }
+    std::vector<Particle>::iterator end() { return particleArray.end(); }
 
     int size() const;
-    Particle& getParticleAt(int idx);
 };

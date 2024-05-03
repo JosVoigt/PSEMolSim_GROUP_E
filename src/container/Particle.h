@@ -54,7 +54,7 @@ class Particle {
         std::array<double, 3> x_arg, std::array<double, 3> v_arg, double m_arg,
         int type = 0);
 
-    virtual ~Particle();
+    ~Particle();
 
     // Getter
     const std::array<double, 3>& getX() const;

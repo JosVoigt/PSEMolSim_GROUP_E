@@ -21,9 +21,7 @@ void Simulation::run(double start, double end) {
         calculateF(container, method);
         calculateV(container, dt);
 
-        std::cout << "Sim run" << std::endl;
-
-        if (iteration <= start) {
+        if (iteration >= start) {
             out->plotParticles(container, filename, iteration);
         }
     }
