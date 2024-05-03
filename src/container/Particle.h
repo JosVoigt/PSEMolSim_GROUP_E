@@ -65,24 +65,36 @@ class Particle {
     int getType() const;
     // End Getter
 
-    const void addF(std::array<double, 3>& aF);
+    /**
+     * \brief
+     *  Adds the given force to the current force
+     * \param aF
+     *  The force to be added
+     */
+    void addF(std::array<double, 3>& aF);
+    /**
+     * \brief
+     *  Adds the given position to the current position
+     * \param aX
+     *  The position to be added
+     */
+    void addX(std::array<double, 3>& aX);
+    /**
+     * \brief
+     *  Adds the given speed to the current speed
+     * \param aV
+     *  The speed to be added
+     */
+    void addV(std::array<double, 3>& aV);
 
-    const void nextIteration();
-
-    virtual std::array<double, 3> calculateForce(Particle& forcePartner) {
-        return {0, 0, 0};
-    };
-
-    void calculateX(double dt);
-
-    void calculateV(double dt);
-
-    double distance(Particle& p);
-
-    std::array<double, 3> positionVector(Particle& p);
+    /**
+     * \brief
+     *  Prepares the particles for the next iterations by making the current the
+     *  old force and setting the current force to {0,0,0}
+     */
+    void nextIteration();
 
     bool operator==(Particle& other);
-
     std::string toString() const;
 };
 

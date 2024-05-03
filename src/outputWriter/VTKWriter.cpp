@@ -61,7 +61,7 @@ void VTKWriter::writeFile(const std::string &filename, int iteration) {
     delete vtkFile;
 }
 
-void VTKWriter::plotParticle(Particle &p) {
+void VTKWriter::plotParticle(const Particle &p) {
     if (vtkFile->UnstructuredGrid().present()) {
         std::cout << "UnstructuredGrid is present" << std::endl;
     } else {
@@ -98,11 +98,11 @@ void VTKWriter::plotParticle(Particle &p) {
     pointsIterator->push_back(p.getX()[2]);
 }
 
-void VTKWriter::plotParticles(std::vector<Particle *> &particles,
+void VTKWriter::plotParticles(ParticleContainer &particles,
                               const std::string &filename, int iteration) {
     initializeOutput(particles.size());
     for (auto &p : particles) {
-        plotParticle(*p);
+        plotParticle(p);
     }
     writeFile(filename, iteration);
 }

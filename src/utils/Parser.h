@@ -8,23 +8,23 @@ namespace po = boost::program_options;
 #include <string>
 using namespace std;
 
-#include "VTKWriter.h"
-#include "XYZWriter.h"
-#include "writer.h"
+#include "force/Force.h"
+#include "force/Planet.h"
+#include "outputWriter/VTKWriter.h"
+#include "outputWriter/Writer.h"
+#include "outputWriter/XYZWriter.h"
 
 double const DEFAULT_DELTA = 0.00001;
 double const DEFAULT_END = 1;
 
-enum particleTypes { planet };
-
-enum outputType {xyz, vtk};
-
 struct options {
     double delta_t;
+    double start;
     double end;
     std::string filepath;
-    outputType output_method;
-    particleTypes type;
+    std::string outfile;
+    Writer* writer_;
+    Force* force_;
 };
 
 /**
@@ -42,13 +42,23 @@ options parse(int ac, char* av[]) {
 
         po::options_description desc("Allowed options");
 
-        desc.add_options()
-        ("help,h", "produce help message")
-        ("delta,dt", po::value<double>(&o.delta_t)->default_value(DEFAULT_DELTA),"set step size")
-        ("end,e", po::value<double>(&o.end)->default_value(DEFAULT_END),"set end point")
-        ("file,f", po::value<std::string>(&o.filepath),"set the path to the file containing initial state of the molecules")
-        ("output,o", po::value<std::string>()->default_value("vtk"),"set the output method")
-        ("type,t", po::value<std::string>()->default_value("planet", "sets the type of particle"));
+        desc.add_options()("help,h", "produce help message")(
+            "delta,dt",
+            po::value<double>(&o.delta_t)->default_value(DEFAULT_DELTA),
+            "set step size")(
+            "start,s", po::value<double>(&o.start)->default_value(0),
+            "sets the recording start point for the simulation")(
+            "end,e", po::value<double>(&o.end)->default_value(DEFAULT_END),
+            "set end point")("file,f", po::value<std::string>(&o.filepath),
+                             "set the path to the file containing initial "
+                             "state of the molecules")(
+            "outformat,of", po::value<std::string>()->default_value("vtk"),
+            "set the output method")(
+            "outfile,o",
+            po::value<std::string>(&o.outfile)->default_value("simulation"),
+            "set the output file name")(
+            "type,t", po::value<std::string>()->default_value("planet"),
+            "sets the type of particle");
 
         po::variables_map vm;
         po::store(po::parse_command_line(ac, av, desc), vm);
@@ -67,24 +77,24 @@ options parse(int ac, char* av[]) {
             std::exit(1);
         }
 
-        if (vm["output"].as<string>() == "vtk") {
+        if (vm["outformat"].as<string>() == "vtk") {
             auto w = outputWriter::VTKWriter();
-            o.output_method = vtk;
+            o.writer_ = (Writer*)&w;
         } else if (vm["output"].as<string>() == "xyz") {
-            auto w = outputWriter::XYZWriter();
-            o.output_method = xyz;
+            outputWriter::XYZWriter w = outputWriter::XYZWriter();
+            o.writer_ = (Writer*)&w;
         } else {
             std::cerr << vm["output"].as<string>()
                       << " is not a valid output type" << std::endl;
             exit(1);
         }
 
-        if(vm["type"].as<std::string>() == "planet") {
-            o.type = planet;
-        }
-        else {
-            std::cerr << vm["type"].as<string>()
-                      << " is not a valid type" << std::endl;
+        if (vm["type"].as<std::string>() == "planet") {
+            Planet pl = Planet();
+            o.force_ = (Force*)&pl;
+        } else {
+            std::cerr << vm["type"].as<string>() << " is not a valid type"
+                      << std::endl;
             exit(1);
         }
 

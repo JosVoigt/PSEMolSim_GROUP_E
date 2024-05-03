@@ -33,9 +33,10 @@ set (EXECUTABLE_OUTPUT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/${CMAKE_BUILD_TYPE}")
 
 # collect all cpp files
 file(GLOB_RECURSE MY_SRC
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/MolSim.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/*/*.cpp"
     # header don't need to be included but this might be necessary for some IDEs
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/*/*.h"
 )
 
 # create make target
@@ -51,10 +52,7 @@ target_include_directories(MolSim
         PUBLIC
             ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd
         PRIVATE
-            ${CMAKE_CURRENT_SOURCE_DIR}/src
-            ${CMAKE_CURRENT_SOURCE_DIR}/src/header
-            ${CMAKE_CURRENT_SOURCE_DIR}/src/utils
-            ${CMAKE_CURRENT_SOURCE_DIR}/src/outputWriter
+            ${CMAKE_CURRENT_SOURCE_DIR}/src/
 )
 
 target_link_libraries(MolSim
