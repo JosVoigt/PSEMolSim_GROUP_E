@@ -18,7 +18,7 @@ Simulation::Simulation(ParticleContainer& container_, Force* method_,
 }
 
 void Simulation::run(double start, double end) {
-    for (int iteration = 0; iteration < end; iteration++) {
+    for (int iteration = 0; iteration <= end; iteration++) {
         calculateX(container, dt, dt_sq);
         calculateF(container, method);
         calculateV(container, dt);
