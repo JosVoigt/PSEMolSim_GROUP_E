@@ -17,11 +17,13 @@ using namespace std;
 
 double const DEFAULT_DELTA = 0.00001;
 double const DEFAULT_END = 1;
+double const DEFAULT_FREQUENCY = 10;
 
 struct options {
     double delta_t;
     double start;
     double end;
+    int writeoutFrequency;
     std::string filepath;
     std::string outfile;
     unique_ptr<Writer> writer_;
@@ -43,23 +45,16 @@ options parse(int ac, char* av[]) {
 
         po::options_description desc("Allowed options");
 
-        desc.add_options()("help,h", "produce help message")(
-            "delta,dt",
-            po::value<double>(&o.delta_t)->default_value(DEFAULT_DELTA),
-            "set step size")(
-            "start,s", po::value<double>(&o.start)->default_value(0),
-            "sets the recording start point for the simulation")(
-            "end,e", po::value<double>(&o.end)->default_value(DEFAULT_END),
-            "set end point")("file,f", po::value<std::string>(&o.filepath),
-                             "set the path to the file containing initial "
-                             "state of the molecules")(
-            "outformat,of", po::value<std::string>()->default_value("vtk"),
-            "set the output method")(
-            "outfile,o",
-            po::value<std::string>(&o.outfile)->default_value("simulation"),
-            "set the output file name")(
-            "type,t", po::value<std::string>()->default_value("planet"),
-            "sets the type of particle");
+        desc.add_options()
+        ("help,h", "produce help message")
+        ("delta,d",po::value<double>(&o.delta_t)->default_value(DEFAULT_DELTA),"set step size")
+        ("frequency,f", po::value<int>(&o.writeoutFrequency)->default_value(DEFAULT_FREQUENCY), "sets the frequency for data writeout")
+        ("start,s", po::value<double>(&o.start)->default_value(0),"sets the recording start point for the simulation")
+        ("end,e", po::value<double>(&o.end)->default_value(DEFAULT_END),"set end point")
+        ("file,F", po::value<std::string>(&o.filepath),"set the path to the file containing initial state of the molecules")
+        ("outformat,O", po::value<std::string>()->default_value("vtk"),"set the output method")
+        ("outfile,o",po::value<std::string>(&o.outfile)->default_value("simulation"),"set the output file name")
+        ("type,t", po::value<std::string>()->default_value("planet"),"sets the type of particle");
 
         po::variables_map vm;
         po::store(po::parse_command_line(ac, av, desc), vm);

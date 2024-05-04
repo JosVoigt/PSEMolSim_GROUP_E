@@ -14,7 +14,7 @@ int main(int argc, char *argv[]) {
     ParticleContainer container = ParticleContainer(init.size(), init);
 
     Simulation sim(container, o.force_.get(), o.writer_.get(), o.delta_t,
-                   o.outfile);
+                   o.writeoutFrequency, o.outfile);
 
     sim.run(o.start, o.end);
 }

@@ -15,12 +15,13 @@ class Simulation {
 
     double dt;
     double dt_sq;
+    int outputFreqency;
 
     std::string filename;
 
    public:
     Simulation(ParticleContainer& container_, Force* method_, Writer* writer_,
-               double dt_, std::string filename_);
+               double dt_, int outputFrequency, std::string filename_);
 
     void run(double start, double end);
 };
