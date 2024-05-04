@@ -18,12 +18,12 @@ Simulation::Simulation(ParticleContainer& container_, Force* method_,
 }
 
 void Simulation::run(double start, double end) {
-    for (int iteration = 0; iteration <= end; iteration++) {
+    for (int iteration = 0; iteration <= end / dt; iteration++) {
         calculateX(container, dt, dt_sq);
         calculateF(container, method);
         calculateV(container, dt);
 
-        if (iteration >= start && iteration % outputFreqency == 0) {
+        if (iteration >= start && ((iteration % outputFreqency) == 0)) {
             out->plotParticles(container, filename, iteration);
         }
     }
