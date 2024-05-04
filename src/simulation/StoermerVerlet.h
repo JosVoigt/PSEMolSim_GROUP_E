@@ -60,9 +60,12 @@ void calculateV(ParticleContainer &container, double dt) {
  *
  */
 void calculateF(ParticleContainer &container, const Force *method) {
-    bool newParticle = false;
+    for (Particle &p : container) {
+        p.nextIteration();
+    }
 
     for (Particle &p1 : container) {
+        bool newParticle = false;
         for (Particle &p2 : container) {
             if (newParticle) {
                 std::array<double, 3> f = method->calculateForce(p1, p2);
