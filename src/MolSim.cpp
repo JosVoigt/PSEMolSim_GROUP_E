@@ -8,8 +8,10 @@ int main(int argc, char *argv[]) {
 
     std::list<Particle> init = list<Particle>();
 
-    FileReader filereader;
-    filereader.readFile(init, o.filepath.c_str());
+    for (auto file : o.filepath) {
+        FileReader filereader(file.c_str());
+        filereader.readData(init);
+    }
 
     ParticleContainer container = ParticleContainer(init.size(), init);
 

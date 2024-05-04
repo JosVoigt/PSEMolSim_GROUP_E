@@ -9,11 +9,15 @@
 
 #include <list>
 
-#include "container/Particle.h"
+#include "Initializer.h"
 
-class FileReader {
+class FileReader : public Initializer {
+   private:
+    const char* filename;
+
    public:
-    FileReader() = default;
+    FileReader(const char* filename);
+    ~FileReader() override = default;
 
-    void readFile(std::list<Particle>& particles, const char* filename);
+    void readData(std::list<Particle>& particles) override;
 };
