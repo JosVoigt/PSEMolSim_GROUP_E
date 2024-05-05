@@ -1,7 +1,6 @@
 #include "force/Planet.h"
 
 #include <cmath>
-#include <iostream>
 
 #include "utils/ArrayUtils.h"
 

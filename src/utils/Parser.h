@@ -18,13 +18,13 @@ using namespace std;
 
 double const DEFAULT_DELTA = 0.00001;
 double const DEFAULT_END = 1;
-double const DEFAULT_FREQUENCY = 10;
+int const DEFAULT_FREQUENCY = 10;
 
 struct options {
-    double delta_t;
-    double start;
-    double end;
-    int writeoutFrequency;
+    double delta_t{};
+    double start{};
+    double end{};
+    int writeoutFrequency{};
     std::vector<std::string> filepath;
     std::string outfile;
     unique_ptr<Writer> writer_;
@@ -35,9 +35,9 @@ struct options {
  *\brief
  *   parses the program options for the molecular simulation
  *\param ac
- *   The amount of arguments (usally called argc) provided to the main function
+ *   The amount of arguments (usually called argc) provided to the main function
  *\param av
- *   The arguments (usally called argv) provided to the main function
+ *   The arguments (usually called argv) provided to the main function
  *\return an options struct containing the read options and settings
  */
 options parse(int ac, char* av[]) {
@@ -49,13 +49,13 @@ options parse(int ac, char* av[]) {
         desc.add_options()
             ("help,h", "produce help message")
             ("delta,d",po::value<double>(&o.delta_t)->default_value(DEFAULT_DELTA),"set step size")
-            ("frequency,f",po::value<int>(&o.writeoutFrequency)->default_value(DEFAULT_FREQUENCY),"sets the frequency for data writeout")
+            ("frequency,f", po::value<int>(&o.writeoutFrequency)->default_value(DEFAULT_FREQUENCY),"sets the frequency for data writeout")
             ("start,s", po::value<double>(&o.start)->default_value(0),"sets the recording start point for the simulation")
             ("end,e", po::value<double>(&o.end)->default_value(DEFAULT_END),"set end point")
             ("file,F",po::value<std::vector<std::string>>(&o.filepath)->multitoken(),"set the path to the file containing initial state of the molecules")
             ("outformat,O",po::value<std::string>()->default_value("vtk"),"set the output method (vtk,xyz)")
             ("outfile,o",po::value<std::string>(&o.outfile)->default_value("simulation"),"set the output file name")
-            ("planet","sets particle mode to planet, exclusive with other particle modes"),
+            ("planet","sets particle mode to planet, exclusive with other particle modes")
             ("lenjonesmol", po::value<std::vector<double>>()->multitoken(),"set particle mode to molecules using Lennard-Jones with epsilon and sigma as the following values, exclusive with other particle modes");
 
         po::variables_map vm;

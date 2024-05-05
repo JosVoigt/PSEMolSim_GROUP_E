@@ -16,7 +16,7 @@ class FileReader : public Initializer {
     const char* filename;
 
    public:
-    FileReader(const char* filename);
+    explicit FileReader(const char* filename);
     ~FileReader() override = default;
 
     void readData(std::list<Particle>& particles) override;

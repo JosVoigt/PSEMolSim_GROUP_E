@@ -17,7 +17,7 @@
  *
  *  \param dt_sq
  *  The time difference dt squared
- *  If dt_sq is not equal to dt^2 behaiviour is undefined
+ *  If dt_sq is not equal to dt^2 behaviour is undefined
  *
  */
 

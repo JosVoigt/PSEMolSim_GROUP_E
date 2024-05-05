@@ -1,6 +1,7 @@
 #include "simulation/Simulation.h"
 
-#include <iostream>
+#include <utility>
+
 
 #include "force/Force.h"
 #include "simulation/StoermerVerlet.h"
@@ -12,8 +13,8 @@ Simulation::Simulation(ParticleContainer& container_, Force* method_,
       method(method_),
       out(writer_),
       dt(dt_),
-      outputFreqency(outputFrequency_),
-      filename(filename_) {
+      outputFrequency(outputFrequency_),
+      filename(std::move(filename_)) {
     dt_sq = std::pow(dt, 2);
 }
 
@@ -23,7 +24,7 @@ void Simulation::run(double start, double end) {
         calculateF(container, method);
         calculateV(container, dt);
 
-        if (iteration >= start && ((iteration % outputFreqency) == 0)) {
+        if (iteration >= start && ((iteration % outputFrequency) == 0)) {
             out->plotParticles(container, filename, iteration);
         }
     }

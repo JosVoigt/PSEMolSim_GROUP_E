@@ -8,14 +8,14 @@
 class ParticleContainer {
    private:
     std::vector<Particle> particleArray;
-    int length;
+    std::size_t length;
 
    public:
-    ParticleContainer(int count, std::list<Particle>& init);
+    ParticleContainer(std::size_t count, std::list<Particle>& init);
     ~ParticleContainer() = default;
 
     std::vector<Particle>::iterator begin() { return particleArray.begin(); }
     std::vector<Particle>::iterator end() { return particleArray.end(); }
 
-    int size() const;
+    [[nodiscard]] std::size_t size() const;
 };

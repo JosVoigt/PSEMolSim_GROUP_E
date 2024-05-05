@@ -15,7 +15,7 @@ class Simulation {
 
     double dt;
     double dt_sq;
-    int outputFreqency;
+    int outputFrequency;
 
     std::string filename;
 

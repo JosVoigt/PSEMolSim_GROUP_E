@@ -15,8 +15,8 @@
 FileReader::FileReader(const char* filename_) : filename(filename_) {}
 
 void FileReader::readData(std::list<Particle>& particles) {
-    std::array<double, 3> x;
-    std::array<double, 3> v;
+    std::array<double, 3> x{};
+    std::array<double, 3> v{};
     double m;
     int num_particles = 0;
 

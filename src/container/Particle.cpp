@@ -7,7 +7,6 @@
 
 #include "Particle.h"
 
-#include <cmath>
 #include <iostream>
 
 #include "utils/ArrayUtils.h"

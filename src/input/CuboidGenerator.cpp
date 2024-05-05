@@ -12,7 +12,7 @@ CuboidGenerator::CuboidGenerator(int x_, int y_, int z_, double distance,
       mass(mass_),
       h(distance),
       lowerLeftFrontCorner(lowerLeftFrontCorner_),
-      initialVelocity(initialVelocity_){};
+      initialVelocity(initialVelocity_){}
 
 void CuboidGenerator::readData(std::list<Particle>& list) {
     for (int X = 0; X < x; X++) {
@@ -27,4 +27,4 @@ void CuboidGenerator::readData(std::list<Particle>& list) {
             }
         }
     }
-};
+}

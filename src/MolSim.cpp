@@ -8,9 +8,9 @@ int main(int argc, char *argv[]) {
 
     std::list<Particle> init = list<Particle>();
 
-    for (auto file : o.filepath) {
-        FileReader filereader(file.c_str());
-        filereader.readData(init);
+    for (const auto& file : o.filepath) {
+        FileReader fileReader(file.c_str());
+        fileReader.readData(init);
     }
 
     ParticleContainer container = ParticleContainer(init.size(), init);

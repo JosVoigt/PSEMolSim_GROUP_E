@@ -1,6 +1,6 @@
 #include "ParticleContainer.h"
 
-ParticleContainer::ParticleContainer(int length_, std::list<Particle>& init)
+ParticleContainer::ParticleContainer(std::size_t length_, std::list<Particle>& init)
     : length(length_) {
     // init new array
     particleArray = std::vector<Particle>();
@@ -11,4 +11,4 @@ ParticleContainer::ParticleContainer(int length_, std::list<Particle>& init)
     }
 }
 
-int ParticleContainer::size() const { return length; }
+std::size_t ParticleContainer::size() const { return length; }
