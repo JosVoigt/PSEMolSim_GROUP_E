@@ -7,7 +7,6 @@ namespace po = boost::program_options;
 #include <iterator>
 #include <memory>
 #include <string>
-using namespace std;
 
 #include "force/Force.h"
 #include "force/LennardJonesMolecule.h"
@@ -27,8 +26,8 @@ struct options {
     int writeoutFrequency{};
     std::vector<std::string> filepath;
     std::string outfile;
-    unique_ptr<Writer> writer_;
-    unique_ptr<Force> force_;
+    std::unique_ptr<Writer> writer_;
+    std::unique_ptr<Force> force_;
 };
 
 /**
@@ -42,19 +41,19 @@ struct options {
  */
 options parse(int ac, char* av[]) {
     try {
-        options o;
+        options opts;
 
         po::options_description desc("Allowed options");
 
         desc.add_options()
             ("help,h", "produce help message")
-            ("delta,d",po::value<double>(&o.delta_t)->default_value(DEFAULT_DELTA),"set step size")
-            ("frequency,f", po::value<int>(&o.writeoutFrequency)->default_value(DEFAULT_FREQUENCY),"sets the frequency for data writeout")
-            ("start,s", po::value<double>(&o.start)->default_value(0),"sets the recording start point for the simulation")
-            ("end,e", po::value<double>(&o.end)->default_value(DEFAULT_END),"set end point")
-            ("file,F",po::value<std::vector<std::string>>(&o.filepath)->multitoken(),"set the path to the file containing initial state of the molecules")
+            ("delta,d",po::value<double>(&opts.delta_t)->default_value(DEFAULT_DELTA),"set step size")
+            ("frequency,f", po::value<int>(&opts.writeoutFrequency)->default_value(DEFAULT_FREQUENCY),"sets the frequency for data writeout")
+            ("start,s", po::value<double>(&opts.start)->default_value(0),"sets the recording start point for the simulation")
+            ("end,e", po::value<double>(&opts.end)->default_value(DEFAULT_END),"set end point")
+            ("file,F",po::value<std::vector<std::string>>(&opts.filepath)->multitoken(),"set the path to the file containing initial state of the molecules")
             ("outformat,O",po::value<std::string>()->default_value("vtk"),"set the output method (vtk,xyz)")
-            ("outfile,o",po::value<std::string>(&o.outfile)->default_value("simulation"),"set the output file name")
+            ("outfile,o",po::value<std::string>(&opts.outfile)->default_value("simulation"),"set the output file name")
             ("planet","sets particle mode to planet, exclusive with other particle modes")
             ("lenjonesmol", po::value<std::vector<double>>()->multitoken(),"set particle mode to molecules using Lennard-Jones with epsilon and sigma as the following values, exclusive with other particle modes");
 
@@ -64,7 +63,7 @@ options parse(int ac, char* av[]) {
 
         // print help if required
         if (vm.count("help")) {
-            cout << desc << "\n";
+            std::cout << desc << "\n";
             std::exit(0);
         }
 
@@ -81,34 +80,34 @@ options parse(int ac, char* av[]) {
             std::cerr << "Please choose EXACTLY ONE force mode" << std::endl;
             exit(1);
         } else if (vm.count("planet")) {
-            o.force_ = unique_ptr<Force>(new Planet());
+            opts.force_ = std::unique_ptr<Force>(new Planet());
         } else if (!vm["lenjonesmol"].empty() &&
                    (ljm_args = vm["lenjonesmol"].as<std::vector<double>>())
                            .size() == 2) {
-            o.force_ = unique_ptr<Force>(
+            opts.force_ = std::unique_ptr<Force>(
                 new LennardJonesMolecule(ljm_args[0], ljm_args[1]));
         } else {
             std::cerr << "Please provide a single force mode" << std::endl;
             exit(1);
         }
 
-        if (vm["outformat"].as<string>() == "vtk") {
-            o.writer_ = unique_ptr<Writer>(new outputWriter::VTKWriter());
-        } else if (vm["output"].as<string>() == "xyz") {
-            o.writer_ = unique_ptr<Writer>(new outputWriter::XYZWriter());
+        if (vm["outformat"].as<std::string>() == "vtk") {
+            opts.writer_ = std::unique_ptr<Writer>(new outputWriter::VTKWriter());
+        } else if (vm["output"].as<std::string>() == "xyz") {
+            opts.writer_ = std::unique_ptr<Writer>(new outputWriter::XYZWriter());
         } else {
-            std::cerr << vm["output"].as<string>()
+            std::cerr << vm["output"].as<std::string>()
                       << " is not a valid output type" << std::endl;
             exit(1);
         }
 
-        return o;
+        return opts;
 
-    } catch (exception& e) {
-        cerr << "error: " << e.what() << "\n";
+    } catch (std::exception& e) {
+        std::cerr << "error: " << e.what() << "\n";
         std::exit(1);
     } catch (...) {
-        cerr << "Exception of unknown type!\n";
+        std::cerr << "Exception of unknown type!\n";
         std::exit(1);
     }
 }

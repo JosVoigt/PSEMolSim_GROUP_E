@@ -3,9 +3,6 @@ cmake_minimum_required(VERSION 3.10)
 # define project name, version
 project(PSEMolDyn_GroupE VERSION 0.0.1)
 
-#set source dir
-set (CMAKE_CURRENT_SOURCE_DIR "..")
-
 #define compile flags
 set (FLAGS "-Wall -Werror -Wpedantic")
 
@@ -16,6 +13,16 @@ set (RELDEBUG_FLAGS "-O3 -g ${FLAGS}")
 set(CMAKE_CXX_FLAGS_RELEASE_INIT "${RELEASE_FLAGS}")
 set(CMAKE_CXX_FLAGS_DEBUG_INIT "${DEBUG_FLAGS}")
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO_INIT "${RELDEBUG_FLAGS}")
+
+
+option(TIDY "Enable clang tidy (off by default)" OFF)
+if(TIDY) 
+    set(CMAKE_CXX_CLANG_TIDY
+  clang-tidy;
+  -header-filter=src/*/*.h;
+  -checks=*;
+  -warnings-as-errors=*;)
+endif(TIDY)
 
 # let ccmake and cmake-gui offer the default build type options
 set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug;Release;RelWithDebInfo;MinSizeRel")

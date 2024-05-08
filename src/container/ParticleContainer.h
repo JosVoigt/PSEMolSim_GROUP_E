@@ -14,8 +14,10 @@ class ParticleContainer {
     ParticleContainer(std::size_t count, std::list<Particle>& init);
     ~ParticleContainer() = default;
 
-    std::vector<Particle>::iterator begin() { return particleArray.begin(); }
-    std::vector<Particle>::iterator end() { return particleArray.end(); }
+    typedef std::vector<Particle>::iterator Iterator;
+
+    Iterator begin() { return particleArray.begin(); }
+    Iterator end() { return particleArray.end(); }
 
     [[nodiscard]] std::size_t size() const;
 };

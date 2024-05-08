@@ -3,20 +3,20 @@
 #include "simulation/Simulation.h"
 #include "utils/Parser.h"
 
-int main(int argc, char *argv[]) {
-    options o = parse(argc, argv);
+int main(int argc, char* argv[]) {
+    options opts = parse(argc, argv);
 
-    std::list<Particle> init = list<Particle>();
+    std::list<Particle> init = std::list<Particle>();
 
-    for (const auto& file : o.filepath) {
+    for (const auto& file : opts.filepath) {
         FileReader fileReader(file.c_str());
         fileReader.readData(init);
     }
 
     ParticleContainer container = ParticleContainer(init.size(), init);
 
-    Simulation sim(container, o.force_.get(), o.writer_.get(), o.delta_t,
-                   o.writeoutFrequency, o.outfile);
+    Simulation sim(container, opts.force_.get(), opts.writer_.get(),
+                   opts.delta_t, opts.writeoutFrequency, opts.outfile);
 
-    sim.run(o.start, o.end);
+    sim.run(opts.start, opts.end);
 }

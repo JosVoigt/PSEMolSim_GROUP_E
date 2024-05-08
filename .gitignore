@@ -1,13 +1,9 @@
-doxys_documentation/
-Release/
-debug/
-MinSizeRel/
-RelWithDebInfo/
-
 build/
-!build/
-!build/CMakeLists.txt
-!build/Doxyfile.in
-!build/cmake/modules/doxygen.cmake
+CMakeFiles/
 
-Makefile
+Release/
+Debug/
+RelWithDebInfo/
+MinSizeRel/
+
+doxys_documentation/
