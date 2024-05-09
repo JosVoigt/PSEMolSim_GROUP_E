@@ -2,13 +2,13 @@
 
 #include <utility>
 
-
 #include "force/Force.h"
 #include "simulation/StoermerVerlet.h"
 
-Simulation::Simulation(ParticleContainer& container_, Force* method_,
-                       Writer* writer_, double dt_, int outputFrequency_,
-                       std::string filename_)
+Simulation::Simulation(ParticleContainer& container_,
+                       std::shared_ptr<Force> method_,
+                       std::shared_ptr<Writer> writer_, double dt_,
+                       int outputFrequency_, std::string filename_)
     : container(container_),
       method(method_),
       out(writer_),

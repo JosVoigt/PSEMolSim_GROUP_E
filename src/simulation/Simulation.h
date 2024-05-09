@@ -10,8 +10,8 @@
 class Simulation {
    private:
     ParticleContainer container;
-    Force* method;
-    Writer* out;
+    std::shared_ptr<Force> method;
+    std::shared_ptr<Writer> out;
 
     double dt;
     double dt_sq;
@@ -20,8 +20,9 @@ class Simulation {
     std::string filename;
 
    public:
-    Simulation(ParticleContainer& container_, Force* method_, Writer* writer_,
-               double dt_, int outputFrequency, std::string filename_);
+    Simulation(ParticleContainer& container_, std::shared_ptr<Force> method_,
+               std::shared_ptr<Writer> writer_, double dt_, int outputFrequency,
+               std::string filename_);
 
     void run(double start, double end);
 };

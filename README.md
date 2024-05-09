@@ -61,7 +61,7 @@ To compile and link with the makefile use either make or --build:
 ```bash
     cmake --build ..
 ```
-The resulting executable is located at **PSEMolSim_GROUP_E/{DCMAKE_BUILD_TYPE}/MolSim**
+The resulting executable is located at **PSEMolSim_GROUP_E/exec/MolSim**
 
 To disable the Doxygen build add the flag BUILD_DOC flag:
 ```bash
@@ -104,7 +104,7 @@ This would be run from the toplevel folder.
 If one would like to change the execution directory the only thing required to be adapted would be the relative path to the input data.
 Furthermore this assumes a release build.
 ```bash
-	Release/MolSim --planet --start 10 --end 1000 -- delta 1 --frequency 10 --outformat vtk --outfile halley --file input/eingabe-sonne.txt
+	Release/MolSim --planet --start 10 --end 1000 --delta 1 --frequency 10 --outformat vtk --outfile halley --file input/eingabe-sonne.txt
 ```
 
 This is the same command, but it makes use of the shorter flags and default values.

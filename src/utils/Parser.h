@@ -20,19 +20,22 @@ double const DEFAULT_END = 1;
 int const DEFAULT_FREQUENCY = 10;
 
 struct options {
+    bool executeTests = false;
     double delta_t{};
     double start{};
     double end{};
     int writeoutFrequency{};
     std::vector<std::string> filepath;
     std::string outfile;
-    std::unique_ptr<Writer> writer_;
-    std::unique_ptr<Force> force_;
+    std::shared_ptr<Writer> writer_;
+    std::shared_ptr<Force> force_;
 };
 
 /**
  *\brief
  *   parses the program options for the molecular simulation
+ *   
+ *   If tests should be executed all other arguments should be expected to be empty
  *\param ac
  *   The amount of arguments (usually called argc) provided to the main function
  *\param av
@@ -47,6 +50,7 @@ options parse(int ac, char* av[]) {
 
         desc.add_options()
             ("help,h", "produce help message")
+            ("test,t", "execute tests")
             ("delta,d",po::value<double>(&opts.delta_t)->default_value(DEFAULT_DELTA),"set step size")
             ("frequency,f", po::value<int>(&opts.writeoutFrequency)->default_value(DEFAULT_FREQUENCY),"sets the frequency for data writeout")
             ("start,s", po::value<double>(&opts.start)->default_value(0),"sets the recording start point for the simulation")
@@ -67,6 +71,10 @@ options parse(int ac, char* av[]) {
             std::exit(0);
         }
 
+        opts.executeTests = (vm.count("test"));
+
+        if (opts.executeTests) return opts;
+
         // check if file is present
         if (!vm.count("file")) {
             std::cerr << "error: option '--file' required but missing"
@@ -80,11 +88,11 @@ options parse(int ac, char* av[]) {
             std::cerr << "Please choose EXACTLY ONE force mode" << std::endl;
             exit(1);
         } else if (vm.count("planet")) {
-            opts.force_ = std::unique_ptr<Force>(new Planet());
+            opts.force_ = std::shared_ptr<Force>(new Planet());
         } else if (!vm["lenjonesmol"].empty() &&
                    (ljm_args = vm["lenjonesmol"].as<std::vector<double>>())
                            .size() == 2) {
-            opts.force_ = std::unique_ptr<Force>(
+            opts.force_ = std::shared_ptr<Force>(
                 new LennardJonesMolecule(ljm_args[0], ljm_args[1]));
         } else {
             std::cerr << "Please provide a single force mode" << std::endl;
@@ -92,9 +100,9 @@ options parse(int ac, char* av[]) {
         }
 
         if (vm["outformat"].as<std::string>() == "vtk") {
-            opts.writer_ = std::unique_ptr<Writer>(new outputWriter::VTKWriter());
+            opts.writer_ = std::shared_ptr<Writer>(new outputWriter::VTKWriter());
         } else if (vm["output"].as<std::string>() == "xyz") {
-            opts.writer_ = std::unique_ptr<Writer>(new outputWriter::XYZWriter());
+            opts.writer_ = std::shared_ptr<Writer>(new outputWriter::XYZWriter());
         } else {
             std::cerr << vm["output"].as<std::string>()
                       << " is not a valid output type" << std::endl;

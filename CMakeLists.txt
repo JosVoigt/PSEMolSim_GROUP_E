@@ -14,7 +14,6 @@ set(CMAKE_CXX_FLAGS_RELEASE_INIT "${RELEASE_FLAGS}")
 set(CMAKE_CXX_FLAGS_DEBUG_INIT "${DEBUG_FLAGS}")
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO_INIT "${RELDEBUG_FLAGS}")
 
-
 option(TIDY "Enable clang tidy (off by default)" OFF)
 if(TIDY) 
     set(CMAKE_CXX_CLANG_TIDY
@@ -34,9 +33,9 @@ if(NOT CMAKE_BUILD_TYPE)
 endif(NOT CMAKE_BUILD_TYPE)
 
 #create build directories
-file (MAKE_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/${CMAKE_BUILD_TYPE}/bin")
-set (CMAKE_BINARY_DIR "${CMAKE_CURRENT_SOURCE_DIR}/${CMAKE_BUILD_TYPE}/bin")
-set (EXECUTABLE_OUTPUT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/${CMAKE_BUILD_TYPE}")
+file (MAKE_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/exec/bin")
+set (CMAKE_BINARY_DIR "${CMAKE_CURRENT_SOURCE_DIR}/exec/bin")
+set (EXECUTABLE_OUTPUT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/exec")
 
 # collect all cpp files
 file(GLOB_RECURSE MY_SRC
@@ -67,6 +66,7 @@ target_link_libraries(MolSim
         PUBLIC
             xerces-c
             boost_program_options
+            gtest
 )
 
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)

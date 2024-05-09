@@ -59,7 +59,8 @@ void calculateV(ParticleContainer &container, double dt) {
  *  The force equation that describes the system
  *
  */
-void calculateF(ParticleContainer &container, const Force *method) {
+void calculateF(ParticleContainer &container,
+                const std::shared_ptr<Force> method) {
     for (Particle &p : container) {
         p.nextIteration();
     }
