@@ -19,11 +19,13 @@ Required libraries
 ---
 - boost
 - xerces-c
+- googletest
 
 To install all of them using apt, run this command (requires *SUDO*):
 ```bash
-    apt install libboost-dev libxerces-c-dev
+    apt install libboost-dev libxerces-c-dev libgtest-dev
 ```
+
 Building with cmake
 ---
 Create a build folder and start the build from there:
@@ -88,6 +90,7 @@ These are the availabe command for the generated executable.
 |Long name      |Short name |Values         			    | Defaults  	| Description												                                            |
 |---------------|-----------|-------------------------------|---------------|-------------------------------------------------------------------------------------------------------|
 |--help         | -h        |               			    |           	|Prints out the help message										                                    |
+|--test         | -t        |                               |               |Executes the complete test suite
 |--delta	    | -d	    |double				            | 1e-5  		|Sets the stepsize for the simulation									                                |
 |--frequency    | -f        |int            			    | 10        	|Sets the output frequency, every nth step a file will be generated					                    |
 |--start        | -s        |int            			    | 0         	|Sets the first point at which output is generated							                            |
