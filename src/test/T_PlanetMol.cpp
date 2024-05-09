@@ -6,7 +6,7 @@
 const double tolerance = 1e-7;
 
 class P_test : public testing::Test {
-protected:
+   protected:
     std::array<double, 3> v = {0, 0, 0};
     std::array<double, 3> x1_basic = {1, 0, 0};
     std::array<double, 3> x2_basic = {0, 0, 0};
@@ -27,7 +27,7 @@ protected:
 };
 
 TEST_F(P_test, basic_functionality) {
-    std::array<double,3> res = planet->calculateForce(planet1, planet2);
+    std::array<double, 3> res = planet->calculateForce(planet1, planet2);
 
     ASSERT_NEAR(1, res[0], tolerance);
     ASSERT_EQ(0, res[1]);
@@ -35,7 +35,8 @@ TEST_F(P_test, basic_functionality) {
 }
 
 TEST_F(P_test, displacement) {
-    std::array<double,3> res = planet->calculateForce(planet1_displaced, planet2_displaced);
+    std::array<double, 3> res =
+        planet->calculateForce(planet1_displaced, planet2_displaced);
 
     ASSERT_NEAR(0.1111111, res[0], tolerance);
     ASSERT_EQ(0, res[1]);
@@ -43,7 +44,8 @@ TEST_F(P_test, displacement) {
 }
 
 TEST_F(P_test, displacement_and_mass) {
-    std::array<double,3> res = planet->calculateForce(planet1_displaced, planet2_displaced);
+    std::array<double, 3> res =
+        planet->calculateForce(planet1_displaced, planet2_displaced);
 
     ASSERT_NEAR(2.1333333, res[0], tolerance);
     ASSERT_EQ(0, res[1]);

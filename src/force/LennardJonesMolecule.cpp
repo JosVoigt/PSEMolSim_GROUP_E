@@ -1,7 +1,6 @@
 #include "LennardJonesMolecule.h"
 
 #include <cmath>
-#include <iostream>
 
 #include "utils/ArrayUtils.h"
 
@@ -20,8 +19,6 @@ std::array<double, 3> LennardJonesMolecule::calculateForce(Particle& p1,
     std::array<double, 3> force = (epsilon_24 / std::pow(distance, 2)) *
                                   (summand_6 - (2 * summand_12)) *
                                   (p1.getX() - p2.getX());
-
-    std::cout << distance << "\n" << force << std::endl;
 
     return force;
 }
