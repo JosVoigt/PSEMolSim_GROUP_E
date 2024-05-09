@@ -74,6 +74,7 @@ void calculateF(ParticleContainer &container,
                 std::array<double, 3> invF = -1 * f;
                 p2.addF(invF);
             } else {
+                // checks if the next particle is new
                 newParticle = (p1 == p2);
             }
         }
