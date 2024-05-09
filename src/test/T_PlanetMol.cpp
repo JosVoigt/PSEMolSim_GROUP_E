@@ -23,7 +23,7 @@ class P_test : public testing::Test {
     Particle planet1_displaced_and_mass = Particle(x1_displaced, v, 3.2, 0);
     Particle planet2_displaced_and_mass = Particle(x1_displaced, v, 6, 0);
 
-    std::shared_ptr<Force> planet;
+    std::shared_ptr<Force> planet = std::shared_ptr<Force>(new Planet());
 };
 
 TEST_F(P_test, basic_functionality) {
