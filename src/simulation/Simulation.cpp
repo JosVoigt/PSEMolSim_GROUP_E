@@ -5,6 +5,8 @@
 #include "force/Force.h"
 #include "simulation/StoermerVerlet.h"
 
+#define output_file
+
 Simulation::Simulation(ParticleContainer& container_,
                        std::shared_ptr<Force> method_,
                        std::shared_ptr<Writer> writer_, double dt_,
@@ -24,8 +26,13 @@ void Simulation::run(double start, double end) {
         calculateF(container, method);
         calculateV(container, dt);
 
+// if output at the top of the file is undefined, the compiler will not include
+// this line intended for maximum speed, DO NOT USE while doing actual
+// calculations
+#ifdef output_file
         if (iteration >= start && ((iteration % outputFrequency) == 0)) {
             out->plotParticles(container, filename, iteration);
         }
+#endif
     }
 }
