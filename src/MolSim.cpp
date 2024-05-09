@@ -1,10 +1,14 @@
 
+#include <algorithm>
+#include <iostream>
+#include <vector>
+
 #include "FileReader.h"
+#include "Parser.h"
+#include "Particle.h"
+#include "Planet.h"
 #include "outputWriter/XYZWriter.h"
 #include "utils/ArrayUtils.h"
-
-#include <iostream>
-#include <list>
 
 /**** forward declaration of the calculation functions ****/
 
@@ -26,79 +30,138 @@ void calculateV();
 /**
  * plot the particles to a xyz-file
  */
-void plotParticles(int iteration);
+void plotParticles(int iteration, outputType type);
 
 constexpr double start_time = 0;
-constexpr double end_time = 1000;
-constexpr double delta_t = 0.014;
+double end_time;
+double delta_t;
 
-// TODO: what data structure to pick?
-std::list<Particle> particles;
+std::vector<Particle*> particles;
 
-int main(int argc, char *argsv[]) {
+int main(int argc, char* argv[]) {
+    options result = parse(argc, argv);
 
-  std::cout << "Hello from MolSim for PSE!" << std::endl;
-  if (argc != 2) {
-    std::cout << "Erroneous programme call! " << std::endl;
-    std::cout << "./molsym filename" << std::endl;
-  }
+    FileReader fileReader;
+    std::vector<Particle> partReadin;
+    fileReader.readFile(partReadin, result.filepath.c_str());
 
-  FileReader fileReader;
-  fileReader.readFile(particles, argsv[1]);
+    particles.reserve(partReadin.size());
 
-  double current_time = start_time;
+    writer* w;
 
-  int iteration = 0;
-
-  // for this loop, we assume: current x, current f and current v are known
-  while (current_time < end_time) {
-    // calculate new x
-    calculateX();
-    // calculate new f
-    calculateF();
-    // calculate new v
-    calculateV();
-
-    iteration++;
-    if (iteration % 10 == 0) {
-      plotParticles(iteration);
+    switch (result.type) {
+        case planet:
+            for (auto& p : partReadin) {
+                auto* pl = new Planet(p);
+                particles.push_back(pl);
+            }
+            break;
     }
-    std::cout << "Iteration " << iteration << " finished." << std::endl;
 
-    current_time += delta_t;
-  }
+    if (result.output_method = vtk) {
+        auto vtk = outputWriter::VTKWriter();
+        w = (writer*)&vtk;
+    } else if (result.output_method = xyz) {
+        auto xyz = outputWriter::XYZWriter();
+        w = (writer*)&xyz;
+    }
 
-  std::cout << "output written. Terminating..." << std::endl;
-  return 0;
+    end_time = result.end;
+    delta_t = result.delta_t;
+
+    std::cout << "Calculating until: " << end_time << std::endl
+              << "Stepsize: " << delta_t << std::endl
+              << "Iterations: " << end_time / delta_t << std::endl
+              << "Particle count: " << particles.size() << std::endl;
+
+    double current_time = start_time;
+
+    int iteration = 0;
+
+    // for this loop, we assume: current x, current f and current v are known
+    while (current_time < end_time) {
+        // calculate new x
+        calculateX();
+        // calculate new f
+        calculateF();
+        // calculate new v
+        calculateV();
+
+        iteration++;
+        if (iteration % 10 == 0) {
+            plotParticles(iteration, result.output_method);
+        }
+        // std::cout << "Iteration " << iteration << " finished." << std::endl;
+
+        current_time += delta_t;
+    }
+
+    std::cout << "output written. Terminating..." << std::endl;
+    return 0;
 }
 
+/**
+ * \brief
+ *  Calculates the forces between every particle in the particle list.
+ */
 void calculateF() {
-  std::list<Particle>::iterator iterator;
-  iterator = particles.begin();
-
-  for (auto &p1 : particles) {
-    for (auto &p2 : particles) {
-      // @TODO: insert calculation of forces here!
+    // prepare the current particles for next iteration
+    for (auto& p : particles) {
+        p->nextIteration();
     }
-  }
+
+    // iterate over the particle pairs
+    bool reachedParticle = false;
+    for (int i = 0; i < particles.size(); i++) {
+        for (int j = i + 1; j < particles.size(); j++) {
+            // check if particle combination has not been calculated
+            auto p1 = particles[i];
+            auto p2 = particles[j];
+
+            // calculate force
+            std::array<double, 3> force_p1_to_p2 = p1->calculateForce(*p2);
+            // add to 1st particle
+            p1->addF(force_p1_to_p2);
+
+            // Usage of Newton's 3rd law
+            for (int i = 0; i < 3; i++) {
+                force_p1_to_p2[i] *= -1;
+            }
+
+            // add inverse to second particle
+            p2->addF(force_p1_to_p2);
+        }
+    }
 }
 
+/**
+ * \brief
+ *  Calculate the new x for every particle based on its force postition
+ */
 void calculateX() {
-  for (auto &p : particles) {
-    // @TODO: insert calculation of position updates here!
-  }
+    for (auto& p : particles) {
+        p->calculateX(delta_t);
+    }
 }
 
+/**
+ * \brief
+ * Calculate the new v for every particle based on force and velocity
+ */
 void calculateV() {
-  for (auto &p : particles) {
-    // @TODO: insert calculation of veclocity updates here!
-  }
+    for (auto& p : particles) {
+        p->calculateV(delta_t);
+    }
 }
 
-void plotParticles(int iteration) {
+void plotParticles(int iteration, outputType type) {
+    std::string out_name("MD_vtk");
 
-  std::string out_name("MD_vtk");
-
-  outputWriter::XYZWriter writer;
-  writer.plotParticles(particles, out_name, iteration);
+    if (type = vtk) {
+        auto w = outputWriter::VTKWriter();
+        w.plotParticles(particles, out_name, iteration);
+    } else if (type = xyz) {
+        auto w = outputWriter::XYZWriter();
+        w.plotParticles(particles, out_name, iteration);
+    }
 }

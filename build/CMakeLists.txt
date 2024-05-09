@@ -1,7 +1,21 @@
 cmake_minimum_required(VERSION 3.10)
 
 # define project name, version
-project(PSEMolDyn VERSION 0.0.1)
+project(PSEMolDyn_GroupE VERSION 0.0.1)
+
+#set source dir
+set (CMAKE_CURRENT_SOURCE_DIR "..")
+
+#define compile flags
+set (FLAGS "-Wall -Werror -Wpedantic")
+
+set (RELEASE_FLAGS "-O3 ${FLAGS}")
+set (DEBUG_FLAGS "-O0 -g ${FLAGS}")
+set (RELDEBUG_FLAGS "-O3 -g ${FLAGS}")
+
+set(CMAKE_CXX_FLAGS_RELEASE_INIT "${RELEASE_FLAGS}")
+set(CMAKE_CXX_FLAGS_DEBUG_INIT "${DEBUG_FLAGS}")
+set(CMAKE_CXX_FLAGS_RELWITHDEBINFO_INIT "${RELDEBUG_FLAGS}")
 
 # let ccmake and cmake-gui offer the default build type options
 set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug;Release;RelWithDebInfo;MinSizeRel")
@@ -11,6 +25,11 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release" CACHE STRING
             "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel." FORCE)
 endif(NOT CMAKE_BUILD_TYPE)
+
+#create build directories
+file (MAKE_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/${CMAKE_BUILD_TYPE}/bin")
+set (CMAKE_BINARY_DIR "${CMAKE_CURRENT_SOURCE_DIR}/${CMAKE_BUILD_TYPE}/bin")
+set (EXECUTABLE_OUTPUT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/${CMAKE_BUILD_TYPE}")
 
 # collect all cpp files
 file(GLOB_RECURSE MY_SRC
@@ -33,21 +52,16 @@ target_include_directories(MolSim
             ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd
         PRIVATE
             ${CMAKE_CURRENT_SOURCE_DIR}/src
+            ${CMAKE_CURRENT_SOURCE_DIR}/src/header
+            ${CMAKE_CURRENT_SOURCE_DIR}/src/utils
+            ${CMAKE_CURRENT_SOURCE_DIR}/src/outputWriter
 )
 
 target_link_libraries(MolSim
         # stuff that is used in headers and source files
         PUBLIC
             xerces-c
-)
-
-# activate all compiler warnings. Clean up your code :P
-# depending on the compiler different flags are used
-target_compile_options(MolSim
-        PRIVATE
-            $<$<CXX_COMPILER_ID:GNU>:-Wall>
-            # disable some spam warnings for icpc...
-            $<$<CXX_COMPILER_ID:Intel>:-w3 -wd383,981,1418,1572,2259>
+            boost_program_options
 )
 
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
