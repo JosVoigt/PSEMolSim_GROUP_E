@@ -15,12 +15,6 @@ class LJM_test : public testing::Test {
     Particle p2 = Particle(x2, v, 1, 0);
 };
 
-/*
- *                        /  /     sigma     \ 12     /     sigma     \ 6 \
- * U (x_i,x_j) = 4 * eps |  | -------------  |    -  | -------------  |   |
- *                       \  \ ||x_i - x_j|| /        \ ||x_i - x_j|| /   /
- */
-
 TEST_F(LJM_test, basic_functionality) {
     double const eps = 1;
     double const sigma = 1;
@@ -29,7 +23,7 @@ TEST_F(LJM_test, basic_functionality) {
 
     std::array<double, 3> res = ljm.calculateForce(p1, p2);
 
-    ASSERT_NEAR(4, res[0], tolerance);
+    ASSERT_NEAR(-24, res[0], tolerance);
     ASSERT_EQ(0, res[1]);
     ASSERT_EQ(0, res[2]);
 }
@@ -42,20 +36,39 @@ TEST_F(LJM_test, sigma) {
 
     std::array<double, 3> res = ljm.calculateForce(p1, p2);
 
-    ASSERT_NEAR(-0.0615234375, res[0], tolerance);
+    ASSERT_NEAR(0.36328125, res[0], tolerance);
     ASSERT_EQ(0, res[1]);
     ASSERT_EQ(0, res[2]);
 }
 
 TEST_F(LJM_test, eps) {
     double const eps = .5;
-    double const sigma = 2;
+    double const sigma = 1;
 
     LennardJonesMolecule ljm = LennardJonesMolecule(eps, sigma);
 
     std::array<double, 3> res = ljm.calculateForce(p1, p2);
 
-    ASSERT_NEAR(8064, res[0], tolerance);
+    ASSERT_NEAR(-12, res[0], tolerance);
     ASSERT_EQ(0, res[1]);
     ASSERT_EQ(0, res[2]);
+}
+
+TEST_F(LJM_test, all) {
+    double const eps = 12;
+    double const sigma = 7;
+
+    std::array<double, 3> x1 = {4.7, 3.6, 2.43};
+    Particle p1(x1, v, 1, 1);
+
+    std::array<double, 3> x2 = {.895, 96.345, 23.4};
+    Particle p2(x2, v, 1, 1);
+
+    LennardJonesMolecule ljm(eps, sigma);
+
+    std::array<double, 3> res = ljm.calculateForce(p1, p2);
+
+    ASSERT_NEAR(1.91698E-08, res[0], tolerance);
+    ASSERT_NEAR(-4.67254E-07, res[1], tolerance);
+    ASSERT_NEAR(-1.05648E-07, res[2], tolerance);
 }
