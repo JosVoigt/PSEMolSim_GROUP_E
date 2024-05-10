@@ -1,12 +1,14 @@
 #include "simulation/Simulation.h"
 
+#include <spdlog/spdlog.h>
+
 #include <utility>
 
 #include "force/Force.h"
 #include "simulation/StoermerVerlet.h"
 
-// only undefine if output is not wished for
-#define output_file
+// ONLY DEFINE IF NO OUTPUT IS WISHED FOR
+// #define NO_OUT_FILE
 
 Simulation::Simulation(ParticleContainer& container_,
                        std::shared_ptr<Force> method_,
@@ -22,17 +24,22 @@ Simulation::Simulation(ParticleContainer& container_,
 }
 
 void Simulation::run(double start, double end) {
+#ifdef NO_OUT_FILE
+    spdlog::get("file")->info(
+        "File output disabled through preprocessor directive. Refer to "
+        "src/simulation/Simulation.cpp l. 33 for more information.");
+#endif
     for (int iteration = 0; iteration <= end / dt; iteration++) {
         calculateX(container, dt, dt_sq);
         calculateF(container, method);
         calculateV(container, dt);
 
-// if output_file at the top of the file is undefined, the compiler will not
+// if NO_OUT_FILE is defined, the compiler will not
 // include this line
 //
-// intended for maximum speed, DO NOT USE while doing actual
+// intended for maximum speed or casual testing, DO NOT USE while doing actual
 // calculations
-#ifdef output_file
+#ifndef NO_OUT_FILE
         if (iteration >= start / dt &&
             ((iteration % outputFrequency) ==
              ((int)(start / dt) % outputFrequency))) {

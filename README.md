@@ -122,3 +122,10 @@ The arguments are provided in the same order as above.
 ```
 
 The logs are written to the executing directory into the file {outfile}_log.
+
+Excluding file output
+---------------------
+
+To exclude file output, one can define NO_OUT_FILE macro by uncommenting l.11 in the file src/simulation/Simulation.cpp .
+
+This will allow for a significant speedup in runtime (21,4s->0.3s using standard settings and Halley's comet with planets).
