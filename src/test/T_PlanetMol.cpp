@@ -23,11 +23,11 @@ class P_test : public testing::Test {
     Particle planet1_displaced_and_mass = Particle(x1_displaced, v, 3.2, 0);
     Particle planet2_displaced_and_mass = Particle(x1_displaced, v, 6, 0);
 
-    std::shared_ptr<Force> planet = std::shared_ptr<Force>(new Planet());
+    Planet planet = Planet();
 };
 
 TEST_F(P_test, basic_functionality) {
-    std::array<double, 3> res = planet->calculateForce(planet1, planet2);
+    std::array<double, 3> res = planet.calculateForce(planet1, planet2);
 
     ASSERT_NEAR(1, res[0], tolerance);
     ASSERT_EQ(0, res[1]);
@@ -36,7 +36,7 @@ TEST_F(P_test, basic_functionality) {
 
 TEST_F(P_test, displacement) {
     std::array<double, 3> res =
-        planet->calculateForce(planet1_displaced, planet2_displaced);
+        planet.calculateForce(planet1_displaced, planet2_displaced);
 
     ASSERT_NEAR(0.1111111, res[0], tolerance);
     ASSERT_EQ(0, res[1]);
@@ -45,7 +45,7 @@ TEST_F(P_test, displacement) {
 
 TEST_F(P_test, displacement_and_mass) {
     std::array<double, 3> res =
-        planet->calculateForce(planet1_displaced, planet2_displaced);
+        planet.calculateForce(planet1_displaced, planet2_displaced);
 
     ASSERT_NEAR(2.1333333, res[0], tolerance);
     ASSERT_EQ(0, res[1]);
