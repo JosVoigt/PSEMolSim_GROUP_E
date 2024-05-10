@@ -33,7 +33,9 @@ void Simulation::run(double start, double end) {
 // intended for maximum speed, DO NOT USE while doing actual
 // calculations
 #ifdef output_file
-        if (iteration >= start && ((iteration % outputFrequency) == 0)) {
+        if (iteration >= start / dt &&
+            ((iteration % outputFrequency) ==
+             ((int)(start / dt) % outputFrequency))) {
             out->plotParticles(container, filename, iteration);
         }
 #endif

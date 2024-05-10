@@ -45,4 +45,6 @@ void XYZWriter::plotParticles(ParticleContainer &particles,
     file.close();
 }
 
+std::string XYZWriter::typeString() { return "XYZWriter"; }
+
 }  // namespace outputWriter

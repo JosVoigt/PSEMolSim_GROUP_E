@@ -3,6 +3,11 @@
 #include <boost/program_options.hpp>
 namespace po = boost::program_options;
 
+#include <spdlog/spdlog.h>
+#include <spdlog/sinks/basic_file_sink.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
+
+
 #include <iostream>
 #include <iterator>
 #include <memory>
@@ -49,13 +54,13 @@ options parse(int ac, char* av[]) {
         po::options_description desc("Allowed options");
 
         desc.add_options()
-            ("help,h", "produce help message")
-            ("test,t", "execute tests")
+            ("help,h", "produce help message, ignores all other flags")
+            ("test,t", "execute tests, ignores all other flags except help")
             ("delta,d",po::value<double>(&opts.delta_t)->default_value(DEFAULT_DELTA),"set step size")
             ("frequency,f", po::value<int>(&opts.writeoutFrequency)->default_value(DEFAULT_FREQUENCY),"sets the frequency for data writeout")
             ("start,s", po::value<double>(&opts.start)->default_value(0),"sets the recording start point for the simulation")
             ("end,e", po::value<double>(&opts.end)->default_value(DEFAULT_END),"set end point")
-            ("file,F",po::value<std::vector<std::string>>(&opts.filepath)->multitoken(),"set the path to the file containing initial state of the molecules")
+            ("file,F",po::value<std::vector<std::string>>(&opts.filepath)->multitoken(),"set the path to the file(s) containing initial state of the molecules")
             ("outformat,O",po::value<std::string>()->default_value("vtk"),"set the output method (vtk,xyz)")
             ("outfile,o",po::value<std::string>(&opts.outfile)->default_value("simulation"),"set the output file name")
             ("planet","sets particle mode to planet, exclusive with other particle modes")
@@ -70,6 +75,15 @@ options parse(int ac, char* av[]) {
             std::cout << desc << "\n";
             std::exit(0);
         }
+
+        //inititalize loggers^
+        try{
+            auto logger_file = spdlog::basic_logger_mt("file", vm["outfile"].as<std::string>() + "_log");
+        } catch (const spdlog::spdlog_ex& ex) {
+            std::cerr << "File logger init failed: " << ex.what() << std::endl;
+            exit (1);
+        }
+        auto logger_error = spdlog::stderr_color_mt("stderr");
 
         opts.executeTests = (vm.count("test"));
 

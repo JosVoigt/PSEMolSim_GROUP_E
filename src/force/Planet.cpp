@@ -29,3 +29,5 @@ std::array<double, 3> Planet::calculateForce(Particle& p1, Particle& p2) const {
         (massProduct / std::pow(distance, 3)) * (p2.getX() - p1.getX());
     return force;
 }
+
+std::string Planet::typeString() { return "Planet"; }

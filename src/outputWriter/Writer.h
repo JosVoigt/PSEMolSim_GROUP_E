@@ -10,4 +10,5 @@ class Writer {
     virtual ~Writer() = default;
     virtual void plotParticles(ParticleContainer &container,
                                const std::string &filename, int iteration) = 0;
+    virtual std::string typeString() = 0;
 };

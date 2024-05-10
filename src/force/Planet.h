@@ -9,4 +9,5 @@ class Planet : public Force {
     Planet() = default;
     std::array<double, 3> calculateForce(Particle &p1,
                                          Particle &p2) const override;
+    std::string typeString() override;
 };

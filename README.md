@@ -20,10 +20,11 @@ Required libraries
 - boost
 - xerces-c
 - googletest
+- spdlog
 
 To install all of them using apt, run this command (requires *SUDO*):
 ```bash
-    apt install libboost-dev libxerces-c-dev libgtest-dev
+    apt install libboost-dev libxerces-c-dev libgtest-dev libspdlog-dev
 ```
 
 Building with cmake
@@ -63,6 +64,10 @@ To compile and link with the makefile use either make or --build:
 ```bash
     cmake --build ..
 ```
+
+Due to the size making use of Make's -j flag is advised.
+This may be memory and computational power consuming and should be used at your own risk.
+
 The resulting executable is located at **PSEMolSim_GROUP_E/exec/MolSim**
 
 To disable the Doxygen build add the flag BUILD_DOC flag:
@@ -90,7 +95,7 @@ These are the availabe command for the generated executable.
 |Long name      |Short name |Values         			    | Defaults  	| Description												                                            |
 |---------------|-----------|-------------------------------|---------------|-------------------------------------------------------------------------------------------------------|
 |--help         | -h        |               			    |           	|Prints out the help message										                                    |
-|--test         | -t        |                               |               |Executes the complete test suite
+|--test         | -t        |                               |               |Executes the complete test suite                                                                       |
 |--delta	    | -d	    |double				            | 1e-5  		|Sets the stepsize for the simulation									                                |
 |--frequency    | -f        |int            			    | 10        	|Sets the output frequency, every nth step a file will be generated					                    |
 |--start        | -s        |int            			    | 0         	|Sets the first point at which output is generated							                            |
@@ -115,3 +120,5 @@ The arguments are provided in the same order as above.
 ```bash
 	Release/MolSim --planet -s 10 -e 1000 -d 1 -o halley -F input/eingabe-sonne.txt
 ```
+
+The logs are written to the executing directory into the file {outfile}_log.

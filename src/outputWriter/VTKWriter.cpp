@@ -105,4 +105,6 @@ void VTKWriter::plotParticles(ParticleContainer &particles,
     writeFile(filename, iteration);
 }
 
+std::string VTKWriter::typeString() { return "VTKWriter"; }
+
 }  // namespace outputWriter

@@ -68,7 +68,9 @@ target_link_libraries(MolSim
             boost_program_options
             gtest
             gtest_main
-)
+            spdlog
+            fmt
+            )
 
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
 

@@ -47,6 +47,7 @@ class VTKWriter : public Writer {
 
     void plotParticles(ParticleContainer &particles,
                        const std::string &filename, int iteration) override;
+    std::string typeString() override;
 
    private:
     VTKFile_t *vtkFile;
