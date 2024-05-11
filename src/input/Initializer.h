@@ -1,3 +1,5 @@
+#pragma once
+
 #include <list>
 
 #include "container/Particle.h"
@@ -7,7 +9,7 @@
  */
 class Initializer {
    public:
-    Initializer()= default;
-    virtual ~Initializer()= default;
+    Initializer() = default;
+    virtual ~Initializer() = default;
     virtual void readData(std::list<Particle>& list) = 0;
 };

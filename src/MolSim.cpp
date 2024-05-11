@@ -1,3 +1,5 @@
+#define NO_OUT_FILE
+
 #include <gtest/gtest.h>
 
 #include "container/ParticleContainer.h"
@@ -5,11 +7,15 @@
 #include "simulation/Simulation.h"
 #include "utils/ArrayUtils.h"
 #include "utils/Parser.h"
+#include "logger/logger.h"
+#include "input/CuboidGenerator.h"
 
 int main(int argc, char* argv[]) {
+    initLoggers();
     options opts = parse(argc, argv);
 
     if (opts.executeTests) {
+        log_file (info, "Test flag was set, will proceed to execute tests");
         testing::InitGoogleTest(&argc, argv);
         return RUN_ALL_TESTS();
     } else {
@@ -32,14 +38,23 @@ int main(int argc, char* argv[]) {
                         << "    Generated files: " << (opts.end - opts.start) / opts.writeoutFrequency / opts.delta_t << "\n"
                         << "    Iterations: " << (opts.end / opts.delta_t) << "\n";
 
-        spdlog::get("file")->info(opt_string.str());
-        spdlog::get("file")->info(expected_stream.str());
+        log_file(info, opt_string.str());
+        log_file(info, expected_stream.str());
 
         std::list<Particle> init = std::list<Particle>();
 
         for (const auto& file : opts.filepath) {
             FileReader fileReader(file.c_str());
             fileReader.readData(init);
+        }
+
+        for (auto& cuboid: opts.cuboids) {
+            cuboid.readData(init);
+        }
+
+        if (init.size() < 2) {
+            log_error(critical, "The simulation requires at least 2 particles! Include them via file or cuboid.");
+            exit(1);
         }
 
         ParticleContainer container = ParticleContainer(init.size(), init);

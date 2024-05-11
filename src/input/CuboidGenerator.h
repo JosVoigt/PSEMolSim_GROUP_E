@@ -1,3 +1,5 @@
+#pragma once
+
 #include <array>
 
 #include "Initializer.h"
@@ -13,7 +15,6 @@ class CuboidGenerator : public Initializer {
     std::array<double, 3> initialVelocity;
 
    public:
-    
     /**
      * \brief
      *  Holds all the necessary information to construct the particle cubiod.
@@ -28,14 +29,13 @@ class CuboidGenerator : public Initializer {
      * \param mass_
      *  The mass of every particle in the cubiod
      * \param lowerLeftFrontCorner_
-     *  The 3D coordinate of the corner with minimal coordinates (lower, left, front)
-     * \param initialVelocity_
-     *  The average initial velocity of all the particles in the cuboid
-    */
+     *  The 3D coordinate of the corner with minimal coordinates (lower, left,
+     * front) \param initialVelocity_ The average initial velocity of all the
+     * particles in the cuboid
+     */
     CuboidGenerator(int x_, int y_, int z_, double distance, double mass_,
                     std::array<double, 3> lowerLeftFrontCorner_,
                     std::array<double, 3> initialVelocity_);
-
 
     ~CuboidGenerator() override = default;
 
@@ -47,6 +47,6 @@ class CuboidGenerator : public Initializer {
      *  The list that will hold the generated particles.
      *  The generated particles will be appended to the end of the list.
      *  The list can be empty or already containing particles.
-    */
+     */
     void readData(std::list<Particle>& list) override;
 };
