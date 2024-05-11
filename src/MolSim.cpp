@@ -52,6 +52,11 @@ int main(int argc, char* argv[]) {
             cuboid.readData(init);
         }
 
+        std::stringstream particleCount;
+
+        particleCount << "Particle count: " << init.size();
+        log_file (debug, particleCount.str());
+
         if (init.size() < 2) {
             log_error(critical, "The simulation requires at least 2 particles! Include them via file or cuboid.");
             exit(1);
