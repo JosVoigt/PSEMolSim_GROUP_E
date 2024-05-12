@@ -37,7 +37,7 @@ Particle::Particle(std::array<double, 3> x_arg, std::array<double, 3> v_arg,
       m(m_arg),
       type(type_arg) {}
 
-Particle::~Particle() {}
+Particle::~Particle() = default;
 
 // Getter
 const std::array<double, 3>& Particle::getX() const { return x; }
@@ -47,48 +47,24 @@ const std::array<double, 3>& Particle::getOldF() const { return old_f; }
 double Particle::getM() const { return m; }
 int Particle::getType() const { return type; }
 
-/**
- * \brief
- *   adds a force to the total force in the particle
- *
- * \param aF
- *   The force to be added (a 3D vector)
- */
 void Particle::addF(std::array<double, 3>& aF) {
     for (int i = 0; i < 3; i++) {
         f[i] += aF[i];
     }
 }
-/**
- * \brief
- *   adds a force to the total force in the particle
- *
- * \param aX
- *   The force to be added (a 3D vector)
- */
+
 void Particle::addX(std::array<double, 3>& aX) {
     for (int i = 0; i < 3; i++) {
         x[i] += aX[i];
     }
 }
-/**
- * \brief
- *   adds a force to the total force in the particle
- *
- * \param aV
- *   The force to be added (a 3D vector)
- */
+
 void Particle::addV(std::array<double, 3>& aV) {
     for (int i = 0; i < 3; i++) {
         v[i] += aV[i];
     }
 }
-/**
- * \brief
- *   Prepare the single particle for the next iteration
- *   The current force becomes the old force and the current force is set to 0
- *
- */
+
 void Particle::nextIteration() {
     old_f = f;
     f = {0, 0, 0};

@@ -20,7 +20,6 @@
  *  If dt_sq is not equal to dt^2 behaviour is undefined
  *
  */
-
 void calculateX(ParticleContainer &container, const double dt,
                 const double dt_sq) {
     for (Particle &p : container) {

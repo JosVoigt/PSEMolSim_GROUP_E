@@ -12,8 +12,8 @@ Simulation::Simulation(ParticleContainer& container_,
                        std::shared_ptr<Writer> writer_, double dt_,
                        int outputFrequency_, std::string filename_)
     : container(container_),
-      method(method_),
-      out(writer_),
+      method(std::move(method_)),
+      out(std::move(writer_)),
       dt(dt_),
       outputFrequency(outputFrequency_),
       filename(std::move(filename_)) {

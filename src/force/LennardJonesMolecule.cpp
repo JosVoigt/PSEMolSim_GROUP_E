@@ -24,5 +24,5 @@ std::array<double, 3> LennardJonesMolecule::calculateForce(Particle& p1,
 }
 
 std::string LennardJonesMolecule::typeString() {
-    return "Lennard-Jones-Potental for molecules";
+    return "Lennard-Jones-Potential for molecules";
 }

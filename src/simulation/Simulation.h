@@ -9,14 +9,49 @@
 
 class Simulation {
    private:
+    /**
+     * \brief
+     *  The container containing all particles for the simulation.
+     */
     ParticleContainer container;
+
+    /**
+     * \brief
+     *  The method to calculate the force.
+     *  This will be used to calculate all forces between the particles in container.
+     */
     std::shared_ptr<Force> method;
+
+    /**
+     * \brief
+     *  This provides the output method for the particle state.
+     */
     std::shared_ptr<Writer> out;
 
+    /**
+     * \brief
+     *  The time difference between each step.
+     */
     double dt;
+
+    /**
+     * \brief
+     *  The time difference dt squared.
+     *  If dt_sq is not equal to dt^2 behaviour is undefined.
+     */
     double dt_sq;
+
+    /**
+     * \brief
+     *  The frequency at which output will be generated.
+     *  For every n-th iteration. (calculated by iteration % n)
+     */
     int outputFrequency;
 
+    /**
+     * \brief
+     *  The prefix for the files that are going to get outputted.
+     */
     std::string filename;
 
    public:

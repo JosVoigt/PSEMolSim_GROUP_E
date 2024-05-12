@@ -12,10 +12,4 @@ ParticleContainer::ParticleContainer(std::size_t length_,
     }
 }
 
-/**
- * \brief
- *  Returns the amount of particles in the container.
- * \return
- *  The amount of particles in the container
- */
 std::size_t ParticleContainer::size() const { return length; }

@@ -10,6 +10,10 @@
 #include <array>
 #include <string>
 
+/**
+ * \brief
+ *  Represents a particle in the simulation
+ */
 class Particle {
    private:
     /**
@@ -44,24 +48,91 @@ class Particle {
     int type;
 
    public:
+    /**
+     * \brief
+     *  Default constructor
+     */
     explicit Particle(int type = 0);
 
+    /**
+     * \brief
+     *  Copy constructor
+     * \param other
+     *  The particle to be copied
+     */
     Particle(const Particle& other);
 
+    /**
+     * \brief
+     *  Constructor
+     * \param x_arg
+     *  The position of the particle
+     * \param v_arg
+     *  The velocity of the particle
+     * \param m_arg
+     *  The mass of the particle
+     * \param type
+     *  The type of the particle
+     */
     Particle(
-        // for visualization, we need always 3 coordinates
+        // for visualization, we always need 3 coordinates
         // -> in case of 2d, we use only the first and the second
         std::array<double, 3> x_arg, std::array<double, 3> v_arg, double m_arg,
         int type = 0);
 
+    /**
+     * \brief
+     *  Destructor
+     */
     ~Particle();
 
     // Getter
+    /**
+     * \brief
+     *  Returns the position of the particle
+     * \return
+     *  The position of the particle
+     */
     [[nodiscard]] const std::array<double, 3>& getX() const;
+
+    /**
+     * \brief
+     *  Returns the velocity of the particle
+     * \return
+     *  The velocity of the particle
+     */
     [[nodiscard]] const std::array<double, 3>& getV() const;
+
+    /**
+     * \brief
+     *  Returns the force of the particle
+     * \return
+     *  The force of the particle
+     */
     [[nodiscard]] const std::array<double, 3>& getF() const;
+
+    /**
+     * \brief
+     *  Returns the old force of the particle
+     * \return
+     *  The old force of the particle
+     */
     [[nodiscard]] const std::array<double, 3>& getOldF() const;
+
+    /**
+     * \brief
+     *  Returns the mass of the particle
+     * \return
+     *  The mass of the particle
+     */
     [[nodiscard]] double getM() const;
+
+    /**
+     * \brief
+     *  Returns the type of the particle
+     * \return
+     *  The type of the particle
+     */
     [[nodiscard]] int getType() const;
     // End Getter
 
@@ -72,6 +143,7 @@ class Particle {
      *  The force to be added
      */
     void addF(std::array<double, 3>& aF);
+
     /**
      * \brief
      *  Adds the given position to the current position
@@ -79,6 +151,7 @@ class Particle {
      *  The position to be added
      */
     void addX(std::array<double, 3>& aX);
+
     /**
      * \brief
      *  Adds the given speed to the current speed
@@ -94,8 +167,33 @@ class Particle {
      */
     void nextIteration();
 
+    /**
+     * \brief
+     *  Compares two particles
+     * \param other
+     *  The particle to be compared with
+     * \return
+     *  True if the particles are equal, false otherwise
+     */
     bool operator==(Particle& other);
+
+    /**
+     * \brief
+     *  Converts the particle to a string
+     * \return
+     *  The particle as a string
+     */
     [[nodiscard]] std::string toString() const;
 };
 
+/**
+ * \brief
+ *  Prints the particle to the given stream
+ * \param stream
+ *  The stream to print to
+ * \param p
+ *  The particle to be printed
+ * \return
+ *  The stream
+ */
 std::ostream& operator<<(std::ostream& stream, Particle& p);
