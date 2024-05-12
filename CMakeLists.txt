@@ -106,3 +106,10 @@ FetchContent_Declare(
 )
 # Download spdlog
 FetchContent_MakeAvailable(spdlog)
+
+FetchContent_Declare(
+  Boost
+  GIT_REPOSITORY https://github.com/boostorg/boost.git
+  GIT_TAG boost-1.80.0
+)
+FetchContent_MakeAvailable(Boost)
