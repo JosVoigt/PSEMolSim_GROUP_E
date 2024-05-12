@@ -107,9 +107,18 @@ FetchContent_Declare(
 # Download spdlog
 FetchContent_MakeAvailable(spdlog)
 
+set(BOOST_INCLUDE_LIBRARIES program_options)
+set(BOOST_ENABLE_CMAKE ON)
 FetchContent_Declare(
   Boost
   GIT_REPOSITORY https://github.com/boostorg/boost.git
   GIT_TAG boost-1.80.0
 )
 FetchContent_MakeAvailable(Boost)
+
+FetchContent_Declare (
+    fmt
+    GIT_REPOSITORY https://github.com/fmtlib/fmt.git
+    GIT_TAG 10.2.1
+)
+FetchContent_MakeAvailable(fmt)
