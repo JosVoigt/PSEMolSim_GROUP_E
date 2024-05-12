@@ -32,3 +32,35 @@ void CuboidGenerator::readData(std::list<Particle>& list) {
         }
     }
 }
+
+int CuboidGenerator::getX() const {
+    return x;
+}
+
+int CuboidGenerator::getY() const {
+    return y;
+}
+
+int CuboidGenerator::getZ() const {
+    return z;
+}
+
+double CuboidGenerator::getH() const {
+    return h;
+}
+
+double CuboidGenerator::getMass() const {
+    return mass;
+}
+
+double CuboidGenerator::getMeanBrownianMotion() const {
+    return meanBrownianMotion;
+}
+
+const std::array<double, 3> &CuboidGenerator::getLLFC() const {
+    return lowerLeftFrontCorner;
+}
+
+const std::array<double, 3> &CuboidGenerator::getInitialVelocity() const {
+    return initialVelocity;
+}

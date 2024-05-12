@@ -98,4 +98,71 @@ class CuboidGenerator : public Initializer {
      *  The list can be empty or already containing particles.
      */
     void readData(std::list<Particle>& list) override;
+
+    /**
+     * \brief
+     *  Getter for the x dimension of the cuboid
+     * \return
+     *  The x dimension of the cuboid
+     */
+    [[nodiscard]] int getX() const;
+
+    /**
+     * \brief
+     *  Getter for the y dimension of the cuboid
+     * \return
+     *  The y dimension of the cuboid
+     */
+    [[nodiscard]] int getY() const;
+
+    /**
+     * \brief
+     *  Getter for the z dimension of the cuboid
+     * \return
+     *  The z dimension of the cuboid
+     */
+    [[nodiscard]] int getZ() const;
+
+    /**
+     * \brief
+     *  Getter for the distance between the particles in every direction
+     * \return
+     *  The distance between the particles in every direction
+     */
+    [[nodiscard]] double getH() const;
+
+    /**
+     * \brief
+     *  Getter for the mass of every particle in the cuboid
+     * \return
+     *  The mass of every particle in the cuboid
+     */
+    [[nodiscard]] double getMass() const;
+
+    /**
+     * \brief
+     *  Getter for the mean brownian motion of the particles in the cuboid.
+     * \return
+     *  The mean brownian motion of the particles in the cuboid.
+     */
+    [[nodiscard]] double getMeanBrownianMotion() const;
+
+    /**
+     * \brief
+     *  Getter for the 3D coordinate of the corner with minimal coordinates
+     * (lower, left, front)
+     * \return
+     *  The 3D coordinate of the corner with minimal coordinates (lower, left,
+     * front)
+     */
+    [[nodiscard]] const std::array<double, 3> &getLLFC() const;
+
+    /**
+     * \brief
+     *  Getter for the average initial velocity of all the particles in the
+     * cuboid
+     * \return
+     *  The average initial velocity of all the particles in the cuboid
+     */
+    [[nodiscard]] const std::array<double, 3> &getInitialVelocity() const;
 };
