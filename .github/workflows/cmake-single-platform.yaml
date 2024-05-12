@@ -7,7 +7,7 @@ on: [push]
 env:
   BUILD_TYPE: Release
   TIDY : off
-  OUTFILE : off
+  OUTFILE : on
   BUILD_DOC : off
   TEST : on
 
@@ -23,7 +23,7 @@ jobs:
 
     #install xerces-c
     - name: install xerces
-    sudo apt install libxerces-c-dev
+      run: sudo apt install libxerces-c-dev
 
 
     - name: Configure CMake
