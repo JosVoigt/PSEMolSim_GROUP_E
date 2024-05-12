@@ -29,6 +29,6 @@ TEST(ParseCuboidsTest, HandlesValidInput) {
 TEST(ParseCuboidsTest, HandlesInvalidInput) {
     std::vector<CuboidGenerator> cuboids;
     std::string input = "[[1.0,2.0,3.0],[4.0,5.0,6.0],7.0,8.0,9,10,11]";
-    ASSERT_DEATH(parser::parseCuboids(input, cuboids),
-                 ::testing::ExitedWithCode(1), "?*");
+    ASSERT_EXIT(parser::parseCuboids(input, cuboids),
+                ::testing::ExitedWithCode(1), ".*");
 }
