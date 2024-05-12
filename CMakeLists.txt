@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 # define project name, version
-project(PSEMolDyn_GroupE VERSION 0.0.1)
+project(PSEMolSim_GroupE VERSION 0.0.1)
 
 #define compile flags
 set (FLAGS "-Wall -Werror -Wpedantic")

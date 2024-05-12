@@ -23,7 +23,7 @@ int main(int argc, char* argv[]) {
     spdlog::flush_every(std::chrono::seconds(5));
 
     spdlog::cfg::load_env_levels();
-    options opts = parse(argc, argv);
+    parser::options opts = parser::parse(argc, argv);
 
     if (opts.executeTests) {
         spdlog::get("file")->info(

@@ -1,10 +1,11 @@
 #include <gtest/gtest.h>
+
 #include "utils/Parser.h"
 
 TEST(ParseCuboidsTest, HandlesValidInput) {
     std::vector<CuboidGenerator> cuboids;
     std::string input = "[[1.0,2.0,3.0],[4.0,5.0,6.0],7.0,8.0,9,10,11,12.0]";
-    parseCuboids(input, cuboids);
+    parser::parseCuboids(input, cuboids);
 
     ASSERT_EQ(cuboids.size(), 1);
     CuboidGenerator cuboid = cuboids[0];
@@ -28,5 +29,6 @@ TEST(ParseCuboidsTest, HandlesValidInput) {
 TEST(ParseCuboidsTest, HandlesInvalidInput) {
     std::vector<CuboidGenerator> cuboids;
     std::string input = "[[1.0,2.0,3.0],[4.0,5.0,6.0],7.0,8.0,9,10,11]";
-    EXPECT_EXIT(parseCuboids(input, cuboids), ::testing::ExitedWithCode(1), ".*");
+    ASSERT_DEATH(parser::parseCuboids(input, cuboids),
+                 ::testing::ExitedWithCode(1), "?*");
 }
