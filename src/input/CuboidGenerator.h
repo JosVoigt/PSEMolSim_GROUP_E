@@ -11,6 +11,7 @@ class CuboidGenerator : public Initializer {
     int z;
     double h;
     double mass;
+    double meanBrownianMotion;
     std::array<double, 3> lowerLeftFrontCorner;
     std::array<double, 3> initialVelocity;
 
@@ -28,12 +29,15 @@ class CuboidGenerator : public Initializer {
      *  The distance between the particles in every direction
      * \param mass_
      *  The mass of every particle in the cubiod
+     * \param meanBrownMotion
+     *  The mean brownian motion of the particles in the cuboid.
      * \param lowerLeftFrontCorner_
      *  The 3D coordinate of the corner with minimal coordinates (lower, left,
      * front) \param initialVelocity_ The average initial velocity of all the
      * particles in the cuboid
      */
     CuboidGenerator(int x_, int y_, int z_, double distance, double mass_,
+                    double meanBrownMotion,
                     std::array<double, 3> lowerLeftFrontCorner_,
                     std::array<double, 3> initialVelocity_);
 

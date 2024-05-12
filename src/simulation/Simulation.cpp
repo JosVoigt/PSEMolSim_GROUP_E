@@ -1,5 +1,7 @@
 #include "simulation/Simulation.h"
 
+#include <spdlog/spdlog.h>
+
 #include <utility>
 
 #include "force/Force.h"
@@ -19,7 +21,8 @@ Simulation::Simulation(ParticleContainer& container_,
 }
 
 void Simulation::run(double start, double end) {
-    for (int iteration = 0; iteration <= end / dt; iteration++) {
+    spdlog::get("file")->debug("Expected iterations: {}", (end / dt));
+    for (int iteration = 0; iteration <= (end / dt); iteration++) {
         calculateX(container, dt, dt_sq);
         calculateF(container, method);
         calculateV(container, dt);
