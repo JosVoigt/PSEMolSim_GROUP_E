@@ -81,7 +81,7 @@ int main(int argc, char* argv[]) {
         spdlog::get("file")->debug(particleCount.str());
 
         if (init.size() < 2) {
-            spdlog::get("file")->critical(
+            spdlog::get("console")->critical(
                 "The simulation requires at least 2 particles! Include them "
                 "via file or cuboid.");
             exit(1);

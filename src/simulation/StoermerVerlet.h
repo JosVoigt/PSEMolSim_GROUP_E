@@ -65,18 +65,13 @@ void calculateF(ParticleContainer &container,
         p.nextIteration();
     }
 
-    for (Particle &p1 : container) {
-        bool newParticle = false;
-        for (Particle &p2 : container) {
-            if (newParticle) {
-                std::array<double, 3> f = method->calculateForce(p1, p2);
-                p1.addF(f);
-                std::array<double, 3> invF = -1 * f;
-                p2.addF(invF);
-            } else {
-                // checks if the next particle is new
-                newParticle = (p1 == p2);
-            }
+    for (auto iterator = container.begin(); iterator != container.end();
+         iterator++) {
+        for (auto inner = iterator + 1; inner != container.end(); inner++) {
+            std::array<double, 3> f = method->calculateForce(*iterator, *inner);
+            (*iterator).addF(f);
+            std::array<double, 3> invF = -1 * f;
+            (*inner).addF(invF);
         }
     }
 }

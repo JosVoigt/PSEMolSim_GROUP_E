@@ -63,7 +63,6 @@ options parse(int ac, char* av[]) {
 
         desc.add_options()
             ("help,h", "produce help message, ignores all other flags")
-            ("outlevel,l", po::value<std::string>()->default_value("info"), ("the output level of information (info, err, critical, debug, off)"))
             ("test,t", "execute tests, ignores all other flags except help")
             ("cuboid,c", po::value<std::string>(), "accepts the generation paramaters for the cuboids")
             ("delta,d",po::value<double>(&opts.delta_t)->default_value(DEFAULT_DELTA),"set step size")
@@ -127,7 +126,7 @@ options parse(int ac, char* av[]) {
 
         //check if we got passed any particles
         if (opts.cuboids.empty() && opts.filepath.empty()) {
-            spdlog::get("file")->critical("There are no particles to run the simulation on. Please include at least 2 particles via file or cuboid.");
+            spdlog::get("console")->critical("There are no particles to run the simulation on. Please include at least 2 particles via file or cuboid.");
             exit(1);
         }
 
