@@ -97,19 +97,20 @@ Options
 ---
 These are the availabe command for the generated executable.
 
-|Long name      |Short name |Values         			    | Defaults  	| Description												                                            |
-|---------------|-----------|-------------------------------|---------------|-------------------------------------------------------------------------------------------------------|
-|--help         | -h        |               			    |           	|Prints out the help message										                                    |
-|--test         | -t        |                               |               |Executes the complete test suite                                                                       |
-|--delta	    | -d	    |double				            | 1e-5  		|Sets the stepsize for the simulation									                                |
-|--frequency    | -f        |int            			    | 10        	|Sets the output frequency, every nth step a file will be generated					                    |
-|--start        | -s        |int            			    | 0         	|Sets the first point at which output is generated							                            |
-|--end          | -e        |int            			    | 1         	|Sets the endpoint for the simulation. After reaching will terminate					                |
-|--file         | -F        |filepath(s)    			    |           	|Sets the input file(s) that describe the initial state of the system					                |
-|--outformat    | -O        |vtk,xyz       			        | vtk       	|Set the output method											                                        |
-|--outfile      | -o        |string         			    | simulation	|Sets the prefix for the output files									                                |
-|--planet       |           |               			    |           	|Sets the particle type to planets and uses planet force calculation					                |
-|--lenjonesmol  |           |epsilon (double) sigma(double)	|		        |Set the particle mode to molcule while using Lennard-Jones with the provided epsilon and sigma values	|
+|Long name      |Short name |Values         			    | Defaults  	| Description												                                                                                                                |
+|---------------|-----------|-------------------------------|---------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|--help         | -h        |               			    |           	|Prints out the help message										                                                                                                        |
+|--test         | -t        |                               |               |Executes the complete test suite                                                                                                                                           |
+|--delta	    | -d	    |double				            | 1e-5  		|Sets the stepsize for the simulation									                                                                                                    |
+|--frequency    | -f        |int            			    | 10        	|Sets the output frequency, every nth step a file will be generated					                                                                                        |
+|--start        | -s        |int            			    | 0         	|Sets the first point at which output is generated							                                                                                                |
+|--end          | -e        |int            			    | 1         	|Sets the endpoint for the simulation. After reaching will terminate					                                                                                    |
+|--file         | -F        |filepath(s)    			    |           	|Sets the input file(s) that describe the initial state of the system					                                                                                    |
+|--outformat    | -O        |vtk,xyz       			        | vtk       	|Set the output method											                                                                                                            |
+|--outfile      | -o        |string         			    | simulation	|Sets the prefix for the output files									                                                                                                    |
+|--cuboid       | -c        |string                         |               |Accepts multiple cuboids, in the form [velocity,corner,distance,mass,x,y,z,meanBrownianMotion] sperated by comma. Velocity and corner are 3D-vectors of the form [a,b,c]   |
+|--planet       |           |               			    |           	|Sets the particle type to planets and uses planet force calculation					                                                                                    |
+|--lenjonesmol  |           |epsilon (double) sigma(double)	|		        |Set the particle mode to molcule while using Lennard-Jones with the provided epsilon and sigma values	                                                                    |
   
 
 An example to calculate the path of Halley's comet using the provided data in input/:
@@ -125,14 +126,7 @@ The arguments are provided in the same order as above.
 	exec/MolSim --planet -s 10 -e 1000 -d 1 -o halley -F input/eingabe-sonne.txt
 ```
 
-The logs are written to the executing directory into the file {outfile}_log.
-
-Excluding file output
----------------------
-
-To exclude file output, one can define NO_OUT_FILE macro by uncommenting l.11 in the file src/simulation/Simulation.cpp .
-
-This will allow for a significant speedup in runtime (21,4s->0.3s using standard settings and Halley's comet with planets).
+The logs are written to the executing directory into the file {outfile}.log.
 
 Setting loglevel
 ----------------
