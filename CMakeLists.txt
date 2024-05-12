@@ -23,6 +23,11 @@ if(TIDY)
   -warnings-as-errors=*;)
 endif(TIDY)
 
+option(OUTPUT "Enable file output (on by default)" ON) 
+if(NOT OUTPUT)
+    add_compile_definitions(NO_OUT_FILE)
+endif(NOT OUTPUT)
+
 # let ccmake and cmake-gui offer the default build type options
 set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug;Release;RelWithDebInfo;MinSizeRel")
 

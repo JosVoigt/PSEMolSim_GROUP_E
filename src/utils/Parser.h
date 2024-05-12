@@ -3,6 +3,8 @@
 #include <boost/program_options.hpp>
 namespace po = boost::program_options;
 
+#include <spdlog/spdlog.h>
+
 #include <iostream>
 #include <iterator>
 #include <memory>
@@ -18,7 +20,6 @@ namespace po = boost::program_options;
 #include "outputWriter/Writer.h"
 #include "outputWriter/XYZWriter.h"
 #include "input/CuboidGenerator.h"
-#include "logger/logger.h"
 
 double const DEFAULT_DELTA = 0.00001;
 double const DEFAULT_END = 1;
@@ -30,6 +31,7 @@ struct options {
     double start{};
     double end{};
     int writeoutFrequency{};
+    spdlog::level::level_enum loglevel;
     std::vector<std::string> filepath;
     std::vector<CuboidGenerator> cuboids;
     std::string outfile;
@@ -38,7 +40,7 @@ struct options {
 };
 
 
-//predeclarration
+//predeclaration
 void parseCuboids(std::string cuboid_s, std::vector<CuboidGenerator>&ret);
 
 /**
@@ -79,29 +81,11 @@ options parse(int ac, char* av[]) {
         po::store(po::parse_command_line(ac, av, desc), vm);
         po::notify(vm);
 
-        if (vm["outlevel"].as<std::string>() == "info") {
-            spdlog::set_level(info);
-        } else if (vm["outlevel"].as<std::string>() == "err") {
-            spdlog::set_level(err);
-        } else if (vm["outlevel"].as<std::string>() == "critical") {
-            spdlog::set_level(critical);
+        // print help if required
+        if (vm.count("help")) {
+            std::cout << desc << "\n";
+            std::exit(0);
         }
-        else if (vm["outlevel"].as<std::string>() == "off") {
-            spdlog::set_level(off);
-        }
-        else if (vm["outlevel"].as<std::string>() == "debug") {
-            spdlog::set_level(debug);
-        }
-        else {
-            spdlog::set_level(info);
-            log_error(err, vm["outlevel"].as<std::string>() + " is not a valid logger mode, defaulted to info. The program will continue running.");
-        }
-
-            // print help if required
-            if (vm.count("help")) {
-                std::cout << desc << "\n";
-                std::exit(0);
-            }
 
         opts.executeTests = (vm.count("test"));
 
@@ -143,7 +127,7 @@ options parse(int ac, char* av[]) {
 
         //check if we got passed any particles
         if (opts.cuboids.empty() && opts.filepath.empty()) {
-            log_error(critical, "There are no particles to run the simulation on. Please include at least 2 particles via file or cuboid.");
+            spdlog::get("file")->critical("There are no particles to run the simulation on. Please include at least 2 particles via file or cuboid.");
             exit(1);
         }
 
@@ -176,6 +160,7 @@ enum class cuboid_parser_state {
     x,
     y,
     z,
+    avgBrownMot,
     end,
     trap
 };
@@ -215,6 +200,8 @@ std::string parser_state_tostring (cuboid_parser_state state) {
         return "y";
     case cuboid_parser_state::z:
         return "z";
+    case cuboid_parser_state::avgBrownMot:
+        return "avgBrownMot";
     case cuboid_parser_state::end:
         return "end";
     case cuboid_parser_state::trap:
@@ -225,21 +212,23 @@ std::string parser_state_tostring (cuboid_parser_state state) {
 
 /**
  * \brief
- * Executes the NFA for the cuboid input string.
+ * Executes the DFA for the cuboid input string.
  * Input strings of the form
- * [[D,D,D],[D,D,D],D,D,I,I,I](,[[D,D,D],[D,D,D],D,D,I,I,I])*
- * are getting accepted
+ * [[D,D,D],[D,D,D],D,D,I,I,I,D](,[[D,D,D],[D,D,D],D,D,I,I,I,D])*
+ * are getting accepted.
  * D here means double, I integer.
  * It is assumed that Doubles and Integers only contain 0-9 '.' and '-'.
  * The square brackets are symbols, the round brackets belong to the REGEX.
+ * 
+ * The meaning is the velocity (3Dvector) the lower left corner (3D vector) the distance , the mass , x , y, z, and the mean of the brownian motion.
  * \param cuboid_s
  * The string to get parsed.
  * \return
  * The list of CuboidGenerators that have been extracted from the string
  */
 void parseCuboids(std::string cuboid_s, std::vector<CuboidGenerator>& ret) {
-    log_file (debug, "INIT CUBOID_PARSER");
-    log_file (debug, "Cuboid parser received input string: " + cuboid_s);
+    spdlog::get("file")->debug("INIT CUBOID_PARSER");
+    spdlog::get("file")->debug("Cuboid parser received input string: " + cuboid_s);
 
     std::string currentString = "";
     cuboid_parser_state state = cuboid_parser_state::start;
@@ -248,13 +237,14 @@ void parseCuboids(std::string cuboid_s, std::vector<CuboidGenerator>& ret) {
     std::array<double, 3> llfc;
     double d;
     double m;
+    double aBM;
     int xc;
     int yc;
     int zc;
 
     for (int i = 0; i < cuboid_s.length() && state != cuboid_parser_state::trap; i++) {
         char currentChar = cuboid_s.at(i);
-        log_file(debug, parser_state_tostring(state) + " -> " + currentChar + " \n    Cached chars are: " + currentString);
+        spdlog::get("file")->debug(parser_state_tostring(state) + " -> " + currentChar + " \n    Cached chars are: " + currentString);
         switch (state) {
             case cuboid_parser_state::start:
                 if (currentChar == '[')
@@ -400,8 +390,19 @@ void parseCuboids(std::string cuboid_s, std::vector<CuboidGenerator>& ret) {
                 // is 0-9 or . or - and not /
                 if (currentChar <= 57 && currentChar >= 45 && currentChar != 47)
                     currentString += currentChar;
-                else if (currentChar == ']') {
+                else if (currentChar == ',') {
                     zc = stoi(currentString);
+                    state = cuboid_parser_state::avgBrownMot;
+                    currentString = "";
+                } else
+                    state = cuboid_parser_state::trap;
+                break;
+            case cuboid_parser_state::avgBrownMot:
+                // is 0-9 or . or - and not /
+                if (currentChar <= 57 && currentChar >= 45 && currentChar != 47)
+                    currentString += currentChar;
+                else if (currentChar == ']') {
+                    aBM = stod(currentString);
                     state = cuboid_parser_state::end;
                     currentString = "";
                 } else
@@ -409,9 +410,7 @@ void parseCuboids(std::string cuboid_s, std::vector<CuboidGenerator>& ret) {
                 break;
             case cuboid_parser_state::trap:
                 // only here for exaustive matching should not be reachable
-                log_file(
-                    debug,
-                    "trap state has been reached. This should be impossible.");
+                spdlog::get("file")->debug("trap state has been reached. This should be impossible.");
                 break;
             case cuboid_parser_state::end:
                 std::stringstream ss;
@@ -419,8 +418,8 @@ void parseCuboids(std::string cuboid_s, std::vector<CuboidGenerator>& ret) {
                           " z:" << zc << " dist:" << d << " mass:" << m <<
                           " corner:" << llfc << " velocity" <<
                           velo;
-                log_file(debug, ss.str());
-                ret.emplace_back(xc, yc, zc, d, m, llfc, velo);
+                spdlog::get("file")->debug(ss.str());
+                ret.emplace_back(xc, yc, zc, d, m, aBM,llfc, velo);
                 if (currentChar == ',')
                     state = cuboid_parser_state::start;
                 else
@@ -428,17 +427,17 @@ void parseCuboids(std::string cuboid_s, std::vector<CuboidGenerator>& ret) {
                 break;
         }
     }
-    log_file (debug, "Parsing finished with state: " + parser_state_tostring(state));
+    spdlog::get("file")->debug("Parsing finished with state: " + parser_state_tostring(state));
     if (state != cuboid_parser_state::end) {
-        log_error(critical, "Not an accepted cuboid string!");
+        spdlog::get("console")->critical("Not an accepted cuboid string!");
         exit(1);
     }
     else {
         std::stringstream ss;
         ss << "Emplacing back cuboid with args x:" << xc << " y:" << yc
-           << " z:" << zc << " dist:" << d << " mass:" << m
-           << " corner:" << llfc << " velocity" << velo;
-        log_file(debug, ss.str());
-        ret.emplace_back(xc, yc, zc, d, m, llfc, velo);
+           << " z:" << zc << " dist:" << d << " mass:" << m << " Brownian motion: " << aBM 
+           << " corner:" << llfc << " velocity: " << velo;
+        spdlog::get("file")->debug(ss.str());
+        ret.emplace_back(xc, yc, zc, d, m, aBM, llfc, velo);
     }
 }

@@ -110,15 +110,14 @@ These are the availabe command for the generated executable.
 An example to calculate the path of Halley's comet using the provided data in input/:
 This would be run from the toplevel folder.
 If one would like to change the execution directory the only thing required to be adapted would be the relative path to the input data.
-Furthermore this assumes a release build.
 ```bash
-	Release/MolSim --planet --start 10 --end 1000 --delta 1 --frequency 10 --outformat vtk --outfile halley --file input/eingabe-sonne.txt
+	exec/MolSim --planet --start 10 --end 1000 --delta 1 --frequency 10 --outformat vtk --outfile halley --file input/eingabe-sonne.txt
 ```
 
 This is the same command, but it makes use of the shorter flags and default values.
 The arguments are provided in the same order as above.
 ```bash
-	Release/MolSim --planet -s 10 -e 1000 -d 1 -o halley -F input/eingabe-sonne.txt
+	exec/MolSim --planet -s 10 -e 1000 -d 1 -o halley -F input/eingabe-sonne.txt
 ```
 
 The logs are written to the executing directory into the file {outfile}_log.
@@ -129,3 +128,13 @@ Excluding file output
 To exclude file output, one can define NO_OUT_FILE macro by uncommenting l.11 in the file src/simulation/Simulation.cpp .
 
 This will allow for a significant speedup in runtime (21,4s->0.3s using standard settings and Halley's comet with planets).
+
+Setting loglevel
+----------------
+
+The loglevel can be set easily by setting the SPDLOG enviroment variable.
+For detailed information refer here: https://github.com/gabime/spdlog?tab=readme-ov-file#load-log-levels-from-the-env-variable-or-argv.
+
+The available loggers currently available are:
+- "file": a general file logger
+- "console": a logger used mainly for outputting errors and critical information to the console
