@@ -51,6 +51,7 @@ set (EXECUTABLE_OUTPUT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/exec")
 file(GLOB_RECURSE MY_SRC
     "${CMAKE_CURRENT_SOURCE_DIR}/src/MolSim.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/*/*.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/test/*/*.cpp"
     # header don't need to be included but this might be necessary for some IDEs
     "${CMAKE_CURRENT_SOURCE_DIR}/src/*/*.h"
 )
@@ -79,6 +80,7 @@ target_link_libraries(MolSim
             gtest
             gtest_main
             spdlog
+            #for spdlog
             fmt
             )
 

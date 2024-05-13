@@ -32,6 +32,8 @@ class ParticleContainer {
      */
     ParticleContainer(std::size_t count, std::list<Particle>& init);
 
+    ParticleContainer() = default;
+
     /**
      * \brief
      *  Destructor for the ParticleContainer

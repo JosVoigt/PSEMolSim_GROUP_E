@@ -3,7 +3,9 @@
 #include "container/Particle.h"
 #include "force/LennardJonesMolecule.h"
 
-const double tolerance = 1e-7;
+#ifndef TOLERANCE
+#define TOLERANCE 1e-7;
+#endif
 
 class LJM_test : public testing::Test {
    protected:
@@ -13,6 +15,8 @@ class LJM_test : public testing::Test {
 
     Particle p1 = Particle(x1, v, 1, 0);
     Particle p2 = Particle(x2, v, 1, 0);
+
+    double tolerance = TOLERANCE;
 };
 
 TEST_F(LJM_test, basic_functionality) {

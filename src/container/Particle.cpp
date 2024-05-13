@@ -39,8 +39,8 @@ Particle::Particle(std::array<double, 3> x_arg, std::array<double, 3> v_arg,
 
 Particle::~Particle() = default;
 
-// Getter
 const std::array<double, 3>& Particle::getX() const { return x; }
+// Getter
 const std::array<double, 3>& Particle::getV() const { return v; }
 const std::array<double, 3>& Particle::getF() const { return f; }
 const std::array<double, 3>& Particle::getOldF() const { return old_f; }

@@ -3,7 +3,9 @@
 #include "container/Particle.h"
 #include "force/Planet.h"
 
-const double tolerance = 1e-3;
+#ifndef TOLERANCE
+#define TOLERANCE 1e-7;
+#endif
 
 class P_test : public testing::Test {
    protected:
@@ -24,6 +26,8 @@ class P_test : public testing::Test {
     Particle planet2_displaced_and_mass = Particle(x2_displaced, v, 6, 0);
 
     Planet planet = Planet();
+
+    double tolerance = TOLERANCE;
 };
 
 TEST_F(P_test, basic_functionality) {
@@ -44,8 +48,8 @@ TEST_F(P_test, displacement) {
 }
 
 TEST_F(P_test, displacement_and_mass) {
-    std::array<double, 3> res =
-        planet.calculateForce(planet1_displaced_and_mass, planet2_displaced_and_mass);
+    std::array<double, 3> res = planet.calculateForce(
+        planet1_displaced_and_mass, planet2_displaced_and_mass);
 
     ASSERT_NEAR(2.1333333, res[0], tolerance);
     ASSERT_EQ(0, res[1]);
