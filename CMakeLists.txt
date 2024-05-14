@@ -14,15 +14,6 @@ set(CMAKE_CXX_FLAGS_RELEASE_INIT "${RELEASE_FLAGS}")
 set(CMAKE_CXX_FLAGS_DEBUG_INIT "${DEBUG_FLAGS}")
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO_INIT "${RELDEBUG_FLAGS}")
 
-option(TIDY "Enable clang tidy (off by default)" OFF)
-if(TIDY) 
-    set(CMAKE_CXX_CLANG_TIDY
-  clang-tidy;
-  -header-filter=src/*/*.h;
-  -checks=*;
-  -warnings-as-errors=*;)
-endif(TIDY)
-
 option(OUTPUT "Enable file output (on by default)" ON) 
 if(NOT OUTPUT)
     add_compile_definitions(NO_OUT_FILE)

@@ -78,20 +78,13 @@ To create the documentation run the custom make target.
 ```bash
 	make doc_doxygen
 ```
-
 The doxygen files will be created in the folder PSEMolSim_GROUP_E/doxys_documentation.
 
-To enable clang-tidy add the TIDY flag:
-```bash
-    cmake -DCMAKE_BUILD_TYPE={type} -DTIDY=on ..
-```
 
 To disable file output via the C preprocessor disable the output flag (or compile with -D NO_OUT_FILE):
 ```bash
     cmake -DCMAKE_BUILD_TYPE={type} -DOUTPUT=off ..
 ```
-
-This will lead to significant longer compile times and is not recommended for a release build. clang-tidy will ignore system headers and only output errors found in user code.
 
 Options
 ---
