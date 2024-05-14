@@ -1,5 +1,7 @@
 #include "CuboidGenerator.h"
 
+#include <spdlog/spdlog.h>
+
 #include "utils/ArrayUtils.h"
 #include "utils/MaxwellBoltzmannDistribution.h"
 
@@ -16,7 +18,13 @@ CuboidGenerator::CuboidGenerator(int x_, int y_, int z_, double distance,
       lowerLeftFrontCorner(lowerLeftFrontCorner_),
       initialVelocity(initialVelocity_) {}
 
-void CuboidGenerator::readData(std::list<Particle>& list) {
+void CuboidGenerator::readData(std::list<Particle> &list) {
+    if (x < 1 || y < 1 || z < 1)
+        spdlog::get("console")->error(
+            "At least one dimension of a Cuboid was less than 0."
+            "Will ignore this cuboid.");
+    return;
+
     for (int X = 0; X < x; X++) {
         for (int Y = 0; Y < y; Y++) {
             for (int Z = 0; Z < z; Z++) {
@@ -33,25 +41,15 @@ void CuboidGenerator::readData(std::list<Particle>& list) {
     }
 }
 
-int CuboidGenerator::getX() const {
-    return x;
-}
+int CuboidGenerator::getX() const { return x; }
 
-int CuboidGenerator::getY() const {
-    return y;
-}
+int CuboidGenerator::getY() const { return y; }
 
-int CuboidGenerator::getZ() const {
-    return z;
-}
+int CuboidGenerator::getZ() const { return z; }
 
-double CuboidGenerator::getH() const {
-    return h;
-}
+double CuboidGenerator::getH() const { return h; }
 
-double CuboidGenerator::getMass() const {
-    return mass;
-}
+double CuboidGenerator::getMass() const { return mass; }
 
 double CuboidGenerator::getMeanBrownianMotion() const {
     return meanBrownianMotion;

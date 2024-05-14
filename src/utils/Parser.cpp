@@ -35,36 +35,22 @@ options parse(int argc, char* argv[]) {
 
         po::options_description desc("Allowed options");
 
-        desc.add_options()("help,h",
-                           "produce help message, ignores all other flags")(
-            "test,t", "execute tests, ignores all other flags except help")(
-            "cuboid,c", po::value<std::string>(),
-            "accepts the generation paramaters for the cuboids")(
-            "delta,d",
-            po::value<double>(&opts.delta_t)->default_value(DEFAULT_DELTA),
-            "set step size")("frequency,f",
-                             po::value<int>(&opts.writeoutFrequency)
-                                 ->default_value(DEFAULT_FREQUENCY),
-                             "sets the frequency for data writeout")(
-            "start,s", po::value<double>(&opts.start)->default_value(0),
-            "sets the recording start point for the simulation")(
-            "end,e", po::value<double>(&opts.end)->default_value(DEFAULT_END),
-            "set end point")(
-            "file,F",
-            po::value<std::vector<std::string>>(&opts.filepath)->multitoken(),
-            "set the path to the file(s) containing initial state of the "
-            "molecules")("outformat,O",
-                         po::value<std::string>()->default_value("vtk"),
-                         "set the output method (vtk,xyz)")(
-            "outfile,o",
-            po::value<std::string>(&opts.outfile)->default_value("simulation"),
-            "set the output file name")("planet",
-                                        "sets particle mode to planet, "
-                                        "exclusive with other particle modes")(
-            "lenjonesmol", po::value<std::vector<double>>()->multitoken(),
-            "set particle mode to molecules using Lennard-Jones with epsilon "
-            "and sigma as the following values, exclusive with other particle "
-            "modes");
+        // prevents unwanted VScode formatting
+        // clang-format off
+        desc.add_options()
+            ("help,h", "produce help message, ignores all other flags")
+            ("test,t", "execute tests, ignores all other flags except help")
+            ("cuboid,c", po::value<std::string>(),"accepts the generation paramaters for the cuboids")
+            ("delta,d", po::value<double>(&opts.delta_t)->default_value(DEFAULT_DELTA),"set step size")
+            ("frequency,f", po::value<int>(&opts.writeoutFrequency)->default_value(DEFAULT_FREQUENCY),"sets the frequency for data writeout")
+            ("start,s", po::value<double>(&opts.start)->default_value(0),"sets the recording start point for the simulation")
+            ("end,e", po::value<double>(&opts.end)->default_value(DEFAULT_END),"set end point")
+            ("file,F",po::value<std::vector<std::string>>(&opts.filepath)->multitoken(),"set the path to the file(s) containing initial state of the molecules")
+            ("outformat,O",po::value<std::string>()->default_value("vtk"),"set the output method (vtk,xyz)")
+            ("outfile,o",po::value<std::string>(&opts.outfile)->default_value("simulation"),"set the output file name")
+            ("planet","sets particle mode to planet, exclusive with other particle modes")
+            ("lenjonesmol", po::value<std::vector<double>>()->multitoken(),"set particle mode to molecules using Lennard-Jones with epsilon and sigma as the following values, exclusive with other particle modes");
+        // clang-format on
 
         po::variables_map vm;
         po::store(po::parse_command_line(argc, argv, desc), vm);
@@ -393,9 +379,18 @@ void parseCuboids(std::string cuboid_s, std::vector<CuboidGenerator>& ret) {
                 break;
             case cuboid_parser_state::end:
                 std::stringstream ss;
-                ss << "Emplacing back cuboid with args x:" << xc << " y:" << yc
-                   << " z:" << zc << " dist:" << d << " mass:" << m
-                   << " corner:" << llfc << " velocity" << velo;
+                // prevents unwanted formatting
+                // clang-format off
+                ss << "Emplacing back cuboid with args"
+                << "    x: " << xc << "\n"
+                << "    y: " << yc << "\n"
+                << "    z: " << zc << "\n"
+                << "    dist: " << d << "\n"
+                << "    mass: " << m << "\n"
+                << "    Brownian motion: " << aBM << "\n"
+                << "    corner:" << llfc << "\n"
+                << "    velocity: " << velo;
+                // clang-format on
                 spdlog::get("file")->debug(ss.str());
                 ret.emplace_back(xc, yc, zc, d, m, aBM, llfc, velo);
                 if (currentChar == ',')
@@ -412,10 +407,20 @@ void parseCuboids(std::string cuboid_s, std::vector<CuboidGenerator>& ret) {
         exit(1);
     } else {
         std::stringstream ss;
-        ss << "Emplacing back cuboid with args x:" << xc << " y:" << yc
-           << " z:" << zc << " dist:" << d << " mass:" << m
-           << " Brownian motion: " << aBM << " corner:" << llfc
-           << " velocity: " << velo;
+
+        // prevents unwanted formatting
+        // clang-format off
+        ss << "Emplacing back cuboid with args"
+           << "    x: " << xc << "\n"
+           << "    y: " << yc << "\n"
+           << "    z: " << zc << "\n"
+           << "    dist: " << d << "\n"
+           << "    mass: " << m << "\n"
+           << "    Brownian motion: " << aBM << "\n"
+           << "    corner:" << llfc << "\n"
+           << "    velocity: " << velo;
+        // clang-format on
+
         spdlog::get("file")->debug(ss.str());
         ret.emplace_back(xc, yc, zc, d, m, aBM, llfc, velo);
     }
