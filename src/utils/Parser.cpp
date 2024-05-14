@@ -375,7 +375,7 @@ void parseCuboids(std::string cuboid_s, std::vector<CuboidGenerator>& ret) {
             case cuboid_parser_state::trap:
                 // only here for exaustive matching should not be reachable
                 spdlog::get("file")->debug(
-                    "trap state has been reached. This should be impossible.");
+                    "Trap state has been reached. This should be impossible.");
                 break;
             case cuboid_parser_state::end:
                 std::stringstream ss;
