@@ -86,7 +86,7 @@ To enable clang-tidy add the TIDY flag:
     cmake -DCMAKE_BUILD_TYPE={type} -DTIDY=on ..
 ```
 
-To disable file output via the C preprocessor disable the output flag:
+To disable file output via the C preprocessor disable the output flag (or compile with -D NO_OUT_FILE):
 ```bash
     cmake -DCMAKE_BUILD_TYPE={type} -DOUTPUT=off ..
 ```
@@ -126,7 +126,7 @@ The arguments are provided in the same order as above.
 	exec/MolSim --planet -s 10 -e 1000 -d 1 -o halley -F input/eingabe-sonne.txt
 ```
 
-The logs are written to the executing directory into the file {outfile}.log.
+The logs are written to the executing directory into the file logs/MolSim_[currentTime].log.
 
 Setting loglevel
 ----------------

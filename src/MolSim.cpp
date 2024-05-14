@@ -4,6 +4,9 @@
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/spdlog.h>
 
+#include <chrono>
+#include <ctime>
+
 #include "container/ParticleContainer.h"
 #include "input/CuboidGenerator.h"
 #include "input/FileReader.h"
@@ -14,7 +17,17 @@
 int main(int argc, char* argv[]) {
     auto console_logger = spdlog::stderr_color_mt("console");
     try {
-        auto file_logger = spdlog::basic_logger_mt("file", "logs/MolSim.log");
+        std::stringstream ss;
+        std::string time_format = "%Y-%m-%d_%H-%M-%S";
+
+        auto start = std::chrono::system_clock::now();
+        time_t start_time = std::chrono::system_clock::to_time_t(start);
+
+        ss << "logs/MolSim_"
+           << std::put_time(std::localtime(&start_time), time_format.c_str())
+           << ".log";
+
+        auto file_logger = spdlog::basic_logger_mt("file", ss.str());
     } catch (const spdlog::spdlog_ex& ex) {
         spdlog::get("console")->critical(
             "File logger could not be initalizied: {}", ex.what());
@@ -33,33 +46,26 @@ int main(int argc, char* argv[]) {
     } else {
         std::stringstream opt_string;
 
+        // prevents unwanted formatting
+        // clang-format off
         opt_string << "Parsed options were:\n"
-                   << "    execute tests: "
-                   << (opts.executeTests ? "true" : "false")
-                   << " (expected to be false)"
-                      "\n"
+                   << "    execute tests: " << (opts.executeTests ? "true" : "false") << " (expected to be false)\n"
                    << "    delta_t: " << opts.delta_t << "\n"
                    << "    start: " << opts.start << "\n"
                    << "    end: " << opts.end << "\n"
-                   << "    writeout frequency: " << opts.writeoutFrequency
-                   << "\n"
-                   << "    file(s): " << ArrayUtils::to_string(opts.filepath)
-                   << "\n"
+                   << "    writeout frequency: " << opts.writeoutFrequency << "\n"
+                   << "    file(s): " << ArrayUtils::to_string(opts.filepath) << "\n"
                    << "    outfile prefix: " << opts.outfile << "\n"
-                   << "    writer method: " << opts.writer_->typeString()
-                   << "\n"
-                   << "    output method: " << opts.force_->typeString()
-                   << "\n";
+                   << "    writer method: " << opts.writer_->typeString() << "\n"
+                   << "    output method: " << opts.force_->typeString() << "\n";
 
         std::stringstream expected_stream;
 
         expected_stream << "The expected behaivour would be: " << "\n"
-                        << "    Generated files: "
-                        << (opts.end - opts.start) / opts.writeoutFrequency /
-                               opts.delta_t
-                        << "\n"
-                        << "    Iterations: " << (opts.end / opts.delta_t)
-                        << "\n";
+                        << "    Generated files: " << (opts.end - opts.start) / opts.writeoutFrequency / opts.delta_t << "\n"
+                        << "    Iterations: " << (opts.end / opts.delta_t) << "\n";
+
+        // clang-format on
 
         spdlog::get("file")->info(opt_string.str());
         spdlog::get("file")->info(expected_stream.str());
@@ -82,8 +88,8 @@ int main(int argc, char* argv[]) {
 
         if (init.size() < 2) {
             spdlog::get("console")->critical(
-                "The simulation requires at least 2 particles! Include them "
-                "via file or cuboid.");
+                "The simulation requires at least 2 particles! "
+                "Include them via file or cuboid.");
             exit(1);
         }
 
