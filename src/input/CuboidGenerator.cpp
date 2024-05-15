@@ -19,11 +19,12 @@ CuboidGenerator::CuboidGenerator(int x_, int y_, int z_, double distance,
       initialVelocity(initialVelocity_) {}
 
 void CuboidGenerator::readData(std::list<Particle> &list) {
-    if (x < 1 || y < 1 || z < 1)
+    if (x < 1 || y < 1 || z < 1) {
         spdlog::get("console")->error(
             "At least one dimension of a Cuboid was less than 0."
             "Will ignore this cuboid.");
-    return;
+        return;
+    }
 
     for (int X = 0; X < x; X++) {
         for (int Y = 0; Y < y; Y++) {
@@ -35,6 +36,7 @@ void CuboidGenerator::readData(std::list<Particle> &list) {
                 std::array<double, 3> velocity =
                     initialVelocity +
                     maxwellBoltzmannDistributedVelocity(meanBrownianMotion, 3);
+                spdlog::get("file")->debug("Particle emplaced back with X: " + ArrayUtils::to_string(position) + " V: " + ArrayUtils::to_string(velocity) + " mass: " + std::to_string(mass));
                 list.emplace_back(position, velocity, mass);
             }
         }

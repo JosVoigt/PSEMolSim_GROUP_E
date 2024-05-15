@@ -20,7 +20,7 @@ Required libraries
 - boost
 - xerces-c
 - googletest
-- spdlog
+- spdlog (spdlog requires fmt, but that will be installed by apt or by cmake)
 
 To install all of them using apt, run this command (requires *SUDO*):
 ```bash
@@ -30,7 +30,7 @@ To then prevent the dowload via the CMake add to the cmake prompt:
 ```bash
     -DDOWNLOAD_DEPENDENCIES=off
 ```
-It is strongly recommended to download them previously as a complete fetch may be upwards off 2 minutes.
+It is strongly recommended to download them prior as a complete fetch may be upwards off 2 minutes (longest were 20 minutes on WSL2 Ubuntu).
 
 Building with cmake
 ---
