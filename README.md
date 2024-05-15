@@ -26,6 +26,10 @@ To install all of them using apt, run this command (requires *SUDO*):
 ```bash
     apt install libboost-dev libxerces-c-dev libgtest-dev libspdlog-dev
 ```
+To then prevent the dowload via the CMake add to the cmake prompt:
+```bash
+    -DDOWNLOAD_DEPENDENCIES=off
+```
 
 Building with cmake
 ---

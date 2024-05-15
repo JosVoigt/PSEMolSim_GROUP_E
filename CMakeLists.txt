@@ -79,38 +79,41 @@ list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
 
 include(doxygen)
 
-include(FetchContent)
+option(DOWNLOAD_DEPENDENCIES "Downloads most dependencies (no xerces-c)" ON)
+if (DOWNLOAD_DEPENDENCIES)
+    include(FetchContent)
 
-# Declare where to fetch Google Test from
-FetchContent_Declare(
-        googletest
-        GIT_REPOSITORY https://github.com/google/googletest.git
-        GIT_TAG        v1.14.0  # adjust this to the version you want
-)
+    # Declare where to fetch Google Test from
+    FetchContent_Declare(
+            googletest
+            GIT_REPOSITORY https://github.com/google/googletest.git
+            GIT_TAG        v1.14.0  # adjust this to the version you want
+    )
 
-FetchContent_MakeAvailable(googletest)
+    FetchContent_MakeAvailable(googletest)
 
-include(FetchContent)
-FetchContent_Declare(
-      spdlog
-      GIT_REPOSITORY https://github.com/gabime/spdlog.git
-      GIT_TAG v1.11.0
-)
-# Download spdlog
-FetchContent_MakeAvailable(spdlog)
+    include(FetchContent)
+    FetchContent_Declare(
+        spdlog
+        GIT_REPOSITORY https://github.com/gabime/spdlog.git
+        GIT_TAG v1.11.0
+    )
+    # Download spdlog
+    FetchContent_MakeAvailable(spdlog)
 
-set(BOOST_INCLUDE_LIBRARIES program_options)
-set(BOOST_ENABLE_CMAKE ON)
-FetchContent_Declare(
-  Boost
-  GIT_REPOSITORY https://github.com/boostorg/boost.git
-  GIT_TAG boost-1.80.0
-)
-FetchContent_MakeAvailable(Boost)
+    set(BOOST_INCLUDE_LIBRARIES program_options)
+    set(BOOST_ENABLE_CMAKE ON)
+    FetchContent_Declare(
+    Boost
+    GIT_REPOSITORY https://github.com/boostorg/boost.git
+    GIT_TAG boost-1.80.0
+    )
+    FetchContent_MakeAvailable(Boost)
 
-FetchContent_Declare (
-    fmt
-    GIT_REPOSITORY https://github.com/fmtlib/fmt.git
-    GIT_TAG 10.2.1
-)
-FetchContent_MakeAvailable(fmt)
+    FetchContent_Declare (
+        fmt
+        GIT_REPOSITORY https://github.com/fmtlib/fmt.git
+        GIT_TAG 10.2.1
+    )
+    FetchContent_MakeAvailable(fmt)
+endif(DOWNLOAD_DEPENDENCIES)
