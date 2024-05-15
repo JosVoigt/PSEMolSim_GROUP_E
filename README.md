@@ -24,7 +24,7 @@ Required libraries
 
 To install all of them using apt, run this command (requires *SUDO*):
 ```bash
-    apt install libboost-dev libxerces-c-dev libgtest-dev libspdlog-dev
+    apt install libboost-dev libboost-program-options-dev libxerces-c-dev libgtest-dev libspdlog-dev
 ```
 To then prevent the dowload via the CMake add to the cmake prompt:
 ```bash
