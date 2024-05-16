@@ -27,7 +27,7 @@ TEST_F(LJM_test, basic_functionality) {
 
     std::array<double, 3> res = ljm.calculateForce(p1, p2);
 
-    ASSERT_NEAR(-24, res[0], tolerance);
+    ASSERT_NEAR(24, res[0], tolerance);
     ASSERT_EQ(0, res[1]);
     ASSERT_EQ(0, res[2]);
 }
@@ -40,7 +40,7 @@ TEST_F(LJM_test, sigma) {
 
     std::array<double, 3> res = ljm.calculateForce(p1, p2);
 
-    ASSERT_NEAR(0.36328125, res[0], tolerance);
+    ASSERT_NEAR(-0.36328125, res[0], tolerance);
     ASSERT_EQ(0, res[1]);
     ASSERT_EQ(0, res[2]);
 }
@@ -53,7 +53,7 @@ TEST_F(LJM_test, eps) {
 
     std::array<double, 3> res = ljm.calculateForce(p1, p2);
 
-    ASSERT_NEAR(-12, res[0], tolerance);
+    ASSERT_NEAR(12, res[0], tolerance);
     ASSERT_EQ(0, res[1]);
     ASSERT_EQ(0, res[2]);
 }
@@ -72,7 +72,7 @@ TEST_F(LJM_test, all) {
 
     std::array<double, 3> res = ljm.calculateForce(p1, p2);
 
-    ASSERT_NEAR(1.91698E-08, res[0], tolerance);
-    ASSERT_NEAR(-4.67254E-07, res[1], tolerance);
-    ASSERT_NEAR(-1.05648E-07, res[2], tolerance);
+    ASSERT_NEAR(-1.91698E-08, res[0], tolerance);
+    ASSERT_NEAR(4.67254E-07, res[1], tolerance);
+    ASSERT_NEAR(1.05648E-07, res[2], tolerance);
 }
