@@ -1,12 +1,12 @@
 #include "LennardJonesMolecule.h"
 
 #include <cmath>
-
+#include <spdlog/spdlog.h>
 #include "utils/ArrayUtils.h"
 
 LennardJonesMolecule::LennardJonesMolecule(double epsilon_, double sigma_)
     : epsilon(epsilon_), sigma(sigma_) {
-    epsilon_24 = epsilon * 24;
+    epsilon_24 = epsilon * (-24);
 }
 
 std::array<double, 3> LennardJonesMolecule::calculateForce(Particle& p1,
@@ -19,6 +19,10 @@ std::array<double, 3> LennardJonesMolecule::calculateForce(Particle& p1,
     std::array<double, 3> force = (epsilon_24 / std::pow(distance, 2)) *
                                   (summand_6 - (2 * summand_12)) *
                                   (p1.getX() - p2.getX());
+
+#ifndef NO_LOG
+    spdlog::get("file")->trace ("Calculating force LenJonesMol: s_6: {}, s_12: {}, dist: {}, force: {}", summand_6, summand_12, distance, ArrayUtils::to_string(force));
+#endif
 
     return force;
 }
