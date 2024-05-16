@@ -86,7 +86,7 @@ options parse(int argc, char* argv[]) {
         if (vm["outformat"].as<std::string>() == "vtk") {
             opts.writer_ =
                 std::shared_ptr<Writer>(new outputWriter::VTKWriter());
-        } else if (vm["output"].as<std::string>() == "xyz") {
+        } else if (vm["outformat"].as<std::string>() == "xyz") {
             opts.writer_ =
                 std::shared_ptr<Writer>(new outputWriter::XYZWriter());
         } else {
