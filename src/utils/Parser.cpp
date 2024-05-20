@@ -46,6 +46,7 @@ options parse(int argc, char *argv[]) {
             ("start,s", po::value<double>(&opts.start)->default_value(0),"sets the recording start point for the simulation")
             ("end,e", po::value<double>(&opts.end)->default_value(DEFAULT_END),"set end point")
             ("file,F",po::value<std::vector<std::string>>(&opts.filepath)->multitoken(),"set the path to the file(s) containing initial state of the molecules")
+	    ("xml,X", po::value<std::string>(&opts.xmlpath), "set the path to the xml file defining the simulation parameters")
             ("outformat,O",po::value<std::string>()->default_value("vtk"),"set the output method (vtk,xyz)")
             ("outfile,o",po::value<std::string>(&opts.outfile)->default_value("simulation"),"set the output file name")
             ("planet","sets particle mode to planet, exclusive with other particle modes")

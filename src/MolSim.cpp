@@ -9,6 +9,7 @@
 
 #include "container/ParticleContainer.h"
 #include "input/FileReader.h"
+#include "input/XMLReader.h"
 #include "input/geometricGenerators/CuboidGenerator.h"
 #include "simulation/Simulation.h"
 #include "utils/ArrayUtils.h"
@@ -71,6 +72,9 @@ int main(int argc, char *argv[]) {
     spdlog::get("file")->info(expected_stream.str());
 
     std::list<Particle> init = std::list<Particle>();
+
+    //XMLReader xml(opts.xmlpath);
+    //xml.readData(init);
 
     for (const auto &file : opts.filepath) {
       FileReader fileReader(file.c_str());

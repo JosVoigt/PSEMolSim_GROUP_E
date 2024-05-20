@@ -16,6 +16,7 @@ struct options {
   double start{};
   double end{};
   int writeoutFrequency{};
+  std::string xmlpath;
   std::vector<std::string> filepath;
   std::vector<CuboidGenerator> cuboids;
   std::string outfile;
@@ -25,7 +26,6 @@ struct options {
 
 // predeclaration
 void parseCuboids(std::string cuboid_s, std::vector<CuboidGenerator> &ret);
-
 
 /**
  *\brief
