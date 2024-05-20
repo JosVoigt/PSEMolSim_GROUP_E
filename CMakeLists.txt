@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 
 # define project name, version
 project(PSEMolSim_GroupE VERSION 0.0.1)
+set (CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 option(DOWNLOAD_DEPENDENCIES "Downloads most dependencies (no xerces-c)" ON)
 if (DOWNLOAD_DEPENDENCIES)
