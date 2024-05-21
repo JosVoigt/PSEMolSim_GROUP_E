@@ -40,7 +40,7 @@ if (DOWNLOAD_DEPENDENCIES)
     FetchContent_MakeAvailable(spdlog)
     FetchContent_MakeAvailable(Boost)
     FetchContent_MakeAvailable(fmt)
-    FetchContent_MakeAvailable (xerces-c)
+    FetchContent_MakeAvailable(xerces-c)
 endif(DOWNLOAD_DEPENDENCIES)
 
 #define compile flags
