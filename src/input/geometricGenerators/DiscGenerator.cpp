@@ -27,6 +27,5 @@ void DiscGenerator::readData(std::list<Particle> &list) {
         list.emplace_back(particleCoordinates, distrVelocity, mass, 0);
       }
     }
-
-      }
-    };
+  }
+};
