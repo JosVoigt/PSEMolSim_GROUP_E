@@ -1,5 +1,8 @@
 #include "LinkedCellContainer.h"
 
+#include <algorithm>
+#include <set>
+
 LinkedCellContainer::LinkedCellContainer(double const containerSizeX, double const containerSizeY, double const containerSizeZ, double const r_c) :
 containerSizeX(containerSizeX), containerSizeY(containerSizeY), containerSizeZ(containerSizeZ), r_c(r_c) {
     cellSize = r_c * r_c * r_c;
@@ -27,10 +30,10 @@ void LinkedCellContainer::insertParticle(const Particle& particle) {
     cellVector[cellIndex].push_back(particle);
 }
 
-std::list<Particle> LinkedCellContainer::retrieveNeighbors(const std::array<double, 3>& particle) const {
+std::vector<Particle> LinkedCellContainer::retrieveNeighbors(const std::array<double, 3>& particle) const {
 
     const int cellOfParticle = getCellFromParticle(particle);
-    std::list<Particle> neighbours;
+    std::vector<Particle> neighbours;
 
     //Find bounds of neighbouring cells
     const int startX = cellOfParticle == 0 ? 0 : cellOfParticle - 1;
@@ -54,6 +57,55 @@ std::list<Particle> LinkedCellContainer::retrieveNeighbors(const std::array<doub
     }
     return neighbours;
 }
+
+
+std::vector<int> LinkedCellContainer::retrieveBoundaryCellIndexes() const {
+
+    //Hashmap is used to ensure that no duplicate cells are found (might cause bugs with ghost cells)
+    std::set<int> indices;
+
+    //For start and end of x
+    for (int y = 0; y <= amountCellsY; y++) {
+        for (int z = 0; z <= amountCellsZ; z++) {
+            indices.insert(amountCellsX * (y + amountCellsY * z));
+            indices.insert((amountCellsX - 1) + amountCellsX * (y + amountCellsY * z));
+        }
+    }
+
+    //For start and end of y
+    for (int x = 0; x <= amountCellsX; x++) {
+        for (int z = 0; z <= amountCellsZ; z++) {
+            indices.insert(x + amountCellsX * (amountCellsY * z));
+            indices.insert(x + amountCellsX * ((amountCellsY-1) + amountCellsY * z));
+        }
+    }
+
+    //For start and end of z
+    for (int x = 0; x <= amountCellsX; x++) {
+        for (int y = 0; y <= amountCellsZ; y++) {
+            indices.insert(x + amountCellsX * y);
+            indices.insert( x + amountCellsX * (y + amountCellsY * (amountCellsZ - 1)));
+        }
+    }
+
+    //Convert hash set to vector
+    std::vector indicesVector(indices.begin(), indices.end());
+    return indicesVector;
+}
+
+
+std::vector<Particle> LinkedCellContainer::retrieveBoundaryParticles(const std::vector<int>& cellIndices) const {
+
+    std::vector<Particle> boundaryParticles;
+
+    for (const int index : cellIndices) {
+        for (const Particle& particle : cellVector[index]) {
+            boundaryParticles.push_back(particle);
+        }
+    }
+    return boundaryParticles;
+}
+
 
 
 /**------------------------------------------ GETTERS ------------------------------------------**/

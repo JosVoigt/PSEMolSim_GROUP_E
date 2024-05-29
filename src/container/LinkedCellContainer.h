@@ -70,12 +70,25 @@ public:
      * Retrieves all the neighbors of the given particle using the given cutoff point
      * @param particle
      * The particle, the neighbors of which need to be retrieved
-     * @param cutoff
-     * The cutoff point, after which normal force calculation stops
      */
-    [[nodiscard]] std::list<Particle> retrieveNeighbors(const std::array<double, 3>& particle) const;
+    [[nodiscard]] std::vector<Particle> retrieveNeighbors(const std::array<double, 3>& particle) const;
 
-    //Getters
+    /**
+     * \brief
+     * Retrieve the indexes of boundary cells to save computation time
+     */
+    [[nodiscard]] std::vector<int> retrieveBoundaryCellIndexes() const;
+
+    /**
+     * \brief
+     * Retrieves all the particles residing in the boundary cells
+     * @param cellIndices
+     * The vector of boundary cell indices
+     */
+    [[nodiscard]] std::vector<Particle> retrieveBoundaryParticles(const std::vector<int>& cellIndices) const;
+
+
+    //------------------------------------------ GETTERS ------------------------------------------
 
     /**
      * \brief
