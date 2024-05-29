@@ -15,12 +15,12 @@ containerSizeX(containerSizeX), containerSizeY(containerSizeY), containerSizeZ(c
 int LinkedCellContainer::getCellFromParticle(const std::array<double, 3>& particlePos) const {
 
     static std::array<int, 3> cellCoordinates = {
-        static_cast<int>(particlePos[0] / getCellSize()),
-        static_cast<int>(particlePos[1] / getCellSize()),
-        static_cast<int>(particlePos[2] / getCellSize()),
+        static_cast<int>(particlePos[0] / cellSize),
+        static_cast<int>(particlePos[1] / cellSize),
+        static_cast<int>(particlePos[2] / cellSize),
     };
 
-    return getAmountCellsX() * cellCoordinates[0] + getAmountCellsY() * cellCoordinates[1] + getAmountCellsZ() * cellCoordinates[2];
+    return cellCoordinates[0] + amountCellsX * (cellCoordinates[1] + amountCellsY * cellCoordinates[2]);
 }
 
 
