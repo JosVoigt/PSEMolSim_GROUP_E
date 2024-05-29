@@ -1,6 +1,5 @@
 #include "LinkedCellContainer.h"
 
-#include <algorithm>
 #include <set>
 
 LinkedCellContainer::LinkedCellContainer(double const containerSizeX, double const containerSizeY, double const containerSizeZ, double const r_c) :
