@@ -42,6 +42,15 @@ private:
      */
     [[nodiscard]] int getCellFromParticle(const std::array<double, 3>& particlePos) const;
 
+
+    /**
+     * \brief
+     * Retrieves all particles that reside in the halo cells
+     * @param cellIndices
+     * The vector of indices of the halo cells
+     */
+    [[nodiscard]] std::vector<Particle> retrieveHaloParticles(const std::vector<int>& cellIndices) const;
+
 public:
     /**
      * \brief
@@ -77,7 +86,7 @@ public:
      * \brief
      * Retrieve the indexes of boundary cells to save computation time
      */
-    [[nodiscard]] std::vector<int> retrieveBoundaryCellIndexes() const;
+    [[nodiscard]] std::vector<int> retrieveBoundaryCellIndices() const;
 
     /**
      * \brief
@@ -86,6 +95,20 @@ public:
      * The vector of boundary cell indices
      */
     [[nodiscard]] std::vector<Particle> retrieveBoundaryParticles(const std::vector<int>& cellIndices) const;
+
+
+    /**
+     * \brief
+     * Retrieves the indices of all halo cells
+     */
+    [[nodiscard]] std::vector<int> retrieveHaloCellIndices() const;
+
+
+    /**
+     * \brief
+     * Deletes all particles that reside in the halo cells
+     */
+    void deleteHaloParticles();
 
 
     //------------------------------------------ GETTERS ------------------------------------------

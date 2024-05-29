@@ -5,9 +5,9 @@
 LinkedCellContainer::LinkedCellContainer(double const containerSizeX, double const containerSizeY, double const containerSizeZ, double const r_c) :
 containerSizeX(containerSizeX), containerSizeY(containerSizeY), containerSizeZ(containerSizeZ), r_c(r_c) {
     cellSize = r_c * r_c * r_c;
-    amountCellsX = static_cast<int>(containerSizeX / cellSize);
-    amountCellsY = static_cast<int>(containerSizeY / cellSize);
-    amountCellsZ = static_cast<int>(containerSizeZ / cellSize);
+    amountCellsX = static_cast<int>(containerSizeX / cellSize) + 2;
+    amountCellsY = static_cast<int>(containerSizeY / cellSize) + 2;
+    amountCellsZ = static_cast<int>(containerSizeZ / cellSize) + 2;
 
     cellVector.resize(amountCellsX * amountCellsY * amountCellsZ);
 }
@@ -35,14 +35,14 @@ std::vector<Particle> LinkedCellContainer::retrieveNeighbors(const std::array<do
     std::vector<Particle> neighbours;
 
     //Find bounds of neighbouring cells
-    const int startX = cellOfParticle == 0 ? 0 : cellOfParticle - 1;
-    const int endX = cellOfParticle == amountCellsX - 1 ? amountCellsX - 1 : cellOfParticle + 1;
+    const int startX = cellOfParticle == 1 ? 1 : cellOfParticle - 1;
+    const int endX = cellOfParticle == amountCellsX - 2 ? amountCellsX - 2 : cellOfParticle + 1;
 
-    const int startY = cellOfParticle == 0 ? 0 : cellOfParticle - 1;
-    const int endY = cellOfParticle == amountCellsY - 1 ? amountCellsY - 1 : cellOfParticle + 1;
+    const int startY = cellOfParticle == 1 ? 1 : cellOfParticle - 1;
+    const int endY = cellOfParticle == amountCellsY - 2 ? amountCellsY - 2 : cellOfParticle + 1;
 
-    const int startZ = cellOfParticle == 0 ? 0 : cellOfParticle - 1;
-    const int endZ = cellOfParticle == amountCellsZ - 1 ? amountCellsZ - 1 : cellOfParticle + 1;
+    const int startZ = cellOfParticle == 1 ? 1 : cellOfParticle - 1;
+    const int endZ = cellOfParticle == amountCellsZ - 2 ? amountCellsZ - 2 : cellOfParticle + 1;
 
     //Iterate over them and add all the cells into the list
     for (int x = startX; x <= endX; x++) {
@@ -58,32 +58,32 @@ std::vector<Particle> LinkedCellContainer::retrieveNeighbors(const std::array<do
 }
 
 
-std::vector<int> LinkedCellContainer::retrieveBoundaryCellIndexes() const {
+std::vector<int> LinkedCellContainer::retrieveBoundaryCellIndices() const {
 
     //Hashmap is used to ensure that no duplicate cells are found (might cause bugs with ghost cells)
     std::set<int> indices;
 
     //For start and end of x
-    for (int y = 0; y <= amountCellsY; y++) {
-        for (int z = 0; z <= amountCellsZ; z++) {
-            indices.insert(amountCellsX * (y + amountCellsY * z));
-            indices.insert((amountCellsX - 1) + amountCellsX * (y + amountCellsY * z));
+    for (int y = 1; y < amountCellsY - 1; y++) {
+        for (int z = 1; z < amountCellsZ - 1; z++) {
+            indices.insert(1 + amountCellsX * (y + amountCellsY * z));
+            indices.insert((amountCellsX - 2) + amountCellsX * (y + amountCellsY * z));
         }
     }
 
     //For start and end of y
-    for (int x = 0; x <= amountCellsX; x++) {
-        for (int z = 0; z <= amountCellsZ; z++) {
-            indices.insert(x + amountCellsX * (amountCellsY * z));
-            indices.insert(x + amountCellsX * ((amountCellsY-1) + amountCellsY * z));
+    for (int x = 1; x < amountCellsX - 1; x++) {
+        for (int z = 1; z < amountCellsZ - 1; z++) {
+            indices.insert(x + amountCellsX * (1 + amountCellsY * z));
+            indices.insert(x + amountCellsX * ((amountCellsY-2) + amountCellsY * z));
         }
     }
 
     //For start and end of z
-    for (int x = 0; x <= amountCellsX; x++) {
-        for (int y = 0; y <= amountCellsZ; y++) {
-            indices.insert(x + amountCellsX * y);
-            indices.insert( x + amountCellsX * (y + amountCellsY * (amountCellsZ - 1)));
+    for (int x = 1; x < amountCellsX - 1; x++) {
+        for (int y = 1; y < amountCellsZ - 1; y++) {
+            indices.insert(x + amountCellsX * (y + amountCellsZ));
+            indices.insert( x + amountCellsX * (y + amountCellsY * (amountCellsZ - 2)));
         }
     }
 
@@ -105,6 +105,62 @@ std::vector<Particle> LinkedCellContainer::retrieveBoundaryParticles(const std::
     return boundaryParticles;
 }
 
+std::vector<int> LinkedCellContainer::retrieveHaloCellIndices() const {
+
+    //Hashmap is used to ensure that no duplicate cells are found (might cause bugs with ghost cells)
+    std::set<int> indices;
+
+    //For start and end of x
+    for (int y = 0; y < amountCellsY; y++) {
+        for (int z = 0; z < amountCellsZ; z++) {
+            indices.insert(amountCellsX * (y + amountCellsY * z));
+            indices.insert((amountCellsX - 1) + amountCellsX * (y + amountCellsY * z));
+        }
+    }
+
+    //For start and end of y
+    for (int x = 0; x < amountCellsX; x++) {
+        for (int z = 0; z < amountCellsZ; z++) {
+            indices.insert(x + amountCellsX * (amountCellsY * z));
+            indices.insert(x + amountCellsX * ((amountCellsY-1) + amountCellsY * z));
+        }
+    }
+
+    //For start and end of z
+    for (int x = 0; x < amountCellsX; x++) {
+        for (int y = 0; y < amountCellsZ; y++) {
+            indices.insert(x + amountCellsX * y);
+            indices.insert( x + amountCellsX * (y + amountCellsY * (amountCellsZ - 1)));
+        }
+    }
+
+    //Convert hash set to vector
+    std::vector indicesVector(indices.begin(), indices.end());
+    return indicesVector;
+}
+
+
+std::vector<Particle> LinkedCellContainer::retrieveHaloParticles(const std::vector<int>& cellIndices) const {
+
+    std::vector<Particle> haloParticles;
+
+    for (const int index : cellIndices) {
+        for (const Particle& particle : cellVector[index]) {
+            haloParticles.push_back(particle);
+        }
+    }
+    return haloParticles;
+}
+
+
+void LinkedCellContainer::deleteHaloParticles() {
+
+    std::vector<int> haloCells = retrieveHaloCellIndices();
+
+    for (const int index : haloCells) {
+        cellVector[index].clear();
+    }
+}
 
 
 /**------------------------------------------ GETTERS ------------------------------------------**/
