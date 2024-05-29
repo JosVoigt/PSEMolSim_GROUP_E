@@ -56,9 +56,9 @@ TEST_F(StoermerVerletTest, testCalcX) {
         calculateX(pc, 1, 1);
 
         for (int j = 0; j < pc.size(); j++) {
-            ASSERT_NEAR((double)j, (*(pc.begin() + j)).getX()[0], tolerance);
-            ASSERT_NEAR((double)i, (*(pc.begin() + j)).getX()[1], tolerance);
-            ASSERT_NEAR((double)i, (*(pc.begin() + j)).getX()[2], tolerance);
+            EXPECT_NEAR((double)j, (*(pc.begin() + j)).getX()[0], tolerance);
+            EXPECT_NEAR((double)i, (*(pc.begin() + j)).getX()[1], tolerance);
+            EXPECT_NEAR((double)i, (*(pc.begin() + j)).getX()[2], tolerance);
         }
     }
 }
@@ -77,9 +77,9 @@ TEST_F(StoermerVerletTest, testCalcV) {
         calculateV(pc, 1);
 
         for (int j = 0; j < pc.size(); j++) {
-            ASSERT_NEAR((double)j, (*(pc.begin() + j)).getV()[0], tolerance);
-            ASSERT_NEAR((double)i, (*(pc.begin() + j)).getV()[1], tolerance);
-            ASSERT_NEAR((double)i, (*(pc.begin() + j)).getV()[2], tolerance);
+            EXPECT_NEAR((double)j, (*(pc.begin() + j)).getV()[0], tolerance);
+            EXPECT_NEAR((double)i, (*(pc.begin() + j)).getV()[1], tolerance);
+            EXPECT_NEAR((double)i, (*(pc.begin() + j)).getV()[2], tolerance);
         }
     }
 }
@@ -100,9 +100,9 @@ TEST_F(StoermerVerletTest, testCalcF) {
         calculateF(pc, method);
 
         for (int j = 0; j < pc.size(); j++) {
-            ASSERT_NEAR((double)j, (*(pc.begin() + j)).getV()[0], tolerance);
-            ASSERT_NEAR((double)i, (*(pc.begin() + j)).getV()[1], tolerance);
-            ASSERT_NEAR((double)i, (*(pc.begin() + j)).getV()[2], tolerance);
+            EXPECT_NEAR((double)j, (*(pc.begin() + j)).getV()[0], tolerance);
+            EXPECT_NEAR((double)i, (*(pc.begin() + j)).getV()[1], tolerance);
+            EXPECT_NEAR((double)i, (*(pc.begin() + j)).getV()[2], tolerance);
         }
     }
 }

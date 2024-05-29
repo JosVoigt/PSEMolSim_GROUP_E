@@ -35,7 +35,7 @@ options parse(int argc, char *argv[]) {
 
     po::options_description desc("Allowed options");
 
-    // prevents unwanted VScode formatting
+    // prevents unwanted formatting
     // clang-format off
         desc.add_options()
             ("help,h", "produce help message, ignores all other flags")
@@ -73,23 +73,28 @@ options parse(int argc, char *argv[]) {
     if (vm.count("planet") && vm.count("lenjonesmol")) {
       std::cerr << "Please choose EXACTLY ONE force mode" << std::endl;
       exit(1);
-    } else if (vm.count("planet")) {
+    }
+    else if (vm.count("planet")) {
       opts.force_ = std::shared_ptr<Force>(new Planet());
-    } else if (!vm["lenjonesmol"].empty() &&
-               (ljm_args = vm["lenjonesmol"].as<std::vector<double>>())
-                       .size() == 2) {
+    }
+    else if (!vm["lenjonesmol"].empty() &&
+             (ljm_args = vm["lenjonesmol"].as<std::vector<double>>()).size() ==
+                 2) {
       opts.force_ = std::shared_ptr<Force>(
           new LennardJonesMolecule(ljm_args[0], ljm_args[1]));
-    } else {
+    }
+    else {
       std::cerr << "Please provide a single force mode" << std::endl;
       exit(1);
     }
 
     if (vm["outformat"].as<std::string>() == "vtk") {
       opts.writer_ = std::shared_ptr<Writer>(new outputWriter::VTKWriter());
-    } else if (vm["outformat"].as<std::string>() == "xyz") {
+    }
+    else if (vm["outformat"].as<std::string>() == "xyz") {
       opts.writer_ = std::shared_ptr<Writer>(new outputWriter::XYZWriter());
-    } else {
+    }
+    else {
       std::cerr << vm["output"].as<std::string>()
                 << " is not a valid output type" << std::endl;
       exit(1);
@@ -109,11 +114,12 @@ options parse(int argc, char *argv[]) {
     }
 
     return opts;
-
-  } catch (std::exception &e) {
+  }
+  catch (std::exception &e) {
     std::cerr << "error: " << e.what() << "\n";
     std::exit(1);
-  } catch (...) {
+  }
+  catch (...) {
     std::cerr << "Exception of unknown type!\n";
     std::exit(1);
   }
@@ -144,46 +150,117 @@ enum class cuboid_parser_state {
 
 std::string parser_state_tostring(cuboid_parser_state state) {
   switch (state) {
-  case cuboid_parser_state::start:
-    return "start";
-  case cuboid_parser_state::V_B:
-    return "V_B";
-  case cuboid_parser_state::v1:
-    return "v1";
-  case cuboid_parser_state::v2:
-    return "v2";
-  case cuboid_parser_state::v3:
-    return "v3";
-  case cuboid_parser_state::V_E:
-    return "V_E";
-  case cuboid_parser_state::LLFC_B:
-    return "LLFC_B";
-  case cuboid_parser_state::llfc1:
-    return "llfc1";
-  case cuboid_parser_state::llfc2:
-    return "llfc2";
-  case cuboid_parser_state::llfc3:
-    return "llfc3";
-  case cuboid_parser_state::LLFC_E:
-    return "LLFC_E";
-  case cuboid_parser_state::dist:
-    return "dist";
-  case cuboid_parser_state::mass:
-    return "mass";
-  case cuboid_parser_state::x:
-    return "x";
-  case cuboid_parser_state::y:
-    return "y";
-  case cuboid_parser_state::z:
-    return "z";
-  case cuboid_parser_state::avgBrownMot:
-    return "avgBrownMot";
-  case cuboid_parser_state::end:
-    return "end";
-  case cuboid_parser_state::trap:
-    return "trap";
+    case cuboid_parser_state::start:
+      return "start";
+    case cuboid_parser_state::V_B:
+      return "V_B";
+    case cuboid_parser_state::v1:
+      return "v1";
+    case cuboid_parser_state::v2:
+      return "v2";
+    case cuboid_parser_state::v3:
+      return "v3";
+    case cuboid_parser_state::V_E:
+      return "V_E";
+    case cuboid_parser_state::LLFC_B:
+      return "LLFC_B";
+    case cuboid_parser_state::llfc1:
+      return "llfc1";
+    case cuboid_parser_state::llfc2:
+      return "llfc2";
+    case cuboid_parser_state::llfc3:
+      return "llfc3";
+    case cuboid_parser_state::LLFC_E:
+      return "LLFC_E";
+    case cuboid_parser_state::dist:
+      return "dist";
+    case cuboid_parser_state::mass:
+      return "mass";
+    case cuboid_parser_state::x:
+      return "x";
+    case cuboid_parser_state::y:
+      return "y";
+    case cuboid_parser_state::z:
+      return "z";
+    case cuboid_parser_state::avgBrownMot:
+      return "avgBrownMot";
+    case cuboid_parser_state::end:
+      return "end";
+    case cuboid_parser_state::trap:
+      return "trap";
   }
   return "NOT A STATE";
+}
+
+/**
+ *\brief
+ *	This is a function to lessen code duplication in parseCuboids.
+ *	It is not to be used outside of this usecase
+ * \param symbol
+ *	The symbol currently processed
+ * \param buffer
+ *	The link to the current buffer of strings, will be modified
+ * \param transitionSymbols
+ *	A string of all symbols that lead to a transition, does not care about
+ *duplicates \param staySymbols A string of all symbols that lead to staying in
+ *the same state \param current The current state the DFA is in \param transTo
+ *	The state the DFA would transition into on a successful hit
+ * \return
+ *	The state that the function determined the DFA to transition into
+ */
+inline cuboid_parser_state transitionDFA(char symbol, std::string &buffer,
+                                         std::string transitionSymbols,
+                                         std::string staySymbols,
+                                         cuboid_parser_state current,
+                                         cuboid_parser_state transTo) {
+  if (transitionSymbols.find(symbol) != std::string::npos) {
+    return transTo;
+  }
+  else if (staySymbols.find(symbol) != std::string::npos) {
+    buffer += symbol;  // cheap cast from string to char
+    return current;
+  }
+  else {
+    return cuboid_parser_state::trap;
+  }
+}
+
+/**
+ * \brief
+ *	Will try to parse the double currently in the buffer and clear it, exits
+ *on error \param buffer Current buffer of the program that should contain a
+ *number \param current The current parser state. Not required for functionality
+ *but recommended for error handling \return The parsed double
+ */
+inline double parseDouble(std::string &buffer, cuboid_parser_state current) {
+  try {
+    return std::stod(buffer);
+  }
+  catch (...) {
+    spdlog::get("console")->critical(
+        "Error in parsing {} as double in position: {}", buffer,
+        parser_state_tostring(current));
+    std::exit(1);
+  }
+}
+
+/**
+ * \brief
+ *	Will try to parse the Integer currently in the buffer and clear it,
+ *exits on error \param buffer Current buffer of the program that should contain
+ *a number \param current The current parser state. Not required for
+ *functionality but recommended for error handling \return The parsed Integer
+ */
+inline int parseInteger(std::string &buffer, cuboid_parser_state current) {
+  try {
+    return std::stoi(buffer);
+  }
+  catch (...) {
+    spdlog::get("console")->critical(
+        "Error in parsing {} as Integer in position: {}", buffer,
+        parser_state_tostring(current));
+    std::exit(1);
+  }
 }
 
 void parseCuboids(std::string cuboid_s, std::vector<CuboidGenerator> &ret) {
@@ -210,177 +287,189 @@ void parseCuboids(std::string cuboid_s, std::vector<CuboidGenerator> &ret) {
                                currentChar +
                                " \n    Cached chars are: " + currentString);
     switch (state) {
-    case cuboid_parser_state::start:
-      if (currentChar == '[')
-        state = cuboid_parser_state::V_B;
-      else
-        state = cuboid_parser_state::trap;
-      break;
-    case cuboid_parser_state::V_B:
-      if (currentChar == '[')
-        state = cuboid_parser_state::v1;
-      else
-        state = cuboid_parser_state::trap;
-      break;
-    case cuboid_parser_state::v1:
-      // is 0-9 or . or - and not /
-      if (currentChar <= 57 && currentChar >= 45 && currentChar != 47)
-        currentString += currentChar;
-      else if (currentChar == ',') {
-        velo[0] = stod(currentString);
-        state = cuboid_parser_state::v2;
-        currentString = "";
-      } else
-        state = cuboid_parser_state::trap;
-      break;
-    case cuboid_parser_state::v2:
-      // is 0-9 or . or - and not /
-      if (currentChar <= 57 && currentChar >= 45 && currentChar != 47)
-        currentString += currentChar;
-      else if (currentChar == ',') {
-        velo[1] = stod(currentString);
-        state = cuboid_parser_state::v3;
-        currentString = "";
-      } else
-        state = cuboid_parser_state::trap;
-      break;
-    case cuboid_parser_state::v3:
-      // is 0-9 or . or - and not /
-      if (currentChar <= 57 && currentChar >= 45 && currentChar != 47)
-        currentString += currentChar;
-      else if (currentChar == ']') {
-        velo[2] = stod(currentString);
-        state = cuboid_parser_state::V_E;
-        currentString = "";
-      } else
-        state = cuboid_parser_state::trap;
-      break;
-    case cuboid_parser_state::V_E:
-      if (currentChar == ',')
-        state = cuboid_parser_state::LLFC_B;
-      else
-        state = cuboid_parser_state::trap;
-      break;
-    case cuboid_parser_state::LLFC_B:
-      if (currentChar == '[')
-        state = cuboid_parser_state::llfc1;
-      else
-        state = cuboid_parser_state::trap;
-      break;
-    case cuboid_parser_state::llfc1:
-      // is 0-9 or . or - and not /
-      if (currentChar <= 57 && currentChar >= 45 && currentChar != 47)
-        currentString += currentChar;
-      else if (currentChar == ',') {
-        llfc[0] = stod(currentString);
-        state = cuboid_parser_state::llfc2;
-        currentString = "";
-      } else
-        state = cuboid_parser_state::trap;
-      break;
-    case cuboid_parser_state::llfc2:
-      // is 0-9 or . or - and not /
-      if (currentChar <= 57 && currentChar >= 45 && currentChar != 47)
-        currentString += currentChar;
-      else if (currentChar == ',') {
-        llfc[1] = stod(currentString);
-        state = cuboid_parser_state::llfc3;
-        currentString = "";
-      } else
-        state = cuboid_parser_state::trap;
-      break;
-    case cuboid_parser_state::llfc3:
-      // is 0-9 or . or - and not /
-      if (currentChar <= 57 && currentChar >= 45 && currentChar != 47)
-        currentString += currentChar;
-      else if (currentChar == ']') {
-        llfc[2] = stod(currentString);
-        state = cuboid_parser_state::LLFC_E;
-        currentString = "";
-      } else
-        state = cuboid_parser_state::trap;
-      break;
-    case cuboid_parser_state::LLFC_E:
-      if (currentChar == ',')
-        state = cuboid_parser_state::dist;
-      else
-        state = cuboid_parser_state::trap;
-      break;
-    case cuboid_parser_state::dist:
-      // is 0-9 or . or - and not /
-      if (currentChar <= 57 && currentChar >= 45 && currentChar != 47)
-        currentString += currentChar;
-      else if (currentChar == ',') {
-        d = stod(currentString);
-        state = cuboid_parser_state::mass;
-        currentString = "";
-      } else
-        state = cuboid_parser_state::trap;
-      break;
-    case cuboid_parser_state::mass:
-      // is 0-9 or . or - and not /
-      if (currentChar <= 57 && currentChar >= 45 && currentChar != 47)
-        currentString += currentChar;
-      else if (currentChar == ',') {
-        m = stod(currentString);
-        state = cuboid_parser_state::x;
-        currentString = "";
-      } else
-        state = cuboid_parser_state::trap;
-      break;
-    case cuboid_parser_state::x:
-      // is 0-9 or . or - and not /
-      if (currentChar <= 57 && currentChar >= 45 && currentChar != 47)
-        currentString += currentChar;
-      else if (currentChar == ',') {
-        xc = stoi(currentString);
-        state = cuboid_parser_state::y;
-        currentString = "";
-      } else
-        state = cuboid_parser_state::trap;
-      break;
-    case cuboid_parser_state::y:
-      // is 0-9 or . or - and not /
-      if (currentChar <= 57 && currentChar >= 45 && currentChar != 47)
-        currentString += currentChar;
-      else if (currentChar == ',') {
-        yc = stoi(currentString);
-        state = cuboid_parser_state::z;
-        currentString = "";
-      } else
-        state = cuboid_parser_state::trap;
-      break;
-    case cuboid_parser_state::z:
-      // is 0-9 or . or - and not /
-      if (currentChar <= 57 && currentChar >= 45 && currentChar != 47)
-        currentString += currentChar;
-      else if (currentChar == ',') {
-        zc = stoi(currentString);
-        state = cuboid_parser_state::avgBrownMot;
-        currentString = "";
-      } else
-        state = cuboid_parser_state::trap;
-      break;
-    case cuboid_parser_state::avgBrownMot:
-      // is 0-9 or . or - and not /
-      if (currentChar <= 57 && currentChar >= 45 && currentChar != 47)
-        currentString += currentChar;
-      else if (currentChar == ']') {
-        aBM = stod(currentString);
-        state = cuboid_parser_state::end;
-        currentString = "";
-      } else
-        state = cuboid_parser_state::trap;
-      break;
-    case cuboid_parser_state::trap:
-      // only here for exaustive matching should not be reachable
-      spdlog::get("file")->debug(
-          "Trap state has been reached. This should be impossible.");
-      break;
-    case cuboid_parser_state::end:
-      std::stringstream ss;
-      // prevents unwanted formatting
-      // clang-format off
+      case cuboid_parser_state::start:
+        if (currentChar == '[')
+          state = cuboid_parser_state::V_B;
+        else
+          state = cuboid_parser_state::trap;
+        break;
+      case cuboid_parser_state::V_B:
+        if (currentChar == '[')
+          state = cuboid_parser_state::v1;
+        else
+          state = cuboid_parser_state::trap;
+        break;
+      case cuboid_parser_state::v1:
+        // is 0-9 or . or - and not /
+        if (currentChar <= 57 && currentChar >= 45 && currentChar != 47)
+          currentString += currentChar;
+        else if (currentChar == ',') {
+          velo[0] = stod(currentString);
+          state = cuboid_parser_state::v2;
+          currentString = "";
+        }
+        else
+          state = cuboid_parser_state::trap;
+        break;
+      case cuboid_parser_state::v2:
+        // is 0-9 or . or - and not /
+        if (currentChar <= 57 && currentChar >= 45 && currentChar != 47)
+          currentString += currentChar;
+        else if (currentChar == ',') {
+          velo[1] = stod(currentString);
+          state = cuboid_parser_state::v3;
+          currentString = "";
+        }
+        else
+          state = cuboid_parser_state::trap;
+        break;
+      case cuboid_parser_state::v3:
+        // is 0-9 or . or - and not /
+        if (currentChar <= 57 && currentChar >= 45 && currentChar != 47)
+          currentString += currentChar;
+        else if (currentChar == ']') {
+          velo[2] = stod(currentString);
+          state = cuboid_parser_state::V_E;
+          currentString = "";
+        }
+        else
+          state = cuboid_parser_state::trap;
+        break;
+      case cuboid_parser_state::V_E:
+        if (currentChar == ',')
+          state = cuboid_parser_state::LLFC_B;
+        else
+          state = cuboid_parser_state::trap;
+        break;
+      case cuboid_parser_state::LLFC_B:
+        if (currentChar == '[')
+          state = cuboid_parser_state::llfc1;
+        else
+          state = cuboid_parser_state::trap;
+        break;
+      case cuboid_parser_state::llfc1:
+        // is 0-9 or . or - and not /
+        if (currentChar <= 57 && currentChar >= 45 && currentChar != 47)
+          currentString += currentChar;
+        else if (currentChar == ',') {
+          llfc[0] = stod(currentString);
+          state = cuboid_parser_state::llfc2;
+          currentString = "";
+        }
+        else
+          state = cuboid_parser_state::trap;
+        break;
+      case cuboid_parser_state::llfc2:
+        // is 0-9 or . or - and not /
+        if (currentChar <= 57 && currentChar >= 45 && currentChar != 47)
+          currentString += currentChar;
+        else if (currentChar == ',') {
+          llfc[1] = stod(currentString);
+          state = cuboid_parser_state::llfc3;
+          currentString = "";
+        }
+        else
+          state = cuboid_parser_state::trap;
+        break;
+      case cuboid_parser_state::llfc3:
+        // is 0-9 or . or - and not /
+        if (currentChar <= 57 && currentChar >= 45 && currentChar != 47)
+          currentString += currentChar;
+        else if (currentChar == ']') {
+          llfc[2] = stod(currentString);
+          state = cuboid_parser_state::LLFC_E;
+          currentString = "";
+        }
+        else
+          state = cuboid_parser_state::trap;
+        break;
+      case cuboid_parser_state::LLFC_E:
+        if (currentChar == ',')
+          state = cuboid_parser_state::dist;
+        else
+          state = cuboid_parser_state::trap;
+        break;
+      case cuboid_parser_state::dist:
+        // is 0-9 or . or - and not /
+        if (currentChar <= 57 && currentChar >= 45 && currentChar != 47)
+          currentString += currentChar;
+        else if (currentChar == ',') {
+          d = stod(currentString);
+          state = cuboid_parser_state::mass;
+          currentString = "";
+        }
+        else
+          state = cuboid_parser_state::trap;
+        break;
+      case cuboid_parser_state::mass:
+        // is 0-9 or . or - and not /
+        if (currentChar <= 57 && currentChar >= 45 && currentChar != 47)
+          currentString += currentChar;
+        else if (currentChar == ',') {
+          m = stod(currentString);
+          state = cuboid_parser_state::x;
+          currentString = "";
+        }
+        else
+          state = cuboid_parser_state::trap;
+        break;
+      case cuboid_parser_state::x:
+        // is 0-9 or . or - and not /
+        if (currentChar <= 57 && currentChar >= 45 && currentChar != 47)
+          currentString += currentChar;
+        else if (currentChar == ',') {
+          xc = stoi(currentString);
+          state = cuboid_parser_state::y;
+          currentString = "";
+        }
+        else
+          state = cuboid_parser_state::trap;
+        break;
+      case cuboid_parser_state::y:
+        // is 0-9 or . or - and not /
+        if (currentChar <= 57 && currentChar >= 45 && currentChar != 47)
+          currentString += currentChar;
+        else if (currentChar == ',') {
+          yc = stoi(currentString);
+          state = cuboid_parser_state::z;
+          currentString = "";
+        }
+        else
+          state = cuboid_parser_state::trap;
+        break;
+      case cuboid_parser_state::z:
+        // is 0-9 or . or - and not /
+        if (currentChar <= 57 && currentChar >= 45 && currentChar != 47)
+          currentString += currentChar;
+        else if (currentChar == ',') {
+          zc = stoi(currentString);
+          state = cuboid_parser_state::avgBrownMot;
+          currentString = "";
+        }
+        else
+          state = cuboid_parser_state::trap;
+        break;
+      case cuboid_parser_state::avgBrownMot:
+        // is 0-9 or . or - and not /
+        if (currentChar <= 57 && currentChar >= 45 && currentChar != 47)
+          currentString += currentChar;
+        else if (currentChar == ']') {
+          aBM = stod(currentString);
+          state = cuboid_parser_state::end;
+          currentString = "";
+        }
+        else
+          state = cuboid_parser_state::trap;
+        break;
+      case cuboid_parser_state::trap:
+        // only here for exaustive matching should not be reachable
+        spdlog::get("file")->debug(
+            "Trap state has been reached. This should be impossible.");
+        break;
+      case cuboid_parser_state::end:
+        std::stringstream ss;
+        // prevents unwanted formatting
+        // clang-format off
                 ss << "Emplacing back cuboid with args"
                 << "    x: " << xc << "\n"
                 << "    y: " << yc << "\n"
@@ -390,14 +479,14 @@ void parseCuboids(std::string cuboid_s, std::vector<CuboidGenerator> &ret) {
                 << "    Brownian motion: " << aBM << "\n"
                 << "    corner:" << llfc << "\n"
                 << "    velocity: " << velo;
-      // clang-format on
-      spdlog::get("file")->debug(ss.str());
-      ret.emplace_back(xc, yc, zc, d, m, aBM, llfc, velo);
-      if (currentChar == ',')
-        state = cuboid_parser_state::start;
-      else
-        state = cuboid_parser_state::trap;
-      break;
+        // clang-format on
+        spdlog::get("file")->debug(ss.str());
+        ret.emplace_back(xc, yc, zc, d, m, aBM, llfc, velo);
+        if (currentChar == ',')
+          state = cuboid_parser_state::start;
+        else
+          state = cuboid_parser_state::trap;
+        break;
     }
   }
   spdlog::get("file")->debug("Parsing finished with state: " +
@@ -405,7 +494,8 @@ void parseCuboids(std::string cuboid_s, std::vector<CuboidGenerator> &ret) {
   if (state != cuboid_parser_state::end) {
     spdlog::get("console")->critical("Not an accepted cuboid string!");
     exit(1);
-  } else {
+  }
+  else {
     std::stringstream ss;
 
     // prevents unwanted formatting
@@ -426,4 +516,4 @@ void parseCuboids(std::string cuboid_s, std::vector<CuboidGenerator> &ret) {
   }
 }
 
-} // namespace parser
+}  // namespace parser

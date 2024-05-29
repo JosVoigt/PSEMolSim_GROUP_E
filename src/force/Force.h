@@ -1,8 +1,11 @@
 #pragma once
 
+//Forward declartion of Particle for the compiler
+class Particle;
 #include <container/Particle.h>
 
 #include <array>
+#include <string>
 
 /* Interface for the force calculation
  */

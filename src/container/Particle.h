@@ -7,7 +7,12 @@
 
 #pragma once
 
+//Force predecleration for the compiler
+class Force;
+#include "force/Force.h"
+
 #include <array>
+#include <memory>
 #include <string>
 
 /**
@@ -47,6 +52,11 @@ private:
    */
   int type;
 
+  /**
+   * Abstraction to calculate the force for the particles
+   */
+  std::shared_ptr<Force> forcemode;
+
 public:
   /**
    * \brief
@@ -77,7 +87,8 @@ public:
   Particle(
       // for visualization, we always need 3 coordinates
       // -> in case of 2d, we use only the first and the second
-      std::array<double, 3> x_arg, std::array<double, 3> v_arg, double m_arg,int type = 0);
+      std::array<double, 3> x_arg, std::array<double, 3> v_arg, double m_arg,
+      int type = 0);
 
   /**
    * \brief

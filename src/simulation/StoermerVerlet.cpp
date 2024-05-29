@@ -27,9 +27,9 @@ void calculateF(ParticleContainer &container,
          iterator++) {
         for (auto inner = iterator + 1; inner != container.end(); inner++) {
             std::array<double, 3> f = method->calculateForce(*iterator, *inner);
-            (*iterator).addF(f);
+            iterator->addF(f);
             std::array<double, 3> invF = -1 * f;
-            (*inner).addF(invF);
+            inner->addF(invF);
         }
     }
 }
