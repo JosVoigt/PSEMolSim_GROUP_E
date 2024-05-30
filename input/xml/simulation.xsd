@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    
+    <xs:complexType name="vector3D">
+        <xs:sequence>
+            <xs:element name="x" type="xs:double"/>
+            <xs:element name="y" type="xs:double"/>
+            <xs:element name="z" type="xs:double"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="cuboid">
+        <xs:sequence>
+            <xs:element name="velocity" type="vector3D"/>
+            <xs:element name="lowerLeftCorner" type="vector3D"/>
+            <xs:element name="distance" type="xs:double"/>
+            <xs:element name="mass" type="xs:double"/>
+            <xs:element name="x" type="xs:int"/>
+            <xs:element name="y" type="xs:int"/>
+            <xs:element name="z" type="xs:int"/>
+            <xs:element name="brownianMotionMean" type="xs:double"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="lenjonesmol">
+        <xs:sequence>
+            <xs:element name="epsilon" type="xs:double"/>
+            <xs:element name="sigma" type="xs:double"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="simulation">
+            <xs:sequence>
+                <xs:element name="delta" type="xs:double"/>
+                <xs:element name="frequency" type="xs:int"/>
+                <xs:element name="start" type="xs:double"/>
+                <xs:element name="end" type="xs:double"/>
+                <xs:element name="outfile" type="xs:string"/>
+                <xs:element name="cuboids" type="cuboid" minOccurs="2" maxOccurs="unbounded"/>
+                <xs:element name="lenjonesmol" type="lenjonesmol"/>
+            </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="simulation" type="simulation"/>
+
+</xs:schema>
