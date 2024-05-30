@@ -43,6 +43,8 @@ if (DOWNLOAD_DEPENDENCIES)
     FetchContent_MakeAvailable(xerces-c)
 endif(DOWNLOAD_DEPENDENCIES)
 
+set (CMAKE_CXX_STANDARD 17)
+
 #define compile flags
 set (FLAGS "-Wall -Werror -Wpedantic")
 
