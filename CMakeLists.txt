@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.10)
 project(PSEMolSim_GroupE VERSION 0.0.1)
 set (CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-option(DOWNLOAD_DEPENDENCIES "Downloads most dependencies (no xerces-c)" ON)
+option(DOWNLOAD_DEPENDENCIES "Downloads most dependencies" ON)
 if (DOWNLOAD_DEPENDENCIES)
     include(FetchContent)
 
@@ -60,7 +60,7 @@ if(NOT OUTPUT)
 endif(NOT OUTPUT)
 
 include(CTest)
-add_test(NAME Full_Test COMMAND MolSim -t)
+add_test(NAME Full_Test COMMAND MolSimTest)
 
 
 # let ccmake and cmake-gui offer the default build type options
@@ -78,43 +78,58 @@ file (MAKE_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/exec/bin")
 set (CMAKE_BINARY_DIR "${CMAKE_CURRENT_SOURCE_DIR}/exec/bin")
 set (EXECUTABLE_OUTPUT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/exec")
 
-# collect all cpp files
-file(GLOB_RECURSE MY_SRC
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/MolSim.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/*/*.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/test/*/*.cpp"
-    # header don't need to be included but this might be necessary for some IDEs
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/*/*.h"
+file (GLOB_RECURSE molsimfiles
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/*/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/*/*.h
 )
 
-# create make target
-add_executable(MolSim ${MY_SRC})
-
-# set cxx standard. You may raise this if you want.
-target_compile_features(MolSim
-        PRIVATE
-            cxx_std_17
+file (GLOB_RECURSE molsimtests
+${CMAKE_CURRENT_SOURCE_DIR}/test/*/*.cpp
 )
 
-target_include_directories(MolSim
-        PUBLIC
-            ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd
-        PRIVATE
-            ${CMAKE_CURRENT_SOURCE_DIR}/src/
+add_library ( ${PROJECT_NAME} STATIC
+${molsimfiles}
 )
 
-target_link_libraries(MolSim
-        # stuff that is used in headers and source files
-        PUBLIC
-            xerces-c
-            boost_program_options
-            gtest
-            gtest_main
-            spdlog
-            #for spdlog
-            fmt
-            )
+target_link_libraries (${PROJECT_NAME}
+PUBLIC
+    xerces-c
+    boost_program_options
+    spdlog
+    #for spdlog
+    fmt
+)
 
-list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
+target_include_directories (${PROJECT_NAME}
+PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd
+PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+)
 
-include(doxygen)
+add_executable (MolSimTest ${CMAKE_CURRENT_SOURCE_DIR}/test/test_suite_all.cpp ${molsimtests})
+target_link_libraries (MolSimTest
+    ${PROJECT_NAME}
+    gtest
+    gtest_main
+)
+target_include_directories (MolSimTest
+PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd
+PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+)
+
+add_test (NAME FullTest COMMAND MolSimTest)
+
+add_executable (MolSim ${CMAKE_CURRENT_SOURCE_DIR}/src/MolSim.cpp)
+target_link_libraries (MolSim
+    ${PROJECT_NAME}
+)
+target_include_directories (MolSim
+PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd
+PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+)
+
