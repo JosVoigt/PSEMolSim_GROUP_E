@@ -3,6 +3,8 @@
 #include "container/Particle.h"
 #include "force/LennardJonesMolecule.h"
 
+#include <array>
+
 #ifndef TOLERANCE
 #define TOLERANCE 1e-7;
 #endif
@@ -28,8 +30,8 @@ TEST_F(LJM_test, basic_functionality) {
     std::array<double, 3> res = ljm.calculateForce(p1, p2);
 
     EXPECT_NEAR(24, res[0], tolerance);
-    EXPECT_EQ(0, res[1]);
-    EXPECT_EQ(0, res[2]);
+    EXPECT_EQ(0.0, res[1]);
+    EXPECT_EQ(0.0, res[2]);
 }
 
 TEST_F(LJM_test, sigma) {
@@ -54,8 +56,8 @@ TEST_F(LJM_test, eps) {
     std::array<double, 3> res = ljm.calculateForce(p1, p2);
 
     EXPECT_NEAR(12, res[0], tolerance);
-    EXPECT_EQ(0, res[1]);
-    EXPECT_EQ(0, res[2]);
+    EXPECT_EQ(0, 0);
+    EXPECT_EQ(0, 0);
 }
 
 TEST_F(LJM_test, all) {

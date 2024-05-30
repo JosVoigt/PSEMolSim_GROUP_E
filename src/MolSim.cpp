@@ -29,7 +29,8 @@ int main(int argc, char *argv[]) {
        << ".log";
 
     auto file_logger = spdlog::basic_logger_mt("file", ss.str());
-  } catch (const spdlog::spdlog_ex &ex) {
+  }
+  catch (const spdlog::spdlog_ex &ex) {
     spdlog::get("console")->critical("File logger could not be initalizied: {}",
                                      ex.what());
     exit(1);
@@ -39,16 +40,10 @@ int main(int argc, char *argv[]) {
   spdlog::cfg::load_env_levels();
   parser::options opts = parser::parse(argc, argv);
 
-  if (opts.executeTests) {
-    spdlog::get("file")->info(
-        "Test flag was set, will proceed to execute tests");
-    testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
-  } else {
-    std::stringstream opt_string;
+  std::stringstream opt_string;
 
-    // prevents unwanted formatting
-    // clang-format off
+  // prevents unwanted formatting
+  // clang-format off
         opt_string << "Parsed options were:\n"
                    << "    execute tests: " << (opts.executeTests ? "true" : "false") << " (expected to be false)\n"
                    << "    delta_t: " << opts.delta_t << "\n"
@@ -66,39 +61,38 @@ int main(int argc, char *argv[]) {
                         << "    Generated files: " << (opts.end - opts.start) / opts.writeoutFrequency / opts.delta_t << "\n"
                         << "    Iterations: " << (opts.end / opts.delta_t) << "\n";
 
-    // clang-format on
+  // clang-format on
 
-    spdlog::get("file")->info(opt_string.str());
-    spdlog::get("file")->info(expected_stream.str());
+  spdlog::get("file")->info(opt_string.str());
+  spdlog::get("file")->info(expected_stream.str());
 
-    std::list<Particle> init = std::list<Particle>();
+  std::list<Particle> init = std::list<Particle>();
 
-    //XMLReader xml(opts.xmlpath);
-    //xml.readData(init);
+  // XMLReader xml(opts.xmlpath);
+  // xml.readData(init);
 
-    for (const auto &file : opts.filepath) {
-      FileReader fileReader(file.c_str());
-      fileReader.readData(init);
-    }
-
-    for (auto &cuboid : opts.cuboids) {
-      cuboid.readData(init);
-    }
-
-    spdlog::get("file")->debug("Particle count: {}", init.size());
-
-    if (init.size() < 2) {
-      spdlog::get("console")->critical(
-          "The simulation requires at least 2 particles! "
-          "Include them via file or cuboid.");
-      exit(1);
-    }
-
-    ParticleContainer container = ParticleContainer(init.size(), init);
-
-    Simulation sim(container, opts.force_, opts.writer_, opts.delta_t,
-                   opts.writeoutFrequency, opts.outfile);
-
-    sim.run(opts.start, opts.end);
+  for (const auto &file : opts.filepath) {
+    FileReader fileReader(file.c_str());
+    fileReader.readData(init);
   }
+
+  for (auto &cuboid : opts.cuboids) {
+    cuboid.readData(init);
+  }
+
+  spdlog::get("file")->debug("Particle count: {}", init.size());
+
+  if (init.size() < 2) {
+    spdlog::get("console")->critical(
+        "The simulation requires at least 2 particles! "
+        "Include them via file or cuboid.");
+    exit(1);
+  }
+
+  ParticleContainer container = ParticleContainer(init.size(), init);
+
+  Simulation sim(container, opts.force_, opts.writer_, opts.delta_t,
+                 opts.writeoutFrequency, opts.outfile);
+
+  sim.run(opts.start, opts.end);
 }
