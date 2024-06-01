@@ -39,7 +39,6 @@ options parse(int argc, char *argv[]) {
     // clang-format off
         desc.add_options()
             ("help,h", "produce help message, ignores all other flags")
-            ("test,t", "execute tests, ignores all other flags except help")
             ("cuboid,c", po::value<std::string>(),"accepts the generation paramaters for the cuboids")
             ("delta,d", po::value<double>(&opts.delta_t)->default_value(DEFAULT_DELTA),"set step size")
             ("frequency,f", po::value<int>(&opts.writeoutFrequency)->default_value(DEFAULT_FREQUENCY),"sets the frequency for data writeout")
@@ -62,11 +61,6 @@ options parse(int argc, char *argv[]) {
       std::cout << desc << "\n";
       std::exit(0);
     }
-
-    opts.executeTests = (vm.count("test"));
-
-    if (opts.executeTests)
-      return opts;
 
     // check exclusivity and existence of force modes
     std::vector<double> ljm_args;
@@ -264,9 +258,11 @@ inline int parseInteger(std::string &buffer, cuboid_parser_state current) {
 }
 
 void parseCuboids(std::string cuboid_s, std::vector<CuboidGenerator> &ret) {
+#ifndef NO_LOG
   spdlog::get("file")->debug("INIT CUBOID_PARSER");
   spdlog::get("file")->debug("Cuboid parser received input string: " +
                              cuboid_s);
+#endif
 
   std::string currentString = "";
   cuboid_parser_state state = cuboid_parser_state::start;
@@ -283,9 +279,11 @@ void parseCuboids(std::string cuboid_s, std::vector<CuboidGenerator> &ret) {
   for (int i = 0; i < cuboid_s.length() && state != cuboid_parser_state::trap;
        i++) {
     char currentChar = cuboid_s.at(i);
+#ifndef NO_LOG
     spdlog::get("file")->debug(parser_state_tostring(state) + " -> " +
                                currentChar +
                                " \n    Cached chars are: " + currentString);
+#endif
     switch (state) {
       case cuboid_parser_state::start:
         if (currentChar == '[')
@@ -463,8 +461,10 @@ void parseCuboids(std::string cuboid_s, std::vector<CuboidGenerator> &ret) {
         break;
       case cuboid_parser_state::trap:
         // only here for exaustive matching should not be reachable
+#ifndef NO_LOG
         spdlog::get("file")->debug(
             "Trap state has been reached. This should be impossible.");
+#endif
         break;
       case cuboid_parser_state::end:
         std::stringstream ss;
@@ -489,8 +489,10 @@ void parseCuboids(std::string cuboid_s, std::vector<CuboidGenerator> &ret) {
         break;
     }
   }
+#ifndef NO_LOG
   spdlog::get("file")->debug("Parsing finished with state: " +
                              parser_state_tostring(state));
+#endif
   if (state != cuboid_parser_state::end) {
     spdlog::get("console")->critical("Not an accepted cuboid string!");
     exit(1);
@@ -511,7 +513,9 @@ void parseCuboids(std::string cuboid_s, std::vector<CuboidGenerator> &ret) {
            << "    velocity: " << velo;
     // clang-format on
 
+#ifndef NO_LOG
     spdlog::get("file")->debug(ss.str());
+#endif
     ret.emplace_back(xc, yc, zc, d, m, aBM, llfc, velo);
   }
 }

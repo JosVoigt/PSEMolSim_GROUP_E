@@ -13,8 +13,11 @@ Simulation::Simulation(ParticleContainer &container_,
                        int outputFrequency_, std::string filename_,
                        std::array<int, 3> linkedCellDimensions,
                        double linkedCellSidelength)
-    : container(container_), method(std::move(method_)),
-      out(std::move(writer_)), dt(dt_), outputFrequency(outputFrequency_),
+    : container(container_),
+      method(std::move(method_)),
+      out(std::move(writer_)),
+      dt(dt_),
+      outputFrequency(outputFrequency_),
       filename(std::move(filename_)),
       linkedCellDimensions(std::move(linkedCellDimensions)),
       linkedCellSidelength(linkedCellSidelength) {
@@ -22,7 +25,9 @@ Simulation::Simulation(ParticleContainer &container_,
 }
 
 void Simulation::run(double start, double end) {
+#ifndef NO_LOG
   spdlog::get("file")->debug("Expected iterations: {}", (end / dt));
+#endif
   for (int iteration = 0; iteration <= (end / dt); iteration++) {
     calculateX(container, dt, dt_sq);
     calculateF(container, method);

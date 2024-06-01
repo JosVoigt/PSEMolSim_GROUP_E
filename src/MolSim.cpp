@@ -42,10 +42,10 @@ int main(int argc, char *argv[]) {
 
   std::stringstream opt_string;
 
+#ifndef NO_LOG
   // prevents unwanted formatting
   // clang-format off
         opt_string << "Parsed options were:\n"
-                   << "    execute tests: " << (opts.executeTests ? "true" : "false") << " (expected to be false)\n"
                    << "    delta_t: " << opts.delta_t << "\n"
                    << "    start: " << opts.start << "\n"
                    << "    end: " << opts.end << "\n"
@@ -65,11 +65,9 @@ int main(int argc, char *argv[]) {
 
   spdlog::get("file")->info(opt_string.str());
   spdlog::get("file")->info(expected_stream.str());
+#endif
 
   std::list<Particle> init = std::list<Particle>();
-
-  // XMLReader xml(opts.xmlpath);
-  // xml.readData(init);
 
   for (const auto &file : opts.filepath) {
     FileReader fileReader(file.c_str());
@@ -80,7 +78,9 @@ int main(int argc, char *argv[]) {
     cuboid.readData(init);
   }
 
+#ifndef NO_LOG
   spdlog::get("file")->debug("Particle count: {}", init.size());
+#endif
 
   if (init.size() < 2) {
     spdlog::get("console")->critical(

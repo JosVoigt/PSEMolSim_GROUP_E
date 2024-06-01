@@ -11,7 +11,6 @@
 namespace parser {
 
 struct options {
-  bool executeTests = false;
   double delta_t{};
   double start{};
   double end{};
@@ -62,4 +61,4 @@ options parse(int ac, char *av[]);
  */
 std::vector<CuboidGenerator> &parseCuboids(std::string cuboid_s);
 
-} // namespace parser
+}  // namespace parser
