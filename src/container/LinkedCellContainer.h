@@ -55,16 +55,16 @@ public:
     /**
      * \brief
      * Constructs a container that uses the linked cell algorithm using the given container size and cutoff point
-     * @param containerSizeX
-     * The size of the container in the X axis
-     * @param containerSizeY
-     * The size of the container in the Y axis
-     * @param containerSizeZ
-     * The size of the container in the Z axis
+     * @param amountCellsX_
+     * The amount of cells on the X axis
+     * @param amountCellsY_
+     * The amount of cells on the Y axis
+     * @param amountCellsZ_
+     * The amount of cells on the Z axis
      * @param r_c
      * The cutoff point
      */
-    LinkedCellContainer(double containerSizeX, double containerSizeY, double containerSizeZ, double r_c);
+    LinkedCellContainer(int amountCellsX_, int amountCellsY_, int amountCellsZ_, double r_c);
 
     /**
      * \brief

@@ -2,12 +2,17 @@
 
 #include <set>
 
-LinkedCellContainer::LinkedCellContainer(double const containerSizeX, double const containerSizeY, double const containerSizeZ, double const r_c) :
-containerSizeX(containerSizeX), containerSizeY(containerSizeY), containerSizeZ(containerSizeZ), r_c(r_c) {
+LinkedCellContainer::LinkedCellContainer(int const amountCellsX_, int const amountCellsY_, int const amountCellsZ_, double const r_c) :
+amountCellsX(amountCellsX_), amountCellsY(amountCellsY_), amountCellsZ(amountCellsZ_), r_c(r_c) {
     cellSize = r_c * r_c * r_c;
-    amountCellsX = static_cast<int>(containerSizeX / cellSize) + 2;
-    amountCellsY = static_cast<int>(containerSizeY / cellSize) + 2;
-    amountCellsZ = static_cast<int>(containerSizeZ / cellSize) + 2;
+
+    amountCellsX += 2;
+    amountCellsY += 2;
+    amountCellsZ += 2;
+
+    containerSizeX = amountCellsX * r_c;
+    containerSizeY = amountCellsY * r_c;
+    containerSizeZ = amountCellsZ * r_c;
 
     cellVector.resize(amountCellsX * amountCellsY * amountCellsZ);
 }
@@ -34,7 +39,7 @@ std::vector<Particle> LinkedCellContainer::retrieveNeighbors(const std::array<do
     const int cellOfParticle = getCellFromParticle(particle);
     std::vector<Particle> neighbours;
 
-    //Find bounds of neighbouring cells
+    //Find bounds of neighbouring cells (this is needed so that cellOfParticle -1 / +1 doesn't go out of bounds)
     const int startX = cellOfParticle == 1 ? 1 : cellOfParticle - 1;
     const int endX = cellOfParticle == amountCellsX - 2 ? amountCellsX - 2 : cellOfParticle + 1;
 
