@@ -1,8 +1,16 @@
+#pragma once
+
 #include "input/Initializer.h"
+#include "utils/Parser.h"
 
 class XMLReader : public Initializer {
-public:
-  XMLReader(std::string filename);
+private:
+  const char* filename;
 
-  void readData(std::list<Particle> &init) override;
+public:
+  explicit XMLReader(const char* filename);
+
+  ~XMLReader() override = default;
+
+  void readData(parser::options &opt);
 };
