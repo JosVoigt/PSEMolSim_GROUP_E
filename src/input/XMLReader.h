@@ -1,7 +1,7 @@
 #pragma once
 
-#include "input/Initializer.h"
-#include "utils/Parser.h"
+#include "../input/Initializer.h"
+#include "../utils/Parser.h"
 
 class XMLReader : public Initializer {
 private:
