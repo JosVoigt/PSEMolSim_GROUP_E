@@ -16,14 +16,18 @@ void XMLReader::readData(parser::options &options) {
     }
 
     std::string line;
+
+    std::string key;
+    std::string value;
+    double epsilon;
+    std::array<double, 3> velocity{};
+    std::array<double, 3> lowerLeftCorner{};
+    double distance, mass, x, y, z;
+
     while (std::getline(file, line)) {
+
         std::istringstream iss(line);
-        std::string key;
-        std::string value;
-        double epsilon;
-        std::array<double, 3> velocity{};
-        std::array<double, 3> lowerLeftCorner{};
-        double distance, mass, x, y, z;
+
         if (std::getline(iss, key, ':') && iss >> value) {
             if (key == "Velocity") {
                 std::istringstream iss_v(value);
