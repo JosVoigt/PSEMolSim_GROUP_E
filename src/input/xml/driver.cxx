@@ -10,8 +10,11 @@ private:
     double x_{};
     double y_{};
     double z_{};
+    std::string vectorType_;
 
 public:
+
+    vector3D_pimpl(const std::string& vectorType): vectorType_(vectorType) {}
 
     void x (double x) override
     {
@@ -31,7 +34,7 @@ public:
 
     void post_vector3D () override
     {
-        std::cout << "X: " << x_ << ", Y: " << y_ << ", Z: " << z_ << std::endl;
+        std::cout << vectorType_ << ": X: " << x_ << ", Y: " << y_ << ", Z: " << z_ << std::endl;
     }
 };
 
@@ -48,9 +51,11 @@ private:
     int y_{};
     int z_{};
     double brownianMotionMean_{};
-    vector3D_pimpl vector3d;
+    //vector3D_pimpl vector3d;
 
 public:
+
+    cuboid_pimpl(): velocity_("Velocity"), lowerLeftCorner_("LowerLeftCorner") {}
 
     void distance (double d) override
     {
@@ -177,8 +182,8 @@ main (__attribute__((unused)) int argc, char* argv[])
         xml_schema::string_pimpl string_p;
         simulation_pimpl simulation_p;
         cuboid_pimpl cuboid_p;
-        vector3D_pimpl velocity_p;
-        vector3D_pimpl lowerLeftCorner_p;
+        vector3D_pimpl velocity_p("Velocity");
+        vector3D_pimpl lowerLeftCorner_p("LowerLeftCorner");
         lenjonesmol_pimpl lenjonesmol_p;
 
         //velocity
