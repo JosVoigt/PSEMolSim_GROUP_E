@@ -1,15 +1,15 @@
 #pragma once
 
-#include <list>
 #include <vector>
 
 #include "Particle.h"
+#include "ParticleContainerInterface.h"
 
 /**
  * \brief
  * A particle container that uses the linked cell algorithm
  */
-class LinkedCellContainer {
+class LinkedCellContainer : ParticleContainerInterface {
 private:
 
     /**
@@ -30,9 +30,17 @@ private:
     int amountCellsX, amountCellsY, amountCellsZ;
 
     /**
-     * The vector of cells and the particles each cell contains
+     * The vector of cells and the particles in each cell it contains
      */
-    std::vector<std::list<Particle>> cellVector;
+    std::vector<std::vector<Particle>> cellVector;
+
+
+    /**
+     * \brief
+     * Returns the coordinates of the cell that contains the given particle
+     * @param particle
+     */
+    [[nodiscard]] std::array<int, 3> getCellCoordinates(const Particle& particle) const;
 
     /**
      *\brief
@@ -40,7 +48,7 @@ private:
      * @param particlePos
      * The coordinates of the particle
      */
-    [[nodiscard]] int getCellFromParticle(const std::array<double, 3>& particlePos) const;
+    [[nodiscard]] int getIndexFromCoordinates(std::array<int,3> cellCoordinates) const;
 
 
     /**
@@ -76,11 +84,20 @@ public:
 
     /**
      * \brief
+     * Removes the particle only if it has changed cells and returns true, otherwise returns false
+     * @param particle
+     * The particle that is to be removed
+     * @return
+     */
+    [[nodiscard]] bool findAndremoveOldParticle(const Particle& particle) const;
+
+    /**
+     * \brief
      * Retrieves all the neighbors of the given particle using the given cutoff point
      * @param particle
      * The particle, the neighbors of which need to be retrieved
      */
-    [[nodiscard]] std::vector<Particle> retrieveNeighbors(const std::array<double, 3>& particle) const;
+    [[nodiscard]] std::vector<Particle> retrieveNeighbors(const Particle& particle) const;
 
     /**
      * \brief
@@ -109,6 +126,24 @@ public:
      * Deletes all particles that reside in the halo cells
      */
     void deleteHaloParticles();
+
+    /**
+     * \brief
+     * inserts the given particle to the given list if it is resides in the inner cells
+     */
+    void insertIfRelevantParticle(Particle& particle, std::vector<Particle>& relevantParticles) override;
+
+    /**
+     * \brief
+     * Returns the list of all particles before the simulation starts
+     */
+    std::vector<Particle> preprocessParticles() override;
+
+    /**
+     * \brief
+     * Updates all the particle positions
+     */
+    void updateParticles() override;
 
 
     //------------------------------------------ GETTERS ------------------------------------------
