@@ -60,9 +60,8 @@ options parse(int argc, char *argv[]) {
     if (vm.count("help")) {
       std::cout << desc << "\n";
       std::exit(0);
-    }
-    else if (vm.count("xml") {
-	std::string path_to_xml = vm["xml"].as<std::string>();
+    } else if (vm.count("xml")) {
+      std::string path_to_xml = vm["xml"].as<std::string>();
     }
 
     // check exclusivity and existence of force modes
@@ -70,28 +69,23 @@ options parse(int argc, char *argv[]) {
     if (vm.count("planet") && vm.count("lenjonesmol")) {
       std::cerr << "Please choose EXACTLY ONE force mode" << std::endl;
       exit(1);
-    }
-    else if (vm.count("planet")) {
+    } else if (vm.count("planet")) {
       opts.force_ = std::shared_ptr<Force>(new Planet());
-    }
-    else if (!vm["lenjonesmol"].empty() &&
-             (ljm_args = vm["lenjonesmol"].as<std::vector<double>>()).size() ==
-                 2) {
+    } else if (!vm["lenjonesmol"].empty() &&
+               (ljm_args = vm["lenjonesmol"].as<std::vector<double>>())
+                       .size() == 2) {
       opts.force_ = std::shared_ptr<Force>(
           new LennardJonesMolecule(ljm_args[0], ljm_args[1]));
-    }
-    else {
+    } else {
       std::cerr << "Please provide a single force mode" << std::endl;
       exit(1);
     }
 
     if (vm["outformat"].as<std::string>() == "vtk") {
       opts.writer_ = std::shared_ptr<Writer>(new outputWriter::VTKWriter());
-    }
-    else if (vm["outformat"].as<std::string>() == "xyz") {
+    } else if (vm["outformat"].as<std::string>() == "xyz") {
       opts.writer_ = std::shared_ptr<Writer>(new outputWriter::XYZWriter());
-    }
-    else {
+    } else {
       std::cerr << vm["output"].as<std::string>()
                 << " is not a valid output type" << std::endl;
       exit(1);
@@ -111,12 +105,10 @@ options parse(int argc, char *argv[]) {
     }
 
     return opts;
-  }
-  catch (std::exception &e) {
+  } catch (std::exception &e) {
     std::cerr << "error: " << e.what() << "\n";
     std::exit(1);
-  }
-  catch (...) {
+  } catch (...) {
     std::cerr << "Exception of unknown type!\n";
     std::exit(1);
   }
@@ -245,8 +237,7 @@ void parseCuboids(std::string cuboid_s, std::vector<CuboidGenerator> &ret) {
           velo[0] = stod(currentString);
           state = cuboid_parser_state::v2;
           currentString = "";
-        }
-        else
+        } else
           state = cuboid_parser_state::trap;
         break;
       case cuboid_parser_state::v2:
@@ -257,8 +248,7 @@ void parseCuboids(std::string cuboid_s, std::vector<CuboidGenerator> &ret) {
           velo[1] = stod(currentString);
           state = cuboid_parser_state::v3;
           currentString = "";
-        }
-        else
+        } else
           state = cuboid_parser_state::trap;
         break;
       case cuboid_parser_state::v3:
@@ -269,8 +259,7 @@ void parseCuboids(std::string cuboid_s, std::vector<CuboidGenerator> &ret) {
           velo[2] = stod(currentString);
           state = cuboid_parser_state::V_E;
           currentString = "";
-        }
-        else
+        } else
           state = cuboid_parser_state::trap;
         break;
       case cuboid_parser_state::V_E:
@@ -293,8 +282,7 @@ void parseCuboids(std::string cuboid_s, std::vector<CuboidGenerator> &ret) {
           llfc[0] = stod(currentString);
           state = cuboid_parser_state::llfc2;
           currentString = "";
-        }
-        else
+        } else
           state = cuboid_parser_state::trap;
         break;
       case cuboid_parser_state::llfc2:
@@ -305,8 +293,7 @@ void parseCuboids(std::string cuboid_s, std::vector<CuboidGenerator> &ret) {
           llfc[1] = stod(currentString);
           state = cuboid_parser_state::llfc3;
           currentString = "";
-        }
-        else
+        } else
           state = cuboid_parser_state::trap;
         break;
       case cuboid_parser_state::llfc3:
@@ -317,8 +304,7 @@ void parseCuboids(std::string cuboid_s, std::vector<CuboidGenerator> &ret) {
           llfc[2] = stod(currentString);
           state = cuboid_parser_state::LLFC_E;
           currentString = "";
-        }
-        else
+        } else
           state = cuboid_parser_state::trap;
         break;
       case cuboid_parser_state::LLFC_E:
@@ -335,8 +321,7 @@ void parseCuboids(std::string cuboid_s, std::vector<CuboidGenerator> &ret) {
           d = stod(currentString);
           state = cuboid_parser_state::mass;
           currentString = "";
-        }
-        else
+        } else
           state = cuboid_parser_state::trap;
         break;
       case cuboid_parser_state::mass:
@@ -347,8 +332,7 @@ void parseCuboids(std::string cuboid_s, std::vector<CuboidGenerator> &ret) {
           m = stod(currentString);
           state = cuboid_parser_state::x;
           currentString = "";
-        }
-        else
+        } else
           state = cuboid_parser_state::trap;
         break;
       case cuboid_parser_state::x:
@@ -359,8 +343,7 @@ void parseCuboids(std::string cuboid_s, std::vector<CuboidGenerator> &ret) {
           xc = stoi(currentString);
           state = cuboid_parser_state::y;
           currentString = "";
-        }
-        else
+        } else
           state = cuboid_parser_state::trap;
         break;
       case cuboid_parser_state::y:
@@ -371,8 +354,7 @@ void parseCuboids(std::string cuboid_s, std::vector<CuboidGenerator> &ret) {
           yc = stoi(currentString);
           state = cuboid_parser_state::z;
           currentString = "";
-        }
-        else
+        } else
           state = cuboid_parser_state::trap;
         break;
       case cuboid_parser_state::z:
@@ -383,8 +365,7 @@ void parseCuboids(std::string cuboid_s, std::vector<CuboidGenerator> &ret) {
           zc = stoi(currentString);
           state = cuboid_parser_state::avgBrownMot;
           currentString = "";
-        }
-        else
+        } else
           state = cuboid_parser_state::trap;
         break;
       case cuboid_parser_state::avgBrownMot:
@@ -395,8 +376,7 @@ void parseCuboids(std::string cuboid_s, std::vector<CuboidGenerator> &ret) {
           aBM = stod(currentString);
           state = cuboid_parser_state::end;
           currentString = "";
-        }
-        else
+        } else
           state = cuboid_parser_state::trap;
         break;
       case cuboid_parser_state::trap:
@@ -436,8 +416,7 @@ void parseCuboids(std::string cuboid_s, std::vector<CuboidGenerator> &ret) {
   if (state != cuboid_parser_state::end) {
     spdlog::get("console")->critical("Not an accepted cuboid string!");
     exit(1);
-  }
-  else {
+  } else {
     std::stringstream ss;
 
     // prevents unwanted formatting

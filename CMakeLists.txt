@@ -83,16 +83,16 @@ endif(NOT CMAKE_BUILD_TYPE)
 
 #-----------------------------RESULTING DIRECTORY-----------#
 #create build directories
-file (MAKE_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/exec/bin")
-set (CMAKE_BINARY_DIR "${CMAKE_CURRENT_SOURCE_DIR}/exec/bin")
-set (EXECUTABLE_OUTPUT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/exec")
+file (MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/exec/bin")
+set (CMAKE_BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}/exec/bin")
+set (EXECUTABLE_OUTPUT_PATH "${CMAKE_CURRENT_BINARY_DIR}")
 
 #-----------------------------COLLECT SRC FILES--------------#
 file(GLOB_RECURSE molsimfiles
     "${CMAKE_CURRENT_SOURCE_DIR}/src/*/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/test/*/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/*/*.h"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/input/xml/*.cxx"
+	#    "${CMAKE_CURRENT_SOURCE_DIR}/src/input/xml/*.cxx"
 )
 
 #-----------------------------COLLECT TEST FILES-------------#
