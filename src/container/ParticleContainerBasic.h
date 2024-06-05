@@ -67,7 +67,7 @@ class ParticleContainer : public ParticleContainerInterface{
      */
     [[nodiscard]] std::size_t size() const;
 
-	std::vector<Particle> preprocessParticles();
-	std::vector<Particle> insertIfRelevantParticles(Particle& p);
-	void updateParticles();
+	std::vector<Particle> preprocessParticles() override;
+ void insertIfRelevantParticle(Particle& particle, std::vector<Particle>& relevantParticles) override;
+	void updateParticles() override;
 };

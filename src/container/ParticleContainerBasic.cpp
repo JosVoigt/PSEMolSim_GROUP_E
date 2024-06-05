@@ -17,9 +17,7 @@ std::size_t ParticleContainer::size() const { return length; }
 std::vector<Particle> ParticleContainer::preprocessParticles(){
 	return particleArray;
 }
-std::vector<Particle> ParticleContainer::insertIfRelevantParticles(Particle& p){
-	return particleArray;
+void ParticleContainer::insertIfRelevantParticle(Particle& particle, std::vector<Particle>& relevantParticles){
 }
 void ParticleContainer::updateParticles() {
-	return;
-}
+	}
