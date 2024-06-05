@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-#include "container/ParticleContainer.h"
+#include "container/ParticleContainerBasic.h"
 
 class Writer {
    public:

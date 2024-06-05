@@ -4,12 +4,13 @@
 #include <vector>
 
 #include "Particle.h"
+#include "container/ParticleContainerInterface.h"
 
 /**
  * \brief
  *  A container for particles
  */
-class ParticleContainer {
+class ParticleContainer : public ParticleContainerInterface{
    private:
     /**
      * The array containing all particles
@@ -65,4 +66,8 @@ class ParticleContainer {
      *  The amount of particles in the container
      */
     [[nodiscard]] std::size_t size() const;
+
+	std::vector<Particle> preprocessParticles();
+	std::vector<Particle> insertIfRelevantParticles(Particle& p);
+	void updateParticles();
 };

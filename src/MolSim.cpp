@@ -7,7 +7,7 @@
 #include <chrono>
 #include <ctime>
 
-#include "container/ParticleContainer.h"
+#include "container/ParticleContainerBasic.h"
 #include "input/FileReader.h"
 #include "input/XMLReader.h"
 #include "input/geometricGenerators/CuboidGenerator.h"

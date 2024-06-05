@@ -3,7 +3,7 @@
 #include <memory>
 
 #include "container/Particle.h"
-#include "container/ParticleContainer.h"
+#include "container/ParticleContainerBasic.h"
 #include "force/Force.h"
 #include "utils/ArrayUtils.h"
 

@@ -4,7 +4,7 @@
 #include <memory>
 #include <string>
 
-#include "container/ParticleContainer.h"
+#include "container/ParticleContainerBasic.h"
 #include "force/Force.h"
 #include "outputWriter/Writer.h"
 
