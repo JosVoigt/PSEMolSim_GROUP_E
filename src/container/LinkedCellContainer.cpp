@@ -198,7 +198,7 @@ void LinkedCellContainer::insertIfRelevantParticle(Particle& particle, std::vect
     const int cellIndex = getIndexFromCoordinates(cellCoordinates);
     const std::vector<int> haloIndices = retrieveHaloCellIndices();
 
-    if (std::find(haloIndices.begin(), haloIndices.end(), cellIndex) != haloIndices.end()) {
+    if (std::find(haloIndices.begin(), haloIndices.end(), cellIndex) == haloIndices.end()) {
         relevantParticles.push_back(particle);
     }
 }
