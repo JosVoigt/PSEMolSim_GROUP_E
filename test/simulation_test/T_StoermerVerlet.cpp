@@ -3,7 +3,7 @@
 #include <list>
 
 #include "container/Particle.h"
-#include "container/ParticleContainer.h"
+#include "container/ParticleContainerBasic.h"
 #include "simulation/StoermerVerlet.h"
 #include "force/LennardJonesMolecule.h"
 

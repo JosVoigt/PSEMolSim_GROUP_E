@@ -185,7 +185,7 @@ public:
    * \return
    *  True if the particles are equal, false otherwise
    */
-  bool operator==(Particle &other);
+  bool operator==(const Particle &other) const;
 
   /**
    * \brief
