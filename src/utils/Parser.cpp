@@ -61,6 +61,9 @@ options parse(int argc, char *argv[]) {
       std::cout << desc << "\n";
       std::exit(0);
     }
+    else if (vm.count("xml") {
+	std::string path_to_xml = vm["xml"].as<std::string>();
+    }
 
     // check exclusivity and existence of force modes
     std::vector<double> ljm_args;
@@ -187,76 +190,13 @@ std::string parser_state_tostring(cuboid_parser_state state) {
 }
 
 /**
- *\brief
- *	This is a function to lessen code duplication in parseCuboids.
- *	It is not to be used outside of this usecase
- * \param symbol
- *	The symbol currently processed
- * \param buffer
- *	The link to the current buffer of strings, will be modified
- * \param transitionSymbols
- *	A string of all symbols that lead to a transition, does not care about
- *duplicates \param staySymbols A string of all symbols that lead to staying in
- *the same state \param current The current state the DFA is in \param transTo
- *	The state the DFA would transition into on a successful hit
- * \return
- *	The state that the function determined the DFA to transition into
- */
-inline cuboid_parser_state transitionDFA(char symbol, std::string &buffer,
-                                         std::string transitionSymbols,
-                                         std::string staySymbols,
-                                         cuboid_parser_state current,
-                                         cuboid_parser_state transTo) {
-  if (transitionSymbols.find(symbol) != std::string::npos) {
-    return transTo;
-  }
-  else if (staySymbols.find(symbol) != std::string::npos) {
-    buffer += symbol;  // cheap cast from string to char
-    return current;
-  }
-  else {
-    return cuboid_parser_state::trap;
-  }
-}
-
-/**
  * \brief
- *	Will try to parse the double currently in the buffer and clear it, exits
- *on error \param buffer Current buffer of the program that should contain a
- *number \param current The current parser state. Not required for functionality
- *but recommended for error handling \return The parsed double
+ * 	Cuboid parser with a DFA-style parsing of a cuboid.
+ * \param cuboid_s
+ * 	The string representing cuboids
+ * \param ret
+ * 	The vector that shall contain the parsed cuboids.
  */
-inline double parseDouble(std::string &buffer, cuboid_parser_state current) {
-  try {
-    return std::stod(buffer);
-  }
-  catch (...) {
-    spdlog::get("console")->critical(
-        "Error in parsing {} as double in position: {}", buffer,
-        parser_state_tostring(current));
-    std::exit(1);
-  }
-}
-
-/**
- * \brief
- *	Will try to parse the Integer currently in the buffer and clear it,
- *exits on error \param buffer Current buffer of the program that should contain
- *a number \param current The current parser state. Not required for
- *functionality but recommended for error handling \return The parsed Integer
- */
-inline int parseInteger(std::string &buffer, cuboid_parser_state current) {
-  try {
-    return std::stoi(buffer);
-  }
-  catch (...) {
-    spdlog::get("console")->critical(
-        "Error in parsing {} as Integer in position: {}", buffer,
-        parser_state_tostring(current));
-    std::exit(1);
-  }
-}
-
 void parseCuboids(std::string cuboid_s, std::vector<CuboidGenerator> &ret) {
 #ifndef NO_LOG
   spdlog::get("file")->debug("INIT CUBOID_PARSER");

@@ -112,6 +112,7 @@ PUBLIC
     boost_program_options
     spdlog
     fmt #spdlog dependency
+    expat
 )
 
 #-----------------------------INCLUDE DIRECTORIES------------#
