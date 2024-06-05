@@ -1,9 +1,10 @@
 #include "LinkedCellContainer.h"
 
+#include <algorithm>
 #include <set>
 
 LinkedCellContainer::LinkedCellContainer(int const amountCellsX_, int const amountCellsY_, int const amountCellsZ_, double const r_c) :
-amountCellsX(amountCellsX_), amountCellsY(amountCellsY_), amountCellsZ(amountCellsZ_), r_c(r_c) {
+r_c(r_c), amountCellsX(amountCellsX_), amountCellsY(amountCellsY_), amountCellsZ(amountCellsZ_) {
     cellSize = r_c * r_c * r_c;
 
     amountCellsX += 2;
@@ -17,26 +18,50 @@ amountCellsX(amountCellsX_), amountCellsY(amountCellsY_), amountCellsZ(amountCel
     cellVector.resize(amountCellsX * amountCellsY * amountCellsZ);
 }
 
-int LinkedCellContainer::getCellFromParticle(const std::array<double, 3>& particlePos) const {
+std::array<int, 3> LinkedCellContainer::getCellCoordinates(const Particle& particle) const {
 
-    static std::array<int, 3> cellCoordinates = {
-        static_cast<int>(particlePos[0] / cellSize),
-        static_cast<int>(particlePos[1] / cellSize),
-        static_cast<int>(particlePos[2] / cellSize),
+    return {
+        static_cast<int>(particle.getX()[0] / cellSize),
+        static_cast<int>(particle.getX()[1] / cellSize),
+        static_cast<int>(particle.getX()[2] / cellSize),
     };
+}
+
+
+int LinkedCellContainer::getIndexFromCoordinates(const std::array<int,3> cellCoordinates) const {
 
     return cellCoordinates[0] + amountCellsX * (cellCoordinates[1] + amountCellsY * cellCoordinates[2]);
 }
 
 
 void LinkedCellContainer::insertParticle(const Particle& particle) {
-    const int cellIndex = getCellFromParticle(particle.getX());
+
+    std::array<int, 3> particleCellCoordinates = getCellCoordinates(particle);
+    const int cellIndex = getIndexFromCoordinates(particleCellCoordinates);
+
     cellVector[cellIndex].push_back(particle);
 }
 
-std::vector<Particle> LinkedCellContainer::retrieveNeighbors(const std::array<double, 3>& particle) const {
+bool LinkedCellContainer::findAndremoveOldParticle(const Particle& particle) const {
 
-    const int cellOfParticle = getCellFromParticle(particle);
+    std::array<int, 3> particleCellCoordinates = getCellCoordinates(particle);
+    const int cellIndex = getIndexFromCoordinates(particleCellCoordinates);
+
+    if (std::find(cellVector[cellIndex].begin(), cellVector[cellIndex].end(), particle) != cellVector[cellIndex].end()) {
+        return false;
+    }
+    //The particle can only realistically move one cell in any direction in one frame at most, so we only need to check its neighbors
+    std::vector<Particle> neighbors = retrieveNeighbors(particle);
+
+    neighbors.erase(std::find(neighbors.begin(), neighbors.end(), particle), neighbors.end());
+    return true;
+}
+
+
+std::vector<Particle> LinkedCellContainer::retrieveNeighbors(const Particle& particle) const {
+
+    const std::array<int, 3> particleCellCoordinates = getCellCoordinates(particle);
+    const int cellOfParticle = getIndexFromCoordinates(particleCellCoordinates);
     std::vector<Particle> neighbours;
 
     //Find bounds of neighbouring cells (this is needed so that cellOfParticle -1 / +1 doesn't go out of bounds)
@@ -164,6 +189,40 @@ void LinkedCellContainer::deleteHaloParticles() {
 
     for (const int index : haloCells) {
         cellVector[index].clear();
+    }
+}
+
+void LinkedCellContainer::insertIfRelevantParticle(Particle& particle, std::vector<Particle>& relevantParticles) {
+
+    const std::array<int, 3> cellCoordinates = getCellCoordinates(particle);
+    const int cellIndex = getIndexFromCoordinates(cellCoordinates);
+    const std::vector<int> haloIndices = retrieveHaloCellIndices();
+
+    if (std::find(haloIndices.begin(), haloIndices.end(), cellIndex) == haloIndices.end()) {
+        relevantParticles.push_back(particle);
+    }
+}
+
+std::vector <Particle> LinkedCellContainer::preprocessParticles() {
+
+    std::vector<Particle> allParticles;
+
+    for (const std::vector<Particle>& cell : cellVector) {
+        for (const Particle& particle : cell) {
+            allParticles.push_back(particle);
+        }
+    }
+    return allParticles;
+}
+
+void LinkedCellContainer::updateParticles() {
+
+    for (std::vector<Particle>& cell : cellVector) {
+        for (Particle& particle : cell) {
+            if (findAndremoveOldParticle(particle)) {
+                insertParticle(particle);
+            }
+        }
     }
 }
 
