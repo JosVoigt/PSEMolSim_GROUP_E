@@ -21,7 +21,7 @@ class ParticleContainerInterface {
      * \brief
      * Returns a list of all particles in the container
      */
-    virtual void insertIfRelevantParticle(Particle& particle, std::vector<Particle>& relevantParticles) = 0;
+    virtual std::vector<Particle> insertIfRelevantParticle(Particle& particle) = 0;
 
     /**
      * \brief

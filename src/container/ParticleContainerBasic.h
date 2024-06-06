@@ -39,7 +39,7 @@ class ParticleContainer : public ParticleContainerInterface{
      * \brief
      *  Destructor for the ParticleContainer
      */
-    ~ParticleContainer() = default;
+    ~ParticleContainer() override = default;
 
     typedef std::vector<Particle>::iterator Iterator;
 
@@ -67,7 +67,9 @@ class ParticleContainer : public ParticleContainerInterface{
      */
     [[nodiscard]] std::size_t size() const;
 
-	std::vector<Particle> preprocessParticles() override;
- void insertIfRelevantParticle(Particle& particle, std::vector<Particle>& relevantParticles) override;
-	void updateParticles() override;
+	   std::vector<Particle> preprocessParticles() override;
+
+    std::vector<Particle> insertIfRelevantParticle(Particle& particle) override;
+
+	   void updateParticles() override;
 };

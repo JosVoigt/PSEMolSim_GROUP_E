@@ -192,15 +192,8 @@ void LinkedCellContainer::deleteHaloParticles() {
     }
 }
 
-void LinkedCellContainer::insertIfRelevantParticle(Particle& particle, std::vector<Particle>& relevantParticles) {
-
-    const std::array<int, 3> cellCoordinates = getCellCoordinates(particle);
-    const int cellIndex = getIndexFromCoordinates(cellCoordinates);
-    const std::vector<int> haloIndices = retrieveHaloCellIndices();
-
-    if (std::find(haloIndices.begin(), haloIndices.end(), cellIndex) == haloIndices.end()) {
-        relevantParticles.push_back(particle);
-    }
+std::vector<Particle> LinkedCellContainer::insertIfRelevantParticle(Particle& particle) {
+    return retrieveNeighbors(particle);
 }
 
 std::vector <Particle> LinkedCellContainer::preprocessParticles() {

@@ -45,7 +45,7 @@ private:
     /**
      *\brief
      * Calculates the index of the cell, where the given particle is located
-     * @param particlePos
+     * @param cellCoordinates
      * The coordinates of the particle
      */
     [[nodiscard]] int getIndexFromCoordinates(std::array<int,3> cellCoordinates) const;
@@ -131,7 +131,8 @@ public:
      * \brief
      * inserts the given particle to the given list if it is resides in the inner cells
      */
-    void insertIfRelevantParticle(Particle& particle, std::vector<Particle>& relevantParticles) override;
+    std::vector<Particle>
+    insertIfRelevantParticle(Particle& particle) override;
 
     /**
      * \brief

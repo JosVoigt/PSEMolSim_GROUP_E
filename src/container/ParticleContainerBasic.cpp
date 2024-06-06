@@ -17,7 +17,17 @@ std::size_t ParticleContainer::size() const { return length; }
 std::vector<Particle> ParticleContainer::preprocessParticles(){
 	return particleArray;
 }
-void ParticleContainer::insertIfRelevantParticle(Particle& particle, std::vector<Particle>& relevantParticles){
+
+std::vector<Particle> ParticleContainer::insertIfRelevantParticle(Particle& particle){
+    return particleArray;
 }
 void ParticleContainer::updateParticles() {
 	}
+
+int getIndexFromCoordinates(std::array<int,3> cellCoordinates) {
+    return -1;
+}
+
+void insertParticle(const Particle& particle) {
+
+}
