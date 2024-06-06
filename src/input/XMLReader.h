@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../utils/Parser.h"
+#include "utils/Parser.h"
 
 class XMLReader{
   const char* filename;

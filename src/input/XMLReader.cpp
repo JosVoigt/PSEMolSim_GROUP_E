@@ -3,8 +3,8 @@
 #include <iostream>
 #include <sstream>
 
-#include "../force/LennardJonesMolecule.h"
-#include "../utils/Parser.h"
+#include "force/LennardJonesMolecule.h"
+#include "utils/Parser.h"
 
 XMLReader::XMLReader(const char* filename_) : filename(filename_) {}
 

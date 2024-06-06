@@ -15,7 +15,6 @@ struct options {
   double start{};
   double end{};
   int writeoutFrequency{};
-  std::string xmlpath;
   std::vector<std::string> filepath;
   std::vector<CuboidGenerator> cuboids;
   std::string outfile;

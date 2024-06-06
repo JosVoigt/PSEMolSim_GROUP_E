@@ -118,7 +118,7 @@ std::vector<int> LinkedCellContainer::retrieveBoundaryCellIndices() const {
     }
 
     //Convert hash set to vector
-    std::vector indicesVector(indices.begin(), indices.end());
+    std::vector<int> indicesVector(indices.begin(), indices.end());
     return indicesVector;
 }
 
@@ -165,7 +165,7 @@ std::vector<int> LinkedCellContainer::retrieveHaloCellIndices() const {
     }
 
     //Convert hash set to vector
-    std::vector indicesVector(indices.begin(), indices.end());
+    std::vector<int> indicesVector(indices.begin(), indices.end());
     return indicesVector;
 }
 

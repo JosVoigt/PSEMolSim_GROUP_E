@@ -1,14 +1,13 @@
 #include "Parser.h"
 
 #include <boost/program_options.hpp>
+#include "input/XMLReader.h"
 namespace po = boost::program_options;
 
 #include <spdlog/spdlog.h>
 
 #include <cstdlib>
-#include <fstream>
 #include <iostream>
-#include <iterator>
 #include <memory>
 #include <sstream>
 #include <string>
@@ -45,7 +44,7 @@ options parse(int argc, char *argv[]) {
             ("start,s", po::value<double>(&opts.start)->default_value(0),"sets the recording start point for the simulation")
             ("end,e", po::value<double>(&opts.end)->default_value(DEFAULT_END),"set end point")
             ("file,F",po::value<std::vector<std::string>>(&opts.filepath)->multitoken(),"set the path to the file(s) containing initial state of the molecules")
-	    ("xml,X", po::value<std::string>(&opts.xmlpath), "set the path to the xml file defining the simulation parameters")
+		    ("xml,X", po::value<std::string>(), "set the path to the xml file defining the simulation parameters")
             ("outformat,O",po::value<std::string>()->default_value("vtk"),"set the output method (vtk,xyz)")
             ("outfile,o",po::value<std::string>(&opts.outfile)->default_value("simulation"),"set the output file name")
             ("planet","sets particle mode to planet, exclusive with other particle modes")
@@ -62,6 +61,9 @@ options parse(int argc, char *argv[]) {
       std::exit(0);
     } else if (vm.count("xml")) {
       std::string path_to_xml = vm["xml"].as<std::string>();
+	  XMLReader xmlr = XMLReader(path_to_xml.c_str());
+	  xmlr.readData(opts);
+	  return opts;
     }
 
     // check exclusivity and existence of force modes
