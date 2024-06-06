@@ -1,16 +1,23 @@
 #include <memory>
 #include <vector>
-#include "force/Force.h"
+
 #include "LinkedCellBoundary.h"
+#include "force/Force.h"
 
 class BoundaryConditionReflection : public LinkedCellBoundary {
-	private:
-		std::shared_ptr<Force> forceMethod;
-	public:
-		~BoundaryConditionReflection() = default;
+ private:
+  std::shared_ptr<Force> forceMethod;
+  std::array<double, 3> surface_normal;
+  std::array<double, 3> point_on_plane;
 
-		BoundaryConditionReflection (std::vector<Particle> haloCellList, std::vector<Particle> boundaryCellList, std::shared_ptr<Force> forcemode);
-		//: LinkedCellBoundary(haloCellList, boundaryCellList), forceMethod(forcemode)
+ public:
+  ~BoundaryConditionReflection() = default;
 
-		std::vector<Particle> executeBoundaryCondition () override;
+  BoundaryConditionReflection(std::vector<std::vector<Particle>>& haloCellList,
+                              std::vector<std::vector<Particle>>& boundaryCellList,
+                              std::shared_ptr<Force> forcemode,
+                              std::array<double, 3>& surface_normal_,
+                              std::array<double, 3>& point_on_plane_);
+
+  std::vector<Particle>& executeBoundaryCondition() override;
 };
