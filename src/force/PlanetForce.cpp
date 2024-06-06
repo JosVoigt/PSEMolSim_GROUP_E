@@ -1,10 +1,10 @@
-#include "force/Planet.h"
+#include "force/PlanetForce.h"
 
 #include <cmath>
 
 #include "utils/ArrayUtils.h"
 
-std::array<double, 3> Planet::calculateForce(Particle& p1, Particle& p2) const {
+std::array<double, 3> PlanetForce::calculateForce(Particle& p1, Particle& p2) const {
     double massProduct = p1.getM() * p2.getM();
     double distance = ArrayUtils::L2Norm(p2.getX() - p1.getX());
     std::array<double, 3> force =
@@ -12,4 +12,4 @@ std::array<double, 3> Planet::calculateForce(Particle& p1, Particle& p2) const {
     return force;
 }
 
-std::string Planet::typeString() { return "Planet"; }
+std::string PlanetForce::typeString() { return "Planet"; }

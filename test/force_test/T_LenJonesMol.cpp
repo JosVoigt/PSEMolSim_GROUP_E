@@ -3,7 +3,7 @@
 #include <array>
 
 #include "container/Particle.h"
-#include "force/LennardJonesMolecule.h"
+#include "force/LennardJonesForce.h"
 
 #ifndef TOLERANCE
 #define TOLERANCE 1e-7;
@@ -25,7 +25,7 @@ TEST_F(LJM_test, basic_functionality) {
   double const eps = 1;
   double const sigma = 1;
 
-  LennardJonesMolecule ljm = LennardJonesMolecule(eps, sigma);
+  LennardJonesForce ljm = LennardJonesForce(eps, sigma);
 
   std::array<double, 3> res = ljm.calculateForce(p1, p2);
 
@@ -38,7 +38,7 @@ TEST_F(LJM_test, sigma) {
   double const eps = 1;
   double const sigma = .5;
 
-  LennardJonesMolecule ljm = LennardJonesMolecule(eps, sigma);
+  LennardJonesForce ljm = LennardJonesForce(eps, sigma);
 
   std::array<double, 3> res = ljm.calculateForce(p1, p2);
 
@@ -51,7 +51,7 @@ TEST_F(LJM_test, eps) {
   double const eps = .5;
   double const sigma = 1;
 
-  LennardJonesMolecule ljm = LennardJonesMolecule(eps, sigma);
+  LennardJonesForce ljm = LennardJonesForce(eps, sigma);
 
   std::array<double, 3> res = ljm.calculateForce(p1, p2);
 
@@ -70,7 +70,7 @@ TEST_F(LJM_test, all) {
   std::array<double, 3> x2 = {.895, 96.345, 23.4};
   Particle p2(x2, v, 1, 1);
 
-  LennardJonesMolecule ljm(eps, sigma);
+  LennardJonesForce ljm(eps, sigma);
 
   std::array<double, 3> res = ljm.calculateForce(p1, p2);
 

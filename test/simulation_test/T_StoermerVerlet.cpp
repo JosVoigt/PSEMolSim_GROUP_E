@@ -5,7 +5,7 @@
 #include "container/Particle.h"
 #include "container/ParticleContainerBasic.h"
 #include "simulation/StoermerVerlet.h"
-#include "force/LennardJonesMolecule.h"
+#include "force/LennardJonesForce.h"
 
 #ifndef TOLERANCE
 #define TOLERANCE 1e-7;
@@ -89,7 +89,7 @@ TEST_F(StoermerVerletTest, testCalcF) {
     std::array<double, 3> force = {0, 0, 0.5};
     std::array<double, 3> velocity = {0, 1, 0};
 
-    std::shared_ptr<Force> method = std::shared_ptr<Force>(new LennardJonesMolecule(1,1));
+    std::shared_ptr<Force> method = std::shared_ptr<Force>(new LennardJonesForce(1,1));
 
     for (Particle& p : StoermerVerletTest::pc) {
         p.addF(force);

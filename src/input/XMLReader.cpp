@@ -3,7 +3,7 @@
 #include <iostream>
 #include <sstream>
 
-#include "force/LennardJonesMolecule.h"
+#include "force/LennardJonesForce.h"
 #include "utils/Parser.h"
 
 XMLReader::XMLReader(const char* filename_) : filename(filename_) {}
@@ -64,7 +64,7 @@ void XMLReader::readData (parser::options &options) const {
         epsilon = std::stod(value);
       } else if (key == "Sigma") {
         options.force_ =
-            std::make_shared<LennardJonesMolecule>(epsilon, std::stod(value));
+            std::make_shared<LennardJonesForce>(epsilon, std::stod(value));
       } else if (key == "Delta") {
         options.delta_t = std::stod(value);
       } else if (key == "Frequency") {

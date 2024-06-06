@@ -19,7 +19,6 @@ r_c(r_c), amountCellsX(amountCellsX_), amountCellsY(amountCellsY_), amountCellsZ
 }
 
 std::array<int, 3> LinkedCellContainer::getCellCoordinates(const Particle& particle) const {
-
     return {
         static_cast<int>(particle.getX()[0] / cellSize),
         static_cast<int>(particle.getX()[1] / cellSize),
@@ -29,13 +28,11 @@ std::array<int, 3> LinkedCellContainer::getCellCoordinates(const Particle& parti
 
 
 int LinkedCellContainer::getIndexFromCoordinates(const std::array<int,3> cellCoordinates) const {
-
     return cellCoordinates[0] + amountCellsX * (cellCoordinates[1] + amountCellsY * cellCoordinates[2]);
 }
 
 
 void LinkedCellContainer::insertParticle(const Particle& particle) {
-
     std::array<int, 3> particleCellCoordinates = getCellCoordinates(particle);
     const int cellIndex = getIndexFromCoordinates(particleCellCoordinates);
 
@@ -43,7 +40,6 @@ void LinkedCellContainer::insertParticle(const Particle& particle) {
 }
 
 bool LinkedCellContainer::findAndremoveOldParticle(const Particle& particle) const {
-
     std::array<int, 3> particleCellCoordinates = getCellCoordinates(particle);
     const int cellIndex = getIndexFromCoordinates(particleCellCoordinates);
 
@@ -58,7 +54,7 @@ bool LinkedCellContainer::findAndremoveOldParticle(const Particle& particle) con
 }
 
 
-std::vector<Particle> LinkedCellContainer::retrieveNeighbors(const Particle& particle) const {
+std::vector<Particle> LinkedCellContainer::retrieveRelevantParticles(Particle& particle) {
 
     const std::array<int, 3> particleCellCoordinates = getCellCoordinates(particle);
     const int cellOfParticle = getIndexFromCoordinates(particleCellCoordinates);
@@ -202,10 +198,6 @@ std::vector <Particle> LinkedCellContainer::preprocessParticles() {
         }
     }
     return allParticles;
-}
-
-std::vector<Particle> LinkedCellContainer::retrieveRelevantParticles(Particle& particle) {
-    return retrieveNeighbors(particle);
 }
 
 void LinkedCellContainer::updateParticles() {
