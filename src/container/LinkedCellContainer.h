@@ -22,7 +22,7 @@ private:
      */
     double r_c;
 
-    double cellSize = r_c * r_c * r_c;
+    double cellSize = r_c * r_c;
 
     /**
      * The amount of cells for each axis
