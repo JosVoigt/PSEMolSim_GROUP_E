@@ -90,9 +90,7 @@ set (EXECUTABLE_OUTPUT_PATH "${CMAKE_CURRENT_BINARY_DIR}")
 #-----------------------------COLLECT SRC FILES--------------#
 file(GLOB_RECURSE molsimfiles
     "${CMAKE_CURRENT_SOURCE_DIR}/src/*/*.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/test/*/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/*/*.h"
-	#    "${CMAKE_CURRENT_SOURCE_DIR}/src/input/xml/*.cxx"
 )
 
 #-----------------------------COLLECT TEST FILES-------------#

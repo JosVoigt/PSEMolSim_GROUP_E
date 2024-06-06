@@ -15,6 +15,14 @@ Second, Molecules using the Lennard-Jones-Potential for the actual molecule simu
 
 For a documentation please refer to the Doxygen build information and locations further down.
 
+Quick build
+---
+The suggested build is:
+```bash
+    mkdir build && cd build && cmake .. -DDOWNLOAD_DEPENDENCIES=OFF -DCMAKE_BUILD_TYPE=release && cmake --build .
+```
+You will require all dependencies listed below, just install them with the provided apt command.
+
 Required libraries
 ---
 - boost
@@ -73,7 +81,9 @@ To compile and link with the makefile use either make or --build:
 Due to the size making use of Make's -j flag is advised.
 This may be memory and computational power consuming and should be used at your own risk.
 
-The resulting executable is located at **PSEMolSim_GROUP_E/exec/MolSim**
+The resulting executable is located at the folder build from.
+It is named "MolSim".
+Additionally the tests will be built along side it, they are named "MolSimTest".
 
 To disable the Doxygen build add the flag BUILD_DOC flag:
 ```bash
@@ -90,6 +100,10 @@ To disable file output via the C preprocessor disable the output flag (or compil
 ```bash
     cmake -DCMAKE_BUILD_TYPE={type} -DOUTPUT=off ..
 ```
+To disable non critical logging disable the logging flag:
+```bash
+    cmake -DLOGGING=OFF ..
+```
 
 Options
 ---
@@ -98,6 +112,7 @@ These are the availabe command for the generated executable.
 |Long name      |Short name |Values         			    | Defaults  	| Description												                                                                                                                |
 |---------------|-----------|-------------------------------|---------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 |--help         | -h        |               			    |           	|Prints out the help message										                                                                                                        |
+|--xml          | -X        |filepath                       |               |Extracts all required information from the provided XML file
 |--delta	    | -d	    |double				            | 1e-5  		|Sets the stepsize for the simulation									                                                                                                    |
 |--frequency    | -f        |int            			    | 10        	|Sets the output frequency, every nth step a file will be generated					                                                                                        |
 |--start        | -s        |double         			    | 0         	|Sets the first point at which output is generated							                                                                                                |
@@ -114,13 +129,13 @@ An example to calculate the path of Halley's comet using the provided data in in
 This would be run from the toplevel folder.
 If one would like to change the execution directory the only thing required to be adapted would be the relative path to the input data.
 ```bash
-	exec/MolSim --planet --start 10 --end 1000 --delta 1 --frequency 10 --outformat vtk --outfile halley --file input/eingabe-sonne.txt
+	./MolSim --planet --start 10 --end 1000 --delta 1 --frequency 10 --outformat vtk --outfile halley --file input/eingabe-sonne.txt
 ```
 
 This is the same command, but it makes use of the shorter flags and default values.
 The arguments are provided in the same order as above.
 ```bash
-	exec/MolSim --planet -s 10 -e 1000 -d 1 -o halley -F input/eingabe-sonne.txt
+	./MolSim --planet -s 10 -e 1000 -d 1 -o halley -F input/eingabe-sonne.txt
 ```
 
 The logs are written to the executing directory into the file logs/MolSim_[currentTime].log.
