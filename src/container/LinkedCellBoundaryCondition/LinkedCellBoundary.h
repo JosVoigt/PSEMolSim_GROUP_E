@@ -1,4 +1,5 @@
 
+#include <memory>
 #include <vector>
 #include "container/Particle.h"
 class LinkedCellBoundary {
@@ -10,5 +11,5 @@ class LinkedCellBoundary {
 		std::vector<std::vector<Particle>> haloCellList;
 		std::vector<std::vector<Particle>> boundaryCellList;
 
-		virtual std::vector<Particle>& executeBoundaryCondition ();
+		virtual std::shared_ptr<std::vector<Particle>> executeBoundaryCondition ();
 };

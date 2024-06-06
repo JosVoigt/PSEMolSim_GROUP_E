@@ -19,5 +19,5 @@ class BoundaryConditionReflection : public LinkedCellBoundary {
                               std::array<double, 3>& surface_normal_,
                               std::array<double, 3>& point_on_plane_);
 
-  std::vector<Particle>& executeBoundaryCondition() override;
+  std::shared_ptr<std::vector<Particle>> executeBoundaryCondition() override;
 };

@@ -1,3 +1,4 @@
+#include <memory>
 #include <vector>
 #include "container/Particle.h"
 #include "LinkedCellBoundary.h"
@@ -15,5 +16,5 @@ class BoundaryConditionOutflow : public LinkedCellBoundary {
 		 *	\return
 		 *	Every deleted particle
 		 */
-		std::vector<Particle>& executeBoundaryCondition () override;
+		std::shared_ptr<std::vector<Particle>> executeBoundaryCondition () override;
 }; 
