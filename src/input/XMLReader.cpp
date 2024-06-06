@@ -70,6 +70,8 @@ void XMLReader::readData (parser::options &options) const {
         options.delta_t = std::stod(value);
       } else if (key == "Frequency") {
         options.writeoutFrequency = std::stoi(value);
+      } else if (key == "Dimensions") {
+        options.dimensions = std::stoi(value);
       } else if (key == "Start") {
         options.start = std::stod(value);
       } else if (key == "End") {

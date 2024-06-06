@@ -212,6 +212,12 @@ frequency_parser (::xml_schema::int_pskel& p)
 }
 
 void simulation_pskel::
+dimensions_parser (::xml_schema::int_pskel& p)
+{
+  this->dimensions_parser_ = &p;
+}
+
+void simulation_pskel::
 start_parser (::xml_schema::double_pskel& p)
 {
   this->start_parser_ = &p;
@@ -244,6 +250,7 @@ lenjonesmol_parser (::lenjonesmol_pskel& p)
 void simulation_pskel::
 parsers (::xml_schema::double_pskel& delta,
          ::xml_schema::int_pskel& frequency,
+         ::xml_schema::int_pskel& dimensions,
          ::xml_schema::double_pskel& start,
          ::xml_schema::double_pskel& end,
          ::xml_schema::string_pskel& outfile,
@@ -252,6 +259,7 @@ parsers (::xml_schema::double_pskel& delta,
 {
   this->delta_parser_ = &delta;
   this->frequency_parser_ = &frequency;
+  this->dimensions_parser_ = &dimensions;
   this->start_parser_ = &start;
   this->end_parser_ = &end;
   this->outfile_parser_ = &outfile;
@@ -263,6 +271,7 @@ simulation_pskel::
 simulation_pskel ()
 : delta_parser_ (0),
   frequency_parser_ (0),
+  dimensions_parser_ (0),
   start_parser_ (0),
   end_parser_ (0),
   outfile_parser_ (0),
@@ -371,6 +380,11 @@ delta (double)
 
 void simulation_pskel::
 frequency (int)
+{
+}
+
+void simulation_pskel::
+dimensions (int)
 {
 }
 
@@ -1534,6 +1548,43 @@ sequence_0 (unsigned long& state,
     }
     case 2UL:
     {
+      if (n == "dimensions" && ns.empty ())
+      {
+        if (start)
+        {
+          this->::xml_schema::complex_content::context_.top ().parser_ = this->dimensions_parser_;
+
+          if (this->dimensions_parser_)
+            this->dimensions_parser_->pre ();
+        }
+        else
+        {
+          if (this->dimensions_parser_)
+          {
+            int tmp (this->dimensions_parser_->post_int ());
+            this->dimensions (tmp);
+          }
+
+          count = 0;
+          state = 3UL;
+        }
+
+        break;
+      }
+      else
+      {
+        assert (start);
+        if (count < 1UL)
+          this->_expected_element (
+            "", "dimensions",
+            ns, n);
+        count = 0;
+        state = 3UL;
+        // Fall through.
+      }
+    }
+    case 3UL:
+    {
       if (n == "start" && ns.empty ())
       {
         if (start)
@@ -1552,7 +1603,7 @@ sequence_0 (unsigned long& state,
           }
 
           count = 0;
-          state = 3UL;
+          state = 4UL;
         }
 
         break;
@@ -1565,11 +1616,11 @@ sequence_0 (unsigned long& state,
             "", "start",
             ns, n);
         count = 0;
-        state = 3UL;
+        state = 4UL;
         // Fall through.
       }
     }
-    case 3UL:
+    case 4UL:
     {
       if (n == "end" && ns.empty ())
       {
@@ -1589,7 +1640,7 @@ sequence_0 (unsigned long& state,
           }
 
           count = 0;
-          state = 4UL;
+          state = 5UL;
         }
 
         break;
@@ -1602,11 +1653,11 @@ sequence_0 (unsigned long& state,
             "", "end",
             ns, n);
         count = 0;
-        state = 4UL;
+        state = 5UL;
         // Fall through.
       }
     }
-    case 4UL:
+    case 5UL:
     {
       if (n == "outfile" && ns.empty ())
       {
@@ -1626,7 +1677,7 @@ sequence_0 (unsigned long& state,
           }
 
           count = 0;
-          state = 5UL;
+          state = 6UL;
         }
 
         break;
@@ -1639,11 +1690,11 @@ sequence_0 (unsigned long& state,
             "", "outfile",
             ns, n);
         count = 0;
-        state = 5UL;
+        state = 6UL;
         // Fall through.
       }
     }
-    case 5UL:
+    case 6UL:
     {
       if (n == "cuboids" && ns.empty ())
       {
@@ -1675,11 +1726,11 @@ sequence_0 (unsigned long& state,
             "", "cuboids",
             ns, n);
         count = 0;
-        state = 6UL;
+        state = 7UL;
         // Fall through.
       }
     }
-    case 6UL:
+    case 7UL:
     {
       if (n == "lenjonesmol" && ns.empty ())
       {

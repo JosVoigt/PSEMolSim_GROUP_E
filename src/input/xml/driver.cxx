@@ -129,6 +129,7 @@ class simulation_pimpl: public simulation_pskel
 private:
     double delta_{};
     int frequency_{};
+    int dimensions_{};
     double start_{};
     double end_{};
     std::string outfile_;
@@ -144,6 +145,11 @@ public:
     void frequency (int f) override
     {
         frequency_ = f;
+    }
+
+    void dimensions (int d) override
+    {
+        dimensions_ = d;
     }
 
     void start (double s) override
@@ -165,6 +171,7 @@ public:
     {
         std::cout << "Delta: " << delta_ << std::endl;
         std::cout << "Frequency: " << frequency_ << std::endl;
+        std::cout << "Dimensions: " << dimensions_ << std::endl;
         std::cout << "Start: " << start_ << std::endl;
         std::cout << "End: " << end_ << std::endl;
         std::cout << "Outfile: " << outfile_ << std::endl;
@@ -212,6 +219,7 @@ main (__attribute__((unused)) int argc, char* argv[])
         //other parameters
         simulation_p.delta_parser (double_p);
         simulation_p.frequency_parser (int_p);
+        simulation_p.dimensions_parser (int_p);
         simulation_p.start_parser (double_p);
         simulation_p.end_parser (double_p);
         simulation_p.outfile_parser (string_p);

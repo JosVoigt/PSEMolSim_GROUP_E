@@ -587,6 +587,9 @@ class simulation_pskel: public ::xml_schema::complex_content
   frequency (int);
 
   virtual void
+  dimensions (int);
+
+  virtual void
   start (double);
 
   virtual void
@@ -613,6 +616,9 @@ class simulation_pskel: public ::xml_schema::complex_content
   frequency_parser (::xml_schema::int_pskel&);
 
   void
+  dimensions_parser (::xml_schema::int_pskel&);
+
+  void
   start_parser (::xml_schema::double_pskel&);
 
   void
@@ -630,6 +636,7 @@ class simulation_pskel: public ::xml_schema::complex_content
   void
   parsers (::xml_schema::double_pskel& /* delta */,
            ::xml_schema::int_pskel& /* frequency */,
+           ::xml_schema::int_pskel& /* dimensions */,
            ::xml_schema::double_pskel& /* start */,
            ::xml_schema::double_pskel& /* end */,
            ::xml_schema::string_pskel& /* outfile */,
@@ -655,6 +662,7 @@ class simulation_pskel: public ::xml_schema::complex_content
   protected:
   ::xml_schema::double_pskel* delta_parser_;
   ::xml_schema::int_pskel* frequency_parser_;
+  ::xml_schema::int_pskel* dimensions_parser_;
   ::xml_schema::double_pskel* start_parser_;
   ::xml_schema::double_pskel* end_parser_;
   ::xml_schema::string_pskel* outfile_parser_;
