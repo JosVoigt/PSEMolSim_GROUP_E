@@ -21,7 +21,7 @@ CuboidGenerator::CuboidGenerator(int x_, int y_, int z_, double distance,
 void CuboidGenerator::readData(std::list<Particle> &list, int dimensions) {
   if (x < 1 || y < 1 || z < 1) {
     spdlog::get("console")->error(
-        "At least one dimension of a Cuboid was less than 0."
+        "At least one dimension of a Cuboid was less than 1."
         "Will ignore this cuboid.");
     return;
   }

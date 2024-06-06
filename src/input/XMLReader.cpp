@@ -2,6 +2,7 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <spdlog/spdlog.h>
 
 #include "force/LennardJonesForce.h"
 #include "utils/Parser.h"
@@ -11,7 +12,7 @@ XMLReader::XMLReader(const char* filename_) : filename(filename_) {}
 void XMLReader::readData (parser::options &options) const {
     std::ifstream file(filename);
     if (!file.is_open()) {
-        std::cerr << "Unable to open file: " << filename << std::endl;
+        spdlog::get("console")->critical("Unable to open file: ", filename);
         return;
     }
 

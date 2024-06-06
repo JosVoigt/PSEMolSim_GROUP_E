@@ -6,6 +6,7 @@
  */
 
 #include "FileReader.h"
+#include <spdlog/spdlog.h>
 
 #include <cstdlib>
 #include <fstream>
@@ -42,9 +43,7 @@ void FileReader::readData(std::list<Particle>& particles, int dimensions) {
                 datastream >> vj;
             }
             if (datastream.eof()) {
-                std::cerr << "Error reading file: eof reached unexpectedly "
-                             "reading from line "
-                          << i << std::endl;
+				spdlog::get("console")->critical("Error reading file: eof reached unexpectedly reading from line {}", i);
                 exit(-1);
             }
             datastream >> m;
@@ -53,7 +52,7 @@ void FileReader::readData(std::list<Particle>& particles, int dimensions) {
             getline(input_file, tmp_string);
         }
     } else {
-        std::cerr << "Error: could not open file " << filename << std::endl;
+        spdlog::get("console")->critical("Error: could not open file {}", filename);
         exit(-1);
     }
 }

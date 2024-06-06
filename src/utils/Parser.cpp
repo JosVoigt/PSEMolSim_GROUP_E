@@ -1,6 +1,7 @@
 #include "Parser.h"
 
 #include <boost/program_options.hpp>
+
 #include "input/XMLReader.h"
 namespace po = boost::program_options;
 
@@ -63,15 +64,15 @@ options parse(int argc, char *argv[]) {
       std::exit(0);
     } else if (vm.count("xml")) {
       std::string path_to_xml = vm["xml"].as<std::string>();
-	  XMLReader xmlr = XMLReader(path_to_xml.c_str());
-	  xmlr.readData(opts);
-	  return opts;
+      XMLReader xmlr = XMLReader(path_to_xml.c_str());
+      xmlr.readData(opts);
+      return opts;
     }
 
     // check exclusivity and existence of force modes
     std::vector<double> ljm_args;
     if (vm.count("planet") && vm.count("lenjonesmol")) {
-      std::cerr << "Please choose EXACTLY ONE force mode" << std::endl;
+      spdlog::get("console")->critical("Please choose EXACTLY ONE force mode");
       exit(1);
     } else if (vm.count("planet")) {
       opts.force_ = std::shared_ptr<Force>(new PlanetForce());
@@ -81,7 +82,7 @@ options parse(int argc, char *argv[]) {
       opts.force_ = std::shared_ptr<Force>(
           new LennardJonesForce(ljm_args[0], ljm_args[1]));
     } else {
-      std::cerr << "Please provide a single force mode" << std::endl;
+      spdlog::get("console")->critical("Please provide a single force mode");
       exit(1);
     }
 
@@ -90,8 +91,8 @@ options parse(int argc, char *argv[]) {
     } else if (vm["outformat"].as<std::string>() == "xyz") {
       opts.writer_ = std::shared_ptr<Writer>(new outputWriter::XYZWriter());
     } else {
-      std::cerr << vm["output"].as<std::string>()
-                << " is not a valid output type" << std::endl;
+      spdlog::get("console")->critical("{} is not a valid output type",
+                                       vm["output"].as<std::string>());
       exit(1);
     }
 
@@ -110,10 +111,10 @@ options parse(int argc, char *argv[]) {
 
     return opts;
   } catch (std::exception &e) {
-    std::cerr << "error: " << e.what() << "\n";
+    spdlog::get("console")->critical("error: {}", e.what());
     std::exit(1);
   } catch (...) {
-    std::cerr << "Exception of unknown type!\n";
+    spdlog::get("console")->critical("Exception of unknown type!");
     std::exit(1);
   }
 }
