@@ -146,6 +146,24 @@ Setting loglevel
 The loglevel can be set easily by setting the SPDLOG enviroment variable.
 For detailed information refer here: https://github.com/gabime/spdlog?tab=readme-ov-file#load-log-levels-from-the-env-variable-or-argv.
 
+To disable all non-critical logging at compile refer to the -DLOGGING section of cmake.
+
 The available loggers currently available are:
 - "file": a general file logger
 - "console": a logger used mainly for outputting errors and critical information to the console
+
+The settings provided are:
+- off - no logging
+- critical - only the most essential logging, usally program crashes
+- error - non-fatal errors to inform the user
+- info - general informations on the program state
+- debug - detailed information on the program state, intended for debugging
+- trace - extreme information on the program state, intended for debugging extreme bugs "debug" cannot detect. WARNING: This will generate large files on your machine depending on settings!
+
+
+A possible example could look like this:
+```bash
+    export SPDLOG_LOGLEVEL=info,console=critical,file=debug
+```
+This way the console displays fatal error messages to not clutter the console (e.g. during gdb) while maintaining a reasonable info state in the file logger.
+
