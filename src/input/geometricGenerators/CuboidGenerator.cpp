@@ -18,7 +18,7 @@ CuboidGenerator::CuboidGenerator(int x_, int y_, int z_, double distance,
       lowerLeftFrontCorner(lowerLeftFrontCorner_),
       initialVelocity(initialVelocity_) {}
 
-void CuboidGenerator::readData(std::list<Particle> &list) {
+void CuboidGenerator::readData(std::list<Particle> &list, int dimensions) {
   if (x < 1 || y < 1 || z < 1) {
     spdlog::get("console")->error(
         "At least one dimension of a Cuboid was less than 0."
@@ -33,7 +33,7 @@ void CuboidGenerator::readData(std::list<Particle> &list) {
         std::array<double, 3> position = (h * location) + lowerLeftFrontCorner;
         std::array<double, 3> velocity =
             initialVelocity +
-            maxwellBoltzmannDistributedVelocity(meanBrownianMotion, 3);
+            maxwellBoltzmannDistributedVelocity(meanBrownianMotion, dimensions);
 #ifndef NO_LOG
         spdlog::get("file")->debug("Particle emplaced back with X: " +
                                    ArrayUtils::to_string(position) +

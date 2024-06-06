@@ -96,8 +96,10 @@ public:
    *  The list that will hold the generated particles.
    *  The generated particles will be appended to the end of the list.
    *  The list can be empty or already containing particles.
+   * \param dimensions
+   *	The dimensions, required to initialize the brownian motion
    */
-  void readData(std::list<Particle> &list) override;
+  void readData(std::list<Particle> &list, int dimensions) override;
 
   /**
    * \brief

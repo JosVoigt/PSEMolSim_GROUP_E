@@ -1,6 +1,6 @@
 #include "DiscGenerator.h"
-#include "../../src/utils/ArrayUtils.h"
-#include "../../src/utils/MaxwellBoltzmannDistribution.h"
+#include "utils/ArrayUtils.h"
+#include "utils/MaxwellBoltzmannDistribution.h"
 
 #include <cmath>
 
@@ -9,7 +9,7 @@ DiscGenerator::DiscGenerator(int radius_, double distance_, double mass_,
     : radius(radius_), distance(distance_), mass(mass_), velocity(velocity_),
       center(center_){};
 
-void DiscGenerator::readData(std::list<Particle> &list) {
+void DiscGenerator::readData(std::list<Particle> &list, int dimensions) {
   std::array<double, 3> squareUpperLeft = {(double)-radius, (double)-radius, 0};
   std::array<double, 3> upperLeftCorner = distance * squareUpperLeft + center;
   for (int i = 0; i < radius; i++) {
@@ -23,7 +23,7 @@ void DiscGenerator::readData(std::list<Particle> &list) {
       if (ArrayUtils::L2Norm(particleCoordinates - center) <=
           (radius * distance)) {
         std::array<double, 3> distrVelocity =
-            maxwellBoltzmannDistributedVelocity(velocity, 3);
+            maxwellBoltzmannDistributedVelocity(velocity, dimensions);
         list.emplace_back(particleCoordinates, distrVelocity, mass, 0);
       }
     }

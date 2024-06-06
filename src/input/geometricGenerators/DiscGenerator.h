@@ -10,5 +10,5 @@ private:
 
 public:
   DiscGenerator(int radius, double distance, double mass, double velocity, std::array<double, 3> &center);
-  void readData(std::list<Particle> &list) override;
+  void readData(std::list<Particle> &list, int dimensions) override;
 };

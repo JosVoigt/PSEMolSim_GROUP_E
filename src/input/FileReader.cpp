@@ -14,7 +14,7 @@
 
 FileReader::FileReader(const char* filename_) : filename(filename_) {}
 
-void FileReader::readData(std::list<Particle>& particles) {
+void FileReader::readData(std::list<Particle>& particles, int dimensions) {
     std::array<double, 3> x{};
     std::array<double, 3> v{};
     double m;

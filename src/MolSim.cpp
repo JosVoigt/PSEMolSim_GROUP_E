@@ -9,7 +9,6 @@
 
 #include "container/ParticleContainerBasic.h"
 #include "input/FileReader.h"
-#include "input/XMLReader.h"
 #include "input/geometricGenerators/CuboidGenerator.h"
 #include "simulation/Simulation.h"
 #include "utils/ArrayUtils.h"
@@ -71,11 +70,11 @@ int main(int argc, char *argv[]) {
 
   for (const auto &file : opts.filepath) {
     FileReader fileReader(file.c_str());
-    fileReader.readData(init);
+    fileReader.readData(init, opts.dimensions);
   }
 
   for (auto &cuboid : opts.cuboids) {
-    cuboid.readData(init);
+    cuboid.readData(init, opts.dimensions);
   }
 
 #ifndef NO_LOG

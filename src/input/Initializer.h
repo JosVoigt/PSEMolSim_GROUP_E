@@ -11,5 +11,5 @@ class Initializer {
    public:
     Initializer() = default;
     virtual ~Initializer() = default;
-    virtual void readData(std::list<Particle>& list) = 0;
+    virtual void readData(std::list<Particle>& list, int dimensions) = 0;
 };
