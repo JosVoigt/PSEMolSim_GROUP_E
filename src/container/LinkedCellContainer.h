@@ -93,14 +93,6 @@ public:
 
     /**
      * \brief
-     * Retrieves all the neighbors of the given particle using the given cutoff point
-     * @param particle
-     * The particle, the neighbors of which need to be retrieved
-     */
-    [[nodiscard]] std::vector<Particle> retrieveNeighbors(const Particle& particle) const;
-
-    /**
-     * \brief
      * Retrieve the indexes of boundary cells to save computation time
      */
     [[nodiscard]] std::vector<int> retrieveBoundaryCellIndices() const;
@@ -129,10 +121,11 @@ public:
 
     /**
      * \brief
-     * inserts the given particle to the given list if it is resides in the inner cells
+     * Retrieves the relevant particles (in this case the particles that reside in the neighboring cells)
+     * @param particle
+     * The particle for which the relevant particles are to be retrieved
      */
-    std::vector<Particle>
-    insertIfRelevantParticle(Particle& particle) override;
+    std::vector<Particle> retrieveRelevantParticles(Particle& particle) override;
 
     /**
      * \brief

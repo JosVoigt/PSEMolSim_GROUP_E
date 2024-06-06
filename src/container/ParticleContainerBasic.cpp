@@ -18,7 +18,7 @@ std::vector<Particle> ParticleContainer::preprocessParticles(){
 	return particleArray;
 }
 
-std::vector<Particle> ParticleContainer::insertIfRelevantParticle(Particle& particle){
+std::vector<Particle> ParticleContainer::retrieveRelevantParticles(Particle& particle){
     return particleArray;
 }
 void ParticleContainer::updateParticles() {

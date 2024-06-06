@@ -69,7 +69,7 @@ class ParticleContainer : public ParticleContainerInterface{
 
 	   std::vector<Particle> preprocessParticles() override;
 
-    std::vector<Particle> insertIfRelevantParticle(Particle& particle) override;
+    std::vector<Particle> retrieveRelevantParticles(Particle& particle) override;
 
 	   void updateParticles() override;
 };
