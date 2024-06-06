@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../utils/Parser.h"
+#include "outputWriter/VTKWriter.h"
 
 class XMLReader{
   const char* filename;
