@@ -2,6 +2,7 @@
 <simulation>
     <delta>0.0002</delta>
     <frequency>10</frequency>
+    <dimensions>2</dimensions>
     <start>0.0</start>
     <end>5.0</end>
     <outfile>simulation</outfile>
@@ -41,6 +42,17 @@
         <z>1</z>
         <brownianMotionMean>0.1</brownianMotionMean>
     </cuboids>
+    <discs>
+        <radius>15</radius>
+        <mass>1.0</mass>
+        <distance>1.1225</distance>
+        <velocity>0.0</velocity>
+        <center>
+            <x>20.0</x>
+            <y>20.0</y>
+            <z>0.0</z>
+        </center>
+    </discs>
     <lenjonesmol>
         <epsilon>5.0</epsilon>
         <sigma>1.0</sigma>

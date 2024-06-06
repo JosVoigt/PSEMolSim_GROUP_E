@@ -165,6 +165,64 @@ cuboid_pskel ()
 {
 }
 
+// disc_pskel
+//
+
+void disc_pskel::
+radius_parser (::xml_schema::int_pskel& p)
+{
+  this->radius_parser_ = &p;
+}
+
+void disc_pskel::
+mass_parser (::xml_schema::double_pskel& p)
+{
+  this->mass_parser_ = &p;
+}
+
+void disc_pskel::
+distance_parser (::xml_schema::double_pskel& p)
+{
+  this->distance_parser_ = &p;
+}
+
+void disc_pskel::
+velocity_parser (::xml_schema::double_pskel& p)
+{
+  this->velocity_parser_ = &p;
+}
+
+void disc_pskel::
+center_parser (::vector3D_pskel& p)
+{
+  this->center_parser_ = &p;
+}
+
+void disc_pskel::
+parsers (::xml_schema::int_pskel& radius,
+         ::xml_schema::double_pskel& mass,
+         ::xml_schema::double_pskel& distance,
+         ::xml_schema::double_pskel& velocity,
+         ::vector3D_pskel& center)
+{
+  this->radius_parser_ = &radius;
+  this->mass_parser_ = &mass;
+  this->distance_parser_ = &distance;
+  this->velocity_parser_ = &velocity;
+  this->center_parser_ = &center;
+}
+
+disc_pskel::
+disc_pskel ()
+: radius_parser_ (0),
+  mass_parser_ (0),
+  distance_parser_ (0),
+  velocity_parser_ (0),
+  center_parser_ (0),
+  v_state_stack_ (sizeof (v_state_), &v_state_first_)
+{
+}
+
 // lenjonesmol_pskel
 //
 
@@ -242,6 +300,12 @@ cuboids_parser (::cuboid_pskel& p)
 }
 
 void simulation_pskel::
+discs_parser (::disc_pskel& p)
+{
+  this->discs_parser_ = &p;
+}
+
+void simulation_pskel::
 lenjonesmol_parser (::lenjonesmol_pskel& p)
 {
   this->lenjonesmol_parser_ = &p;
@@ -255,6 +319,7 @@ parsers (::xml_schema::double_pskel& delta,
          ::xml_schema::double_pskel& end,
          ::xml_schema::string_pskel& outfile,
          ::cuboid_pskel& cuboids,
+         ::disc_pskel& discs,
          ::lenjonesmol_pskel& lenjonesmol)
 {
   this->delta_parser_ = &delta;
@@ -264,6 +329,7 @@ parsers (::xml_schema::double_pskel& delta,
   this->end_parser_ = &end;
   this->outfile_parser_ = &outfile;
   this->cuboids_parser_ = &cuboids;
+  this->discs_parser_ = &discs;
   this->lenjonesmol_parser_ = &lenjonesmol;
 }
 
@@ -276,6 +342,7 @@ simulation_pskel ()
   end_parser_ (0),
   outfile_parser_ (0),
   cuboids_parser_ (0),
+  discs_parser_ (0),
   lenjonesmol_parser_ (0),
   v_state_stack_ (sizeof (v_state_), &v_state_first_)
 {
@@ -352,6 +419,39 @@ post_cuboid ()
 {
 }
 
+// disc_pskel
+//
+
+void disc_pskel::
+radius (int)
+{
+}
+
+void disc_pskel::
+mass (double)
+{
+}
+
+void disc_pskel::
+distance (double)
+{
+}
+
+void disc_pskel::
+velocity (double)
+{
+}
+
+void disc_pskel::
+center ()
+{
+}
+
+void disc_pskel::
+post_disc ()
+{
+}
+
 // lenjonesmol_pskel
 //
 
@@ -405,6 +505,11 @@ outfile (const ::std::string&)
 
 void simulation_pskel::
 cuboids ()
+{
+}
+
+void simulation_pskel::
+discs ()
 {
 }
 
@@ -1115,6 +1220,335 @@ sequence_0 (unsigned long& state,
   }
 }
 
+// Element validation and dispatch functions for disc_pskel.
+//
+bool disc_pskel::
+_start_element_impl (const ::xml_schema::ro_string& ns,
+                     const ::xml_schema::ro_string& n,
+                     const ::xml_schema::ro_string* t)
+{
+  XSD_UNUSED (t);
+
+  v_state_& vs = *static_cast< v_state_* > (this->v_state_stack_.top ());
+  v_state_descr_* vd = vs.data + (vs.size - 1);
+
+  if (vd->func == 0 && vd->state == 0)
+  {
+    if (this->::xml_schema::complex_content::_start_element_impl (ns, n, t))
+      return true;
+    else
+      vd->state = 1;
+  }
+
+  while (vd->func != 0)
+  {
+    (this->*vd->func) (vd->state, vd->count, ns, n, t, true);
+
+    vd = vs.data + (vs.size - 1);
+
+    if (vd->state == ~0UL)
+      vd = vs.data + (--vs.size - 1);
+    else
+      break;
+  }
+
+  if (vd->func == 0)
+  {
+    if (vd->state != ~0UL)
+    {
+      unsigned long s = ~0UL;
+
+      if (n == "radius" && ns.empty ())
+        s = 0UL;
+
+      if (s != ~0UL)
+      {
+        vd->count++;
+        vd->state = ~0UL;
+
+        vd = vs.data + vs.size++;
+        vd->func = &disc_pskel::sequence_0;
+        vd->state = s;
+        vd->count = 0;
+
+        this->sequence_0 (vd->state, vd->count, ns, n, t, true);
+      }
+      else
+      {
+        if (vd->count < 1UL)
+          this->_expected_element (
+            "", "radius",
+            ns, n);
+        return false;
+      }
+    }
+    else
+      return false;
+  }
+
+  return true;
+}
+
+bool disc_pskel::
+_end_element_impl (const ::xml_schema::ro_string& ns,
+                   const ::xml_schema::ro_string& n)
+{
+  v_state_& vs = *static_cast< v_state_* > (this->v_state_stack_.top ());
+  v_state_descr_& vd = vs.data[vs.size - 1];
+
+  if (vd.func == 0 && vd.state == 0)
+  {
+    if (!::xml_schema::complex_content::_end_element_impl (ns, n))
+      assert (false);
+    return true;
+  }
+
+  assert (vd.func != 0);
+  (this->*vd.func) (vd.state, vd.count, ns, n, 0, false);
+
+  if (vd.state == ~0UL)
+    vs.size--;
+
+  return true;
+}
+
+void disc_pskel::
+_pre_e_validate ()
+{
+  this->v_state_stack_.push ();
+  static_cast< v_state_* > (this->v_state_stack_.top ())->size = 0;
+
+  v_state_& vs = *static_cast< v_state_* > (this->v_state_stack_.top ());
+  v_state_descr_& vd = vs.data[vs.size++];
+
+  vd.func = 0;
+  vd.state = 0;
+  vd.count = 0;
+}
+
+void disc_pskel::
+_post_e_validate ()
+{
+  v_state_& vs = *static_cast< v_state_* > (this->v_state_stack_.top ());
+  v_state_descr_* vd = vs.data + (vs.size - 1);
+
+  ::xml_schema::ro_string empty;
+  while (vd->func != 0)
+  {
+    (this->*vd->func) (vd->state, vd->count, empty, empty, 0, true);
+    assert (vd->state == ~0UL);
+    vd = vs.data + (--vs.size - 1);
+  }
+
+  if (vd->count < 1UL)
+    this->_expected_element (
+      "", "radius");
+
+  this->v_state_stack_.pop ();
+}
+
+void disc_pskel::
+sequence_0 (unsigned long& state,
+            unsigned long& count,
+            const ::xml_schema::ro_string& ns,
+            const ::xml_schema::ro_string& n,
+            const ::xml_schema::ro_string* t,
+            bool start)
+{
+  XSD_UNUSED (t);
+
+  switch (state)
+  {
+    case 0UL:
+    {
+      if (n == "radius" && ns.empty ())
+      {
+        if (start)
+        {
+          this->::xml_schema::complex_content::context_.top ().parser_ = this->radius_parser_;
+
+          if (this->radius_parser_)
+            this->radius_parser_->pre ();
+        }
+        else
+        {
+          if (this->radius_parser_)
+          {
+            int tmp (this->radius_parser_->post_int ());
+            this->radius (tmp);
+          }
+
+          count = 0;
+          state = 1UL;
+        }
+
+        break;
+      }
+      else
+      {
+        assert (start);
+        if (count < 1UL)
+          this->_expected_element (
+            "", "radius",
+            ns, n);
+        count = 0;
+        state = 1UL;
+        // Fall through.
+      }
+    }
+    case 1UL:
+    {
+      if (n == "mass" && ns.empty ())
+      {
+        if (start)
+        {
+          this->::xml_schema::complex_content::context_.top ().parser_ = this->mass_parser_;
+
+          if (this->mass_parser_)
+            this->mass_parser_->pre ();
+        }
+        else
+        {
+          if (this->mass_parser_)
+          {
+            double tmp (this->mass_parser_->post_double ());
+            this->mass (tmp);
+          }
+
+          count = 0;
+          state = 2UL;
+        }
+
+        break;
+      }
+      else
+      {
+        assert (start);
+        if (count < 1UL)
+          this->_expected_element (
+            "", "mass",
+            ns, n);
+        count = 0;
+        state = 2UL;
+        // Fall through.
+      }
+    }
+    case 2UL:
+    {
+      if (n == "distance" && ns.empty ())
+      {
+        if (start)
+        {
+          this->::xml_schema::complex_content::context_.top ().parser_ = this->distance_parser_;
+
+          if (this->distance_parser_)
+            this->distance_parser_->pre ();
+        }
+        else
+        {
+          if (this->distance_parser_)
+          {
+            double tmp (this->distance_parser_->post_double ());
+            this->distance (tmp);
+          }
+
+          count = 0;
+          state = 3UL;
+        }
+
+        break;
+      }
+      else
+      {
+        assert (start);
+        if (count < 1UL)
+          this->_expected_element (
+            "", "distance",
+            ns, n);
+        count = 0;
+        state = 3UL;
+        // Fall through.
+      }
+    }
+    case 3UL:
+    {
+      if (n == "velocity" && ns.empty ())
+      {
+        if (start)
+        {
+          this->::xml_schema::complex_content::context_.top ().parser_ = this->velocity_parser_;
+
+          if (this->velocity_parser_)
+            this->velocity_parser_->pre ();
+        }
+        else
+        {
+          if (this->velocity_parser_)
+          {
+            double tmp (this->velocity_parser_->post_double ());
+            this->velocity (tmp);
+          }
+
+          count = 0;
+          state = 4UL;
+        }
+
+        break;
+      }
+      else
+      {
+        assert (start);
+        if (count < 1UL)
+          this->_expected_element (
+            "", "velocity",
+            ns, n);
+        count = 0;
+        state = 4UL;
+        // Fall through.
+      }
+    }
+    case 4UL:
+    {
+      if (n == "center" && ns.empty ())
+      {
+        if (start)
+        {
+          this->::xml_schema::complex_content::context_.top ().parser_ = this->center_parser_;
+
+          if (this->center_parser_)
+            this->center_parser_->pre ();
+        }
+        else
+        {
+          if (this->center_parser_)
+          {
+            this->center_parser_->post_vector3D ();
+            this->center ();
+          }
+
+          count = 0;
+          state = ~0UL;
+        }
+
+        break;
+      }
+      else
+      {
+        assert (start);
+        if (count < 1UL)
+          this->_expected_element (
+            "", "center",
+            ns, n);
+        count = 0;
+        state = ~0UL;
+        // Fall through.
+      }
+    }
+    case ~0UL:
+      break;
+  }
+}
+
 // Element validation and dispatch functions for lenjonesmol_pskel.
 //
 bool lenjonesmol_pskel::
@@ -1721,16 +2155,44 @@ sequence_0 (unsigned long& state,
       else
       {
         assert (start);
-        if (count < 2UL)
-          this->_expected_element (
-            "", "cuboids",
-            ns, n);
         count = 0;
         state = 7UL;
         // Fall through.
       }
     }
     case 7UL:
+    {
+      if (n == "discs" && ns.empty ())
+      {
+        if (start)
+        {
+          this->::xml_schema::complex_content::context_.top ().parser_ = this->discs_parser_;
+
+          if (this->discs_parser_)
+            this->discs_parser_->pre ();
+        }
+        else
+        {
+          if (this->discs_parser_)
+          {
+            this->discs_parser_->post_disc ();
+            this->discs ();
+          }
+
+          count++;
+        }
+
+        break;
+      }
+      else
+      {
+        assert (start);
+        count = 0;
+        state = 8UL;
+        // Fall through.
+      }
+    }
+    case 8UL:
     {
       if (n == "lenjonesmol" && ns.empty ())
       {

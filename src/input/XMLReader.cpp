@@ -1,6 +1,5 @@
 #include "XMLReader.h"
 #include <fstream>
-#include <iostream>
 #include <sstream>
 #include <spdlog/spdlog.h>
 
@@ -20,10 +19,12 @@ void XMLReader::readData (parser::options &options) const {
 
   std::string key;
   std::string value;
-  double epsilon;
   std::array<double, 3> velocity{};
   std::array<double, 3> lowerLeftCorner{};
-  double distance, mass, x, y, z;
+  std::array<double, 3> center{};
+  double distance, mass, x, y, z, epsilon;
+  int radius;
+  double mass_disc, distance_disc;
 
   options.writer_ = std::shared_ptr<Writer>(new outputWriter::VTKWriter());
 
@@ -64,8 +65,7 @@ void XMLReader::readData (parser::options &options) const {
       } else if (key == "Epsilon") {
         epsilon = std::stod(value);
       } else if (key == "Sigma") {
-        options.force_ =
-            std::make_shared<LennardJonesForce>(epsilon, std::stod(value));
+        options.force_ = std::shared_ptr<Force>(new LennardJonesForce(epsilon, std::stod(value)));
       } else if (key == "Delta") {
         options.delta_t = std::stod(value);
       } else if (key == "Frequency") {
@@ -79,6 +79,22 @@ void XMLReader::readData (parser::options &options) const {
       } else if (key == "Outfile") {
         value.erase(0, 1);
         options.outfile = value;
+      } else if (key == "Center") {
+        std::stringstream iss_c(value);
+        char ignore;
+        double x_c, y_c, z_c;
+        iss_c >> ignore >> ignore >> x_c >> ignore >> ignore >> ignore >> y_c >> ignore >> ignore >> ignore >> z_c;
+        center[0] = x_c;
+        center[1] = y_c;
+        center[2] = z_c;
+      } else if (key == "Radius") {
+        radius = std::stoi(value);
+      } else if (key == "Mass_Disc") {
+        mass_disc = std::stod(value);
+      } else if (key == "Distance_Disc") {
+        distance_disc = std::stod(value);
+      } else if (key == "Velocity_Disc") {
+        options.discs.emplace_back(radius, distance_disc, mass_disc, std::stod(value), center);
       }
     }
   }

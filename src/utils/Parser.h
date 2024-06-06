@@ -6,6 +6,7 @@
 
 #include "force/Force.h"
 #include "input/geometricGenerators/CuboidGenerator.h"
+#include "input/geometricGenerators/DiscGenerator.h"
 #include "outputWriter/Writer.h"
 
 namespace parser {
@@ -18,6 +19,7 @@ struct options {
   int writeoutFrequency{};
   std::vector<std::string> filepath;
   std::vector<CuboidGenerator> cuboids;
+    std::vector<DiscGenerator> discs;
   std::string outfile;
   std::shared_ptr<Writer> writer_;
   std::shared_ptr<Force> force_;
