@@ -24,7 +24,7 @@ void XMLReader::readData (parser::options &options) const {
   std::array<double, 3> lowerLeftCorner{};
   double distance, mass, x, y, z;
 
-  options.writer_ = std::make_shared<Writer>(outputWriter::VTKWriter());
+  options.writer_ = std::shared_ptr<Writer>(new outputWriter::VTKWriter());
 
   while (std::getline(file, line)) {
 
