@@ -5,7 +5,7 @@
 
 LinkedCellContainer::LinkedCellContainer(int const amountCellsX_, int const amountCellsY_, int const amountCellsZ_, double const r_c) :
 r_c(r_c), amountCellsX(amountCellsX_), amountCellsY(amountCellsY_), amountCellsZ(amountCellsZ_) {
-    cellSize = r_c * r_c * r_c;
+    cellSize = r_c * r_c;
 
     amountCellsX += 2;
     amountCellsY += 2;
@@ -54,7 +54,7 @@ bool LinkedCellContainer::findAndremoveOldParticle(const Particle& particle) con
 }
 
 
-std::vector<Particle> LinkedCellContainer::retrieveRelevantParticles(Particle& particle) {
+std::vector<Particle> LinkedCellContainer::retrieveNeighbors(const Particle& particle) const {
 
     const std::array<int, 3> particleCellCoordinates = getCellCoordinates(particle);
     const int cellOfParticle = getIndexFromCoordinates(particleCellCoordinates);
@@ -81,6 +81,10 @@ std::vector<Particle> LinkedCellContainer::retrieveRelevantParticles(Particle& p
         }
     }
     return neighbours;
+}
+
+std::vector<Particle> LinkedCellContainer::retrieveRelevantParticles(Particle& particle) {
+    return retrieveNeighbors(particle);
 }
 
 
@@ -208,6 +212,7 @@ void LinkedCellContainer::updateParticles() {
                 insertParticle(particle);
             }
         }
+        deleteHaloParticles();
     }
 }
 
