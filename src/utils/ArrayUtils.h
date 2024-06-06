@@ -24,7 +24,7 @@
  */
 namespace ArrayUtils {
 
-// specialize a type for all of the STL containers.
+// specialize a type for all the STL containers.
 /**
  * Collection of structs that define what we consider a container. Remove / add
  * whatever you need.

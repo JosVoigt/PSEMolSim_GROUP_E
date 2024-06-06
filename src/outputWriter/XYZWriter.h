@@ -10,19 +10,19 @@
 #include <fstream>
 #include <vector>
 
-#include "Particle.h"
-#include "writer.h"
+#include "outputWriter/Writer.h"
 
 namespace outputWriter {
 
-class XYZWriter : writer {
+class XYZWriter : public Writer {
    public:
     XYZWriter();
 
     ~XYZWriter();
 
-    void plotParticles(std::vector<Particle *> &particles,
+    void plotParticles(ParticleContainer &particles,
                        const std::string &filename, int iteration) override;
+    std::string typeString() override;
 };
 
 }  // namespace outputWriter

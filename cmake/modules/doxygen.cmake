@@ -1,4 +1,4 @@
-#plagirised at https://vicrucann.github.io/tutorials/quick-cmake-doxygen/
+#plagiarised at https://vicrucann.github.io/tutorials/quick-cmake-doxygen/
 
 # first we can indicate the documentation build as an option and set it to ON by default
 option(BUILD_DOC "Build documentation" ON)
@@ -9,7 +9,7 @@ if (BUILD_DOC)
   find_package(Doxygen)
   if (DOXYGEN_FOUND)
       # set input and output files
-      set(DOXYGEN_IN ${CMAKE_CURRENT_SOURCE_DIR}/build/Doxyfile.in)
+      set(DOXYGEN_IN ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in)
 
       set(DOXYGEN_OUT ${CMAKE_CURRENT_SOURCE_DIR}/doxys_documentation/Doxyfile)
 

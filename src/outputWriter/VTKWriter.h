@@ -9,8 +9,8 @@
 
 #include <list>
 
+#include "outputWriter/Writer.h"
 #include "outputWriter/vtk-unstructured.h"
-#include "writer.h"
 
 namespace outputWriter {
 
@@ -18,7 +18,7 @@ namespace outputWriter {
  * This class implements the functionality to generate vtk output from
  * particles.
  */
-class VTKWriter : writer {
+class VTKWriter : public Writer {
    public:
     VTKWriter();
 
@@ -34,7 +34,7 @@ class VTKWriter : writer {
      *
      * @note: initializeOutput() must have been called before.
      */
-    void plotParticle(Particle &particle);
+    void plotParticle(const Particle &particle);
 
     /**
      * writes the final output file.
@@ -45,8 +45,9 @@ class VTKWriter : writer {
      */
     void writeFile(const std::string &filename, int iteration);
 
-    void plotParticles(std::vector<Particle *> &particles,
+    void plotParticles(ParticleContainer &particles,
                        const std::string &filename, int iteration) override;
+    std::string typeString() override;
 
    private:
     VTKFile_t *vtkFile;

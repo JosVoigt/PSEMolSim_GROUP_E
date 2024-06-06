@@ -1,167 +1,103 @@
+#include <gtest/gtest.h>
+#include <spdlog/cfg/env.h>
+#include <spdlog/sinks/basic_file_sink.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
+#include <spdlog/spdlog.h>
 
-#include <algorithm>
-#include <iostream>
-#include <vector>
+#include <chrono>
+#include <ctime>
 
-#include "FileReader.h"
-#include "Parser.h"
-#include "Particle.h"
-#include "Planet.h"
-#include "outputWriter/XYZWriter.h"
+#include "container/ParticleContainer.h"
+#include "input/CuboidGenerator.h"
+#include "input/FileReader.h"
+#include "simulation/Simulation.h"
 #include "utils/ArrayUtils.h"
-
-/**** forward declaration of the calculation functions ****/
-
-/**
- * calculate the force for all particles
- */
-void calculateF();
-
-/**
- * calculate the position for all particles
- */
-void calculateX();
-
-/**
- * calculate the position for all particles
- */
-void calculateV();
-
-/**
- * plot the particles to a xyz-file
- */
-void plotParticles(int iteration, outputType type);
-
-constexpr double start_time = 0;
-double end_time;
-double delta_t;
-
-std::vector<Particle*> particles;
+#include "utils/Parser.h"
 
 int main(int argc, char* argv[]) {
-    options result = parse(argc, argv);
+    auto console_logger = spdlog::stderr_color_mt("console");
+    try {
+        std::stringstream ss;
+        std::string time_format = "%Y-%m-%d_%H-%M-%S";
 
-    FileReader fileReader;
-    std::vector<Particle> partReadin;
-    fileReader.readFile(partReadin, result.filepath.c_str());
+        auto start = std::chrono::system_clock::now();
+        time_t start_time = std::chrono::system_clock::to_time_t(start);
 
-    particles.reserve(partReadin.size());
+        ss << "logs/MolSim_"
+           << std::put_time(std::localtime(&start_time), time_format.c_str())
+           << ".log";
 
-    writer* w;
-
-    switch (result.type) {
-        case planet:
-            for (auto& p : partReadin) {
-                auto* pl = new Planet(p);
-                particles.push_back(pl);
-            }
-            break;
+        auto file_logger = spdlog::basic_logger_mt("file", ss.str());
+    } catch (const spdlog::spdlog_ex& ex) {
+        spdlog::get("console")->critical(
+            "File logger could not be initalizied: {}", ex.what());
+        exit(1);
     }
+    spdlog::flush_every(std::chrono::seconds(5));
 
-    if (result.output_method = vtk) {
-        auto vtk = outputWriter::VTKWriter();
-        w = (writer*)&vtk;
-    } else if (result.output_method = xyz) {
-        auto xyz = outputWriter::XYZWriter();
-        w = (writer*)&xyz;
-    }
+    spdlog::cfg::load_env_levels();
+    parser::options opts = parser::parse(argc, argv);
 
-    end_time = result.end;
-    delta_t = result.delta_t;
+    if (opts.executeTests) {
+        spdlog::get("file")->info(
+            "Test flag was set, will proceed to execute tests");
+        testing::InitGoogleTest(&argc, argv);
+        return RUN_ALL_TESTS();
+    } else {
+        std::stringstream opt_string;
 
-    std::cout << "Calculating until: " << end_time << std::endl
-              << "Stepsize: " << delta_t << std::endl
-              << "Iterations: " << end_time / delta_t << std::endl
-              << "Particle count: " << particles.size() << std::endl;
+        // prevents unwanted formatting
+        // clang-format off
+        opt_string << "Parsed options were:\n"
+                   << "    execute tests: " << (opts.executeTests ? "true" : "false") << " (expected to be false)\n"
+                   << "    delta_t: " << opts.delta_t << "\n"
+                   << "    start: " << opts.start << "\n"
+                   << "    end: " << opts.end << "\n"
+                   << "    writeout frequency: " << opts.writeoutFrequency << "\n"
+                   << "    file(s): " << ArrayUtils::to_string(opts.filepath) << "\n"
+                   << "    outfile prefix: " << opts.outfile << "\n"
+                   << "    writer method: " << opts.writer_->typeString() << "\n"
+                   << "    output method: " << opts.force_->typeString() << "\n";
 
-    double current_time = start_time;
+        std::stringstream expected_stream;
 
-    int iteration = 0;
+        expected_stream << "The expected behaivour would be: " << "\n"
+                        << "    Generated files: " << (opts.end - opts.start) / opts.writeoutFrequency / opts.delta_t << "\n"
+                        << "    Iterations: " << (opts.end / opts.delta_t) << "\n";
 
-    // for this loop, we assume: current x, current f and current v are known
-    while (current_time < end_time) {
-        // calculate new x
-        calculateX();
-        // calculate new f
-        calculateF();
-        // calculate new v
-        calculateV();
+        // clang-format on
 
-        iteration++;
-        if (iteration % 10 == 0) {
-            plotParticles(iteration, result.output_method);
+        spdlog::get("file")->info(opt_string.str());
+        spdlog::get("file")->info(expected_stream.str());
+
+        std::list<Particle> init = std::list<Particle>();
+
+        for (const auto& file : opts.filepath) {
+            FileReader fileReader(file.c_str());
+            fileReader.readData(init);
         }
-        // std::cout << "Iteration " << iteration << " finished." << std::endl;
 
-        current_time += delta_t;
-    }
-
-    std::cout << "output written. Terminating..." << std::endl;
-    return 0;
-}
-
-/**
- * \brief
- *  Calculates the forces between every particle in the particle list.
- */
-void calculateF() {
-    // prepare the current particles for next iteration
-    for (auto& p : particles) {
-        p->nextIteration();
-    }
-
-    // iterate over the particle pairs
-    bool reachedParticle = false;
-    for (int i = 0; i < particles.size(); i++) {
-        for (int j = i + 1; j < particles.size(); j++) {
-            // check if particle combination has not been calculated
-            auto p1 = particles[i];
-            auto p2 = particles[j];
-
-            // calculate force
-            std::array<double, 3> force_p1_to_p2 = p1->calculateForce(*p2);
-            // add to 1st particle
-            p1->addF(force_p1_to_p2);
-
-            // Usage of Newton's 3rd law
-            for (int i = 0; i < 3; i++) {
-                force_p1_to_p2[i] *= -1;
-            }
-
-            // add inverse to second particle
-            p2->addF(force_p1_to_p2);
+        for (auto& cuboid : opts.cuboids) {
+            cuboid.readData(init);
         }
-    }
-}
 
-/**
- * \brief
- *  Calculate the new x for every particle based on its force postition
- */
-void calculateX() {
-    for (auto& p : particles) {
-        p->calculateX(delta_t);
-    }
-}
+        std::stringstream particleCount;
 
-/**
- * \brief
- * Calculate the new v for every particle based on force and velocity
- */
-void calculateV() {
-    for (auto& p : particles) {
-        p->calculateV(delta_t);
-    }
-}
+        particleCount << "Particle count: " << init.size();
+        spdlog::get("file")->debug(particleCount.str());
 
-void plotParticles(int iteration, outputType type) {
-    std::string out_name("MD_vtk");
+        if (init.size() < 2) {
+            spdlog::get("console")->critical(
+                "The simulation requires at least 2 particles! "
+                "Include them via file or cuboid.");
+            exit(1);
+        }
 
-    if (type = vtk) {
-        auto w = outputWriter::VTKWriter();
-        w.plotParticles(particles, out_name, iteration);
-    } else if (type = xyz) {
-        auto w = outputWriter::XYZWriter();
-        w.plotParticles(particles, out_name, iteration);
+        ParticleContainer container = ParticleContainer(init.size(), init);
+
+        Simulation sim(container, opts.force_, opts.writer_, opts.delta_t,
+                       opts.writeoutFrequency, opts.outfile);
+
+        sim.run(opts.start, opts.end);
     }
 }
