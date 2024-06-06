@@ -91,7 +91,9 @@ public:
     {
         std::cout << "Distance: " << distance_ << std::endl;
         std::cout << "Mass: " << mass_ << std::endl;
-        std::cout << "X: " << x_ << ", Y: " << y_ << ", Z: " << z_ << std::endl;
+        std::cout << "X: " << x_ << std::endl;
+        std::cout << "Y: " << y_ << std::endl;
+        std::cout << "Z: " << z_ << std::endl;
         std::cout << "BrownianMotionMean: " << brownianMotionMean_ << std::endl;
     }
 };

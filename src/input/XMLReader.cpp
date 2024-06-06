@@ -6,14 +6,14 @@
 #include "../force/LennardJonesMolecule.h"
 #include "../utils/Parser.h"
 
-XMLReader ::XMLReader(const char *filename_) : filename(filename_) {}
+XMLReader::XMLReader(const char* filename_) : filename(filename_) {}
 
-void XMLReader::readData(parser::options &options) {
-  std::ifstream file(filename);
-  if (!file.is_open()) {
-    std::cerr << "Unable to open file: " << filename << std::endl;
-    return;
-  }
+void XMLReader::readData (parser::options &options) const {
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+        std::cerr << "Unable to open file: " << filename << std::endl;
+        return;
+    }
 
   std::string line;
 
@@ -28,22 +28,20 @@ void XMLReader::readData(parser::options &options) {
 
     std::istringstream iss(line);
 
-    if (std::getline(iss, key, ':') && iss >> value) {
+    if (std::getline(iss, key, ':') && std::getline(iss, value)) {
       if (key == "Velocity") {
-        std::istringstream iss_v(value);
-        char discard;
+        std::stringstream iss_v(value);
+        char ignore;
         double x_v, y_v, z_v;
-        iss_v >> discard >> discard >> x_v >> discard >> discard >> y_v >>
-            discard >> discard >> z_v;
+        iss_v >> ignore >> ignore >> x_v >> ignore >> ignore >> ignore >> y_v >> ignore >> ignore >> ignore >> z_v;
         velocity[0] = x_v;
         velocity[1] = y_v;
         velocity[2] = z_v;
       } else if (key == "LowerLeftCorner") {
-        std::istringstream iss_l(value);
-        char discard;
+        std::stringstream iss_l(value);
+        char ignore;
         double x_l, y_l, z_l;
-        iss_l >> discard >> discard >> x_l >> discard >> discard >> y_l >>
-            discard >> discard >> z_l;
+        iss_l >> ignore >> ignore >> x_l >> ignore >> ignore >> ignore >> y_l >> ignore >> ignore >> ignore >> z_l;
         lowerLeftCorner[0] = x_l;
         lowerLeftCorner[1] = y_l;
         lowerLeftCorner[2] = z_l;
@@ -74,6 +72,7 @@ void XMLReader::readData(parser::options &options) {
       } else if (key == "End") {
         options.end = std::stod(value);
       } else if (key == "Outfile") {
+        value.erase(0, 1);
         options.outfile = value;
       }
     }

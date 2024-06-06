@@ -1,16 +1,14 @@
 #pragma once
 
-#include "../input/Initializer.h"
 #include "../utils/Parser.h"
 
-class XMLReader : public Initializer {
-private:
+class XMLReader{
   const char* filename;
 
 public:
   explicit XMLReader(const char* filename);
 
-  ~XMLReader() override = default;
+  ~XMLReader() = default;
 
-  void readData(parser::options &opt);
+  void readData(parser::options &opt) const;
 };
