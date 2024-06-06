@@ -51,7 +51,6 @@ private:
     int y_{};
     int z_{};
     double brownianMotionMean_{};
-    //vector3D_pimpl vector3d;
 
 public:
 
@@ -98,6 +97,46 @@ public:
     }
 };
 
+class disc_pimpl: public disc_pskel
+{
+private:
+    int radius_{};
+    double mass_{};
+    double distance_{};
+    double velocity_{};
+    vector3D_pimpl center_;
+
+public:
+    disc_pimpl(): center_("Center") {}
+
+    void radius (int r) override
+    {
+        radius_ = r;
+    }
+
+    void mass (double m) override
+    {
+        mass_ = m;
+    }
+
+    void distance (double d) override
+    {
+        distance_ = d;
+    }
+
+    void velocity (double v) override
+    {
+        velocity_ = v;
+    }
+
+    void post_disc () override
+    {
+        std::cout << "Radius: " << radius_ << std::endl;
+        std::cout << "Mass_Disc: " << mass_ << std::endl;
+        std::cout << "Distance_Disc: " << distance_ << std::endl;
+        std::cout << "Velocity_Disc: " << velocity_ << std::endl;
+    }
+};
 
 class lenjonesmol_pimpl: public lenjonesmol_pskel
 {
@@ -135,6 +174,7 @@ private:
     std::string outfile_;
     static cuboid_pskel cuboid_;
     std::vector<cuboid_pimpl> cuboids;
+    std::vector<disc_pimpl> discs;
 
 public:
     void delta (double d) override
@@ -191,9 +231,11 @@ main (__attribute__((unused)) int argc, char* argv[])
         xml_schema::string_pimpl string_p;
         simulation_pimpl simulation_p;
         cuboid_pimpl cuboid_p;
+        disc_pimpl disc_p;
         vector3D_pimpl velocity_p("Velocity");
         vector3D_pimpl lowerLeftCorner_p("LowerLeftCorner");
         lenjonesmol_pimpl lenjonesmol_p;
+        vector3D_pimpl center_p("Center");
 
         //velocity
         velocity_p.x_parser(double_p);
@@ -207,6 +249,12 @@ main (__attribute__((unused)) int argc, char* argv[])
         lowerLeftCorner_p.z_parser(double_p);
         cuboid_p.lowerLeftCorner_parser(lowerLeftCorner_p);
 
+        //center
+        center_p.x_parser(double_p);
+        center_p.y_parser(double_p);
+        center_p.z_parser(double_p);
+        disc_p.center_parser(center_p);
+
         //other cuboid parameters
         cuboid_p.distance_parser(double_p);
         cuboid_p.mass_parser(double_p);
@@ -215,6 +263,13 @@ main (__attribute__((unused)) int argc, char* argv[])
         cuboid_p.z_parser(int_p);
         cuboid_p.brownianMotionMean_parser(double_p);
         simulation_p.cuboids_parser(cuboid_p);
+
+        //disc
+        disc_p.radius_parser(int_p);
+        disc_p.mass_parser(double_p);
+        disc_p.distance_parser(double_p);
+        disc_p.velocity_parser(double_p);
+        simulation_p.discs_parser(disc_p);
 
         //other parameters
         simulation_p.delta_parser (double_p);

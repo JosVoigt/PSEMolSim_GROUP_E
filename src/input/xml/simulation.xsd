@@ -21,6 +21,16 @@
             <xs:element name="brownianMotionMean" type="xs:double"/>
         </xs:sequence>
     </xs:complexType>
+
+    <xs:complexType name="disc">
+        <xs:sequence>
+            <xs:element name="radius" type="xs:int"/>
+            <xs:element name="mass" type="xs:double"/>
+            <xs:element name="distance" type="xs:double"/>
+            <xs:element name="velocity" type="xs:double"/>
+            <xs:element name="center" type="vector3D"/>
+        </xs:sequence>
+    </xs:complexType>
     
     <xs:complexType name="lenjonesmol">
         <xs:sequence>
@@ -37,7 +47,8 @@
                 <xs:element name="start" type="xs:double"/>
                 <xs:element name="end" type="xs:double"/>
                 <xs:element name="outfile" type="xs:string"/>
-                <xs:element name="cuboids" type="cuboid" minOccurs="2" maxOccurs="unbounded"/>
+                <xs:element name="cuboids" type="cuboid" maxOccurs="unbounded"/>
+                <xs:element name="discs" type="disc" maxOccurs="unbounded"/>
                 <xs:element name="lenjonesmol" type="lenjonesmol"/>
             </xs:sequence>
     </xs:complexType>

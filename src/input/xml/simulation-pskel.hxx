@@ -51,6 +51,7 @@
 //
 class vector3D_pskel;
 class cuboid_pskel;
+class disc_pskel;
 class lenjonesmol_pskel;
 class simulation_pskel;
 
@@ -485,6 +486,117 @@ class cuboid_pskel: public ::xml_schema::complex_content
               bool start);
 };
 
+class disc_pskel: public ::xml_schema::complex_content
+{
+  public:
+  // Parser callbacks. Override them in your implementation.
+  //
+  // virtual void
+  // pre ();
+
+  virtual void
+  radius (int);
+
+  virtual void
+  mass (double);
+
+  virtual void
+  distance (double);
+
+  virtual void
+  velocity (double);
+
+  virtual void
+  center ();
+
+  virtual void
+  post_disc ();
+
+  // Parser construction API.
+  //
+  void
+  radius_parser (::xml_schema::int_pskel&);
+
+  void
+  mass_parser (::xml_schema::double_pskel&);
+
+  void
+  distance_parser (::xml_schema::double_pskel&);
+
+  void
+  velocity_parser (::xml_schema::double_pskel&);
+
+  void
+  center_parser (::vector3D_pskel&);
+
+  void
+  parsers (::xml_schema::int_pskel& /* radius */,
+           ::xml_schema::double_pskel& /* mass */,
+           ::xml_schema::double_pskel& /* distance */,
+           ::xml_schema::double_pskel& /* velocity */,
+           ::vector3D_pskel& /* center */);
+
+  // Constructor.
+  //
+  disc_pskel ();
+
+  // Implementation.
+  //
+  protected:
+  virtual bool
+  _start_element_impl (const ::xml_schema::ro_string&,
+                       const ::xml_schema::ro_string&,
+                       const ::xml_schema::ro_string*);
+
+  virtual bool
+  _end_element_impl (const ::xml_schema::ro_string&,
+                     const ::xml_schema::ro_string&);
+
+  protected:
+  ::xml_schema::int_pskel* radius_parser_;
+  ::xml_schema::double_pskel* mass_parser_;
+  ::xml_schema::double_pskel* distance_parser_;
+  ::xml_schema::double_pskel* velocity_parser_;
+  ::vector3D_pskel* center_parser_;
+
+  protected:
+  struct v_state_descr_
+  {
+    void (::disc_pskel::*func) (
+      unsigned long&,
+      unsigned long&,
+      const ::xml_schema::ro_string&,
+      const ::xml_schema::ro_string&,
+      const ::xml_schema::ro_string*,
+      bool);
+    unsigned long state;
+    unsigned long count;
+  };
+
+  struct v_state_
+  {
+    v_state_descr_ data[2UL];
+    unsigned long size;
+  };
+
+  v_state_ v_state_first_;
+  ::xsd::cxx::parser::pod_stack v_state_stack_;
+
+  virtual void
+  _pre_e_validate ();
+
+  virtual void
+  _post_e_validate ();
+
+  void
+  sequence_0 (unsigned long& state,
+              unsigned long& count,
+              const ::xml_schema::ro_string& ns,
+              const ::xml_schema::ro_string& n,
+              const ::xml_schema::ro_string* t,
+              bool start);
+};
+
 class lenjonesmol_pskel: public ::xml_schema::complex_content
 {
   public:
@@ -602,6 +714,9 @@ class simulation_pskel: public ::xml_schema::complex_content
   cuboids ();
 
   virtual void
+  discs ();
+
+  virtual void
   lenjonesmol ();
 
   virtual void
@@ -631,6 +746,9 @@ class simulation_pskel: public ::xml_schema::complex_content
   cuboids_parser (::cuboid_pskel&);
 
   void
+  discs_parser (::disc_pskel&);
+
+  void
   lenjonesmol_parser (::lenjonesmol_pskel&);
 
   void
@@ -641,6 +759,7 @@ class simulation_pskel: public ::xml_schema::complex_content
            ::xml_schema::double_pskel& /* end */,
            ::xml_schema::string_pskel& /* outfile */,
            ::cuboid_pskel& /* cuboids */,
+           ::disc_pskel& /* discs */,
            ::lenjonesmol_pskel& /* lenjonesmol */);
 
   // Constructor.
@@ -667,6 +786,7 @@ class simulation_pskel: public ::xml_schema::complex_content
   ::xml_schema::double_pskel* end_parser_;
   ::xml_schema::string_pskel* outfile_parser_;
   ::cuboid_pskel* cuboids_parser_;
+  ::disc_pskel* discs_parser_;
   ::lenjonesmol_pskel* lenjonesmol_parser_;
 
   protected:
