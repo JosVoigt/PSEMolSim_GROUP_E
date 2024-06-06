@@ -33,6 +33,7 @@
             <xs:sequence>
                 <xs:element name="delta" type="xs:double"/>
                 <xs:element name="frequency" type="xs:int"/>
+                <xs:element name="dimensions" type="xs:int"/>
                 <xs:element name="start" type="xs:double"/>
                 <xs:element name="end" type="xs:double"/>
                 <xs:element name="outfile" type="xs:string"/>
