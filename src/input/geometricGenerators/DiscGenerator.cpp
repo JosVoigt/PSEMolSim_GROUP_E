@@ -1,6 +1,6 @@
 #include "DiscGenerator.h"
-#include "utils/ArrayUtils.h"
-#include "utils/MaxwellBoltzmannDistribution.h"
+#include "../../src/utils/ArrayUtils.h"
+#include "../../src/utils/MaxwellBoltzmannDistribution.h"
 
 #include <cmath>
 

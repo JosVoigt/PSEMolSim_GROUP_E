@@ -1,4 +1,4 @@
-#include "input/Initializer.h"
+#include "../Initializer.h"
 
 class DiscGenerator : public Initializer {
 private:

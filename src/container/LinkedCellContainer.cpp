@@ -58,7 +58,7 @@ bool LinkedCellContainer::findAndremoveOldParticle(const Particle& particle) con
 }
 
 
-std::vector<Particle> LinkedCellContainer::retrieveNeighbors(const Particle& particle) const {
+std::vector<Particle> LinkedCellContainer::retrieveRelevantParticles(Particle& particle) {
 
     const std::array<int, 3> particleCellCoordinates = getCellCoordinates(particle);
     const int cellOfParticle = getIndexFromCoordinates(particleCellCoordinates);
@@ -190,10 +190,6 @@ void LinkedCellContainer::deleteHaloParticles() {
     for (const int index : haloCells) {
         cellVector[index].clear();
     }
-}
-
-std::vector<Particle> LinkedCellContainer::insertIfRelevantParticle(Particle& particle) {
-    return retrieveNeighbors(particle);
 }
 
 std::vector <Particle> LinkedCellContainer::preprocessParticles() {
