@@ -17,7 +17,6 @@ namespace po = boost::program_options;
 #include "force/LennardJonesForce.h"
 #include "force/PlanetForce.h"
 #include "input/geometricGenerators/CuboidGenerator.h"
-#include "input/geometricGenerators/DiscGenerator.h"
 #include "outputWriter/VTKWriter.h"
 #include "outputWriter/Writer.h"
 #include "outputWriter/XYZWriter.h"
