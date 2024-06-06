@@ -25,6 +25,7 @@ namespace parser {
 double const DEFAULT_DELTA = 0.00001;
 double const DEFAULT_END = 1;
 int const DEFAULT_FREQUENCY = 10;
+int const DEFAULT_DIM = 3;
 
 options parse(int argc, char *argv[]) {
   try {
@@ -39,6 +40,7 @@ options parse(int argc, char *argv[]) {
         desc.add_options()
             ("help,h", "produce help message, ignores all other flags")
             ("cuboid,c", po::value<std::string>(),"accepts the generation paramaters for the cuboids")
+			("dimensions,D", po::value<int>(&opts.dimensions)->default_value(DEFAULT_DIM), "choose dimensions either 2 or 3")
             ("delta,d", po::value<double>(&opts.delta_t)->default_value(DEFAULT_DELTA),"set step size")
             ("frequency,f", po::value<int>(&opts.writeoutFrequency)->default_value(DEFAULT_FREQUENCY),"sets the frequency for data writeout")
             ("start,s", po::value<double>(&opts.start)->default_value(0),"sets the recording start point for the simulation")

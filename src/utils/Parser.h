@@ -14,6 +14,7 @@ struct options {
   double delta_t{};
   double start{};
   double end{};
+  int dimensions;
   int writeoutFrequency{};
   std::vector<std::string> filepath;
   std::vector<CuboidGenerator> cuboids;
