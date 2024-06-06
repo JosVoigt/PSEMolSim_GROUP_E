@@ -91,6 +91,16 @@ public:
      */
     [[nodiscard]] bool findAndremoveOldParticle(const Particle& particle) const;
 
+
+
+    /**
+     * \brief
+     * Retrieves all the neighbors of the given particle using the given cutoff point
+     * @param particle
+     * The particle, the neighbors of which need to be retrieved
+     */
+    [[nodiscard]] std::vector<Particle> retrieveNeighbors(const Particle& particle) const;
+
     /**
      * \brief
      * Retrieve the indexes of boundary cells to save computation time
