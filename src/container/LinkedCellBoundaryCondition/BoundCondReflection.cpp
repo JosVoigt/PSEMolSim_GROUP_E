@@ -25,7 +25,7 @@ BoundaryConditionReflection::executeBoundaryCondition() {
       std::array<double, 3> p_x = p.getX();
       std::array<double, 3> distance_array =
           (point_on_plane - p_x) * surface_normal;
-      std::array<double, 3> halo_x = p_x + distance_array;
+      std::array<double, 3> halo_x = p_x + 2 * distance_array;
 
       std::array<double, 3> zero = {0, 0, 0};
 
