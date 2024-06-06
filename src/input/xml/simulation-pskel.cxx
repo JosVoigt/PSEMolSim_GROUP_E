@@ -2155,10 +2155,6 @@ sequence_0 (unsigned long& state,
       else
       {
         assert (start);
-        if (count < 1UL)
-          this->_expected_element (
-            "", "cuboids",
-            ns, n);
         count = 0;
         state = 7UL;
         // Fall through.
@@ -2191,10 +2187,6 @@ sequence_0 (unsigned long& state,
       else
       {
         assert (start);
-        if (count < 1UL)
-          this->_expected_element (
-            "", "discs",
-            ns, n);
         count = 0;
         state = 8UL;
         // Fall through.

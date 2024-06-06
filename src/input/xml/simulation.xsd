@@ -47,8 +47,8 @@
                 <xs:element name="start" type="xs:double"/>
                 <xs:element name="end" type="xs:double"/>
                 <xs:element name="outfile" type="xs:string"/>
-                <xs:element name="cuboids" type="cuboid" maxOccurs="unbounded"/>
-                <xs:element name="discs" type="disc" maxOccurs="unbounded"/>
+                <xs:element name="cuboids" type="cuboid" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element name="discs" type="disc" minOccurs="0" maxOccurs="unbounded"/>
                 <xs:element name="lenjonesmol" type="lenjonesmol"/>
             </xs:sequence>
     </xs:complexType>
