@@ -57,24 +57,29 @@ bool LinkedCellContainer::findAndremoveOldParticle(const Particle& particle) con
 std::vector<Particle> LinkedCellContainer::retrieveNeighbors(const Particle& particle) const {
 
     const std::array<int, 3> particleCellCoordinates = getCellCoordinates(particle);
-    const int cellOfParticle = getIndexFromCoordinates(particleCellCoordinates);
     std::vector<Particle> neighbours;
 
     //Find bounds of neighbouring cells (this is needed so that cellOfParticle -1 / +1 doesn't go out of bounds)
-    const int startX = cellOfParticle == 1 ? 1 : cellOfParticle - 1;
-    const int endX = cellOfParticle == amountCellsX - 2 ? amountCellsX - 2 : cellOfParticle + 1;
+    const int startX = particleCellCoordinates[0] == 1 ? 1 : particleCellCoordinates[0] - 1;
+    const int endX = particleCellCoordinates[0] == amountCellsX - 2 ? amountCellsX - 2 : particleCellCoordinates[0] + 1;
 
-    const int startY = cellOfParticle == 1 ? 1 : cellOfParticle - 1;
-    const int endY = cellOfParticle == amountCellsY - 2 ? amountCellsY - 2 : cellOfParticle + 1;
+    const int startY = particleCellCoordinates[1] == 1 ? 1 : particleCellCoordinates[1] - 1;
+    const int endY = particleCellCoordinates[1] == amountCellsY - 2 ? amountCellsY - 2 : particleCellCoordinates[1] + 1;
 
-    const int startZ = cellOfParticle == 1 ? 1 : cellOfParticle - 1;
-    const int endZ = cellOfParticle == amountCellsZ - 2 ? amountCellsZ - 2 : cellOfParticle + 1;
+    const int startZ = particleCellCoordinates[2] == 1 ? 1 : particleCellCoordinates[2] - 1;
+    const int endZ = particleCellCoordinates[2] == amountCellsZ - 2 ? amountCellsZ - 2 : particleCellCoordinates[2] + 1;
 
     //Iterate over them and add all the cells into the list
     for (int x = startX; x <= endX; x++) {
         for (int y = startY; y <= endY; y++) {
             for (int z = startZ; z <= endZ; z++) {
-                for (const Particle& neighbour : cellVector[x + amountCellsX * (y + amountCellsY * z)]) {
+
+                for (const Particle& neighbour : cellVector[x + (amountCellsX) * (y + (amountCellsY) * z)]) {
+
+                    //Of course we wouldn't want to include the particle itself, otherwise it would mess up the force calculation
+                    if (neighbour == particle) {
+                        continue;
+                    }
                     neighbours.push_back(neighbour);
                 }
             }
