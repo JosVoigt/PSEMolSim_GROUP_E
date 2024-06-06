@@ -1,7 +1,7 @@
 #include <memory>
 #include <vector>
 #include "force/Force.h"
-#include "linkedCellBoundary.h"
+#include "LinkedCellBoundary.h"
 
 class BoundaryConditionReflection : public LinkedCellBoundary {
 	private:

@@ -1,6 +1,6 @@
 #include <vector>
 #include "container/Particle.h"
-#include "linkedCellBoundary.h"
+#include "LinkedCellBoundary.h"
 
 class BoundaryConditionOutflow : public LinkedCellBoundary {
 	public:
