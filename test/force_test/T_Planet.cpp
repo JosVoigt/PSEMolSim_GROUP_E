@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "container/Particle.h"
-#include "force/Planet.h"
+#include "force/PlanetForce.h"
 
 #ifndef TOLERANCE
 #define TOLERANCE 1e-7;
@@ -25,7 +25,7 @@ class P_test : public testing::Test {
     Particle planet1_displaced_and_mass = Particle(x1_displaced, v, 3.2, 0);
     Particle planet2_displaced_and_mass = Particle(x2_displaced, v, 6, 0);
 
-    Planet planet = Planet();
+    PlanetForce planet = PlanetForce();
 
     double tolerance = TOLERANCE;
 };

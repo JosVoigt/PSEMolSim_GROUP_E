@@ -13,8 +13,8 @@ namespace po = boost::program_options;
 #include <string>
 
 #include "force/Force.h"
-#include "force/LennardJonesMolecule.h"
-#include "force/Planet.h"
+#include "force/LennardJonesForce.h"
+#include "force/PlanetForce.h"
 #include "input/geometricGenerators/CuboidGenerator.h"
 #include "outputWriter/VTKWriter.h"
 #include "outputWriter/Writer.h"
@@ -72,12 +72,12 @@ options parse(int argc, char *argv[]) {
       std::cerr << "Please choose EXACTLY ONE force mode" << std::endl;
       exit(1);
     } else if (vm.count("planet")) {
-      opts.force_ = std::shared_ptr<Force>(new Planet());
+      opts.force_ = std::shared_ptr<Force>(new PlanetForce());
     } else if (!vm["lenjonesmol"].empty() &&
                (ljm_args = vm["lenjonesmol"].as<std::vector<double>>())
                        .size() == 2) {
       opts.force_ = std::shared_ptr<Force>(
-          new LennardJonesMolecule(ljm_args[0], ljm_args[1]));
+          new LennardJonesForce(ljm_args[0], ljm_args[1]));
     } else {
       std::cerr << "Please provide a single force mode" << std::endl;
       exit(1);

@@ -1,4 +1,4 @@
-#include "LennardJonesMolecule.h"
+#include "LennardJonesForce.h"
 
 #include <spdlog/spdlog.h>
 
@@ -6,12 +6,12 @@
 
 #include "utils/ArrayUtils.h"
 
-LennardJonesMolecule::LennardJonesMolecule(double epsilon_, double sigma_)
+LennardJonesForce::LennardJonesForce(double epsilon_, double sigma_)
     : epsilon(epsilon_), sigma(sigma_) {
   epsilon_24 = epsilon * (-24);
 }
 
-std::array<double, 3> LennardJonesMolecule::calculateForce(Particle& p1,
+std::array<double, 3> LennardJonesForce::calculateForce(Particle& p1,
                                                            Particle& p2) const {
   double distance = ArrayUtils::L2Norm(p1.getX() - p2.getX());
 
@@ -31,6 +31,6 @@ std::array<double, 3> LennardJonesMolecule::calculateForce(Particle& p1,
   return force;
 }
 
-std::string LennardJonesMolecule::typeString() {
+std::string LennardJonesForce::typeString() {
   return "Lennard-Jones-Potential for molecules";
 }
