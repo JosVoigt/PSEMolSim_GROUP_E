@@ -504,7 +504,7 @@ class disc_pskel: public ::xml_schema::complex_content
   distance (double);
 
   virtual void
-  velocity (double);
+  velocity ();
 
   virtual void
   center ();
@@ -524,7 +524,7 @@ class disc_pskel: public ::xml_schema::complex_content
   distance_parser (::xml_schema::double_pskel&);
 
   void
-  velocity_parser (::xml_schema::double_pskel&);
+  velocity_parser (::vector3D_pskel&);
 
   void
   center_parser (::vector3D_pskel&);
@@ -533,7 +533,7 @@ class disc_pskel: public ::xml_schema::complex_content
   parsers (::xml_schema::int_pskel& /* radius */,
            ::xml_schema::double_pskel& /* mass */,
            ::xml_schema::double_pskel& /* distance */,
-           ::xml_schema::double_pskel& /* velocity */,
+           ::vector3D_pskel& /* velocity */,
            ::vector3D_pskel& /* center */);
 
   // Constructor.
@@ -556,7 +556,7 @@ class disc_pskel: public ::xml_schema::complex_content
   ::xml_schema::int_pskel* radius_parser_;
   ::xml_schema::double_pskel* mass_parser_;
   ::xml_schema::double_pskel* distance_parser_;
-  ::xml_schema::double_pskel* velocity_parser_;
+  ::vector3D_pskel* velocity_parser_;
   ::vector3D_pskel* center_parser_;
 
   protected:

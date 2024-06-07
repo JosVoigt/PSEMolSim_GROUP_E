@@ -46,7 +46,11 @@
         <radius>15</radius>
         <mass>1.0</mass>
         <distance>1.1225</distance>
-        <velocity>0.0</velocity>
+        <velocity>
+            <x>0.0</x>
+            <y>0.0</y>
+            <z>0.0</z>
+        </velocity>
         <center>
             <x>20.0</x>
             <y>20.0</y>

@@ -187,7 +187,7 @@ distance_parser (::xml_schema::double_pskel& p)
 }
 
 void disc_pskel::
-velocity_parser (::xml_schema::double_pskel& p)
+velocity_parser (::vector3D_pskel& p)
 {
   this->velocity_parser_ = &p;
 }
@@ -202,7 +202,7 @@ void disc_pskel::
 parsers (::xml_schema::int_pskel& radius,
          ::xml_schema::double_pskel& mass,
          ::xml_schema::double_pskel& distance,
-         ::xml_schema::double_pskel& velocity,
+         ::vector3D_pskel& velocity,
          ::vector3D_pskel& center)
 {
   this->radius_parser_ = &radius;
@@ -438,7 +438,7 @@ distance (double)
 }
 
 void disc_pskel::
-velocity (double)
+velocity ()
 {
 }
 
@@ -1485,8 +1485,8 @@ sequence_0 (unsigned long& state,
         {
           if (this->velocity_parser_)
           {
-            double tmp (this->velocity_parser_->post_double ());
-            this->velocity (tmp);
+            this->velocity_parser_->post_vector3D ();
+            this->velocity ();
           }
 
           count = 0;
