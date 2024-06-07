@@ -49,7 +49,7 @@ class ParticleContainer : public ParticleContainerInterface{
      * \return
      *  An iterator to the first particle in the container
      */
-    Iterator begin() { return particleArray.begin(); }
+    Iterator begin() override { return particleArray.begin(); }
 
     /**
      * \brief
@@ -57,7 +57,7 @@ class ParticleContainer : public ParticleContainerInterface{
      * \return
      *  An iterator to the end of the container
      */
-    Iterator end() { return particleArray.end(); }
+    Iterator end() override { return particleArray.end(); }
 
     /**
      * \brief
@@ -65,7 +65,7 @@ class ParticleContainer : public ParticleContainerInterface{
      * \return
      *  The amount of particles in the container
      */
-    [[nodiscard]] std::size_t size() const;
+    [[nodiscard]] std::size_t size() const override;
 
 	   std::vector<Particle> preprocessParticles() override;
 

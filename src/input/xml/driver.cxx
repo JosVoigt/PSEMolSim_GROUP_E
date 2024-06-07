@@ -103,11 +103,11 @@ private:
     int radius_{};
     double mass_{};
     double distance_{};
-    double velocity_{};
+    vector3D_pimpl velocity_;
     vector3D_pimpl center_;
 
 public:
-    disc_pimpl(): center_("Center") {}
+    disc_pimpl(): center_("Center"), velocity_("Velocity_Disc") {}
 
     void radius (int r) override
     {
@@ -124,17 +124,12 @@ public:
         distance_ = d;
     }
 
-    void velocity (double v) override
-    {
-        velocity_ = v;
-    }
 
     void post_disc () override
     {
         std::cout << "Radius: " << radius_ << std::endl;
         std::cout << "Mass_Disc: " << mass_ << std::endl;
         std::cout << "Distance_Disc: " << distance_ << std::endl;
-        std::cout << "Velocity_Disc: " << velocity_ << std::endl;
     }
 };
 
@@ -159,6 +154,38 @@ public:
     {
         std::cout << "Epsilon: " << epsilon_ << std::endl;
         std::cout << "Sigma: " << sigma_ << std::endl;
+    }
+};
+
+class linked_cell_pimpl: public linkedcell_pskel {
+private:
+    int amountcellsX_{};
+    int amountcellsY_{};
+    int amountcellsZ_{};
+    double sidelength_{};
+
+public:
+    void amountcellsx(int x) override {
+        amountcellsX_ = x;
+    }
+
+    void amountcellsy(int y) override {
+        amountcellsY_ = y;
+    }
+
+    void amountcellsz(int z) override {
+        amountcellsZ_ = z;
+    }
+
+    void cellsidelength(double s) override {
+        sidelength_ = s;
+    }
+
+    void post_linkedcell() override {
+        std::cout << "AmountCellsX: " << amountcellsX_ << std::endl;
+        std::cout << "AmountCellsY: " << amountcellsY_ << std::endl;
+        std::cout << "AmountCellsZ: " << amountcellsZ_ << std::endl;
+        std::cout << "Sidelength: " << sidelength_ << std::endl;
     }
 };
 
@@ -236,6 +263,7 @@ main (__attribute__((unused)) int argc, char* argv[])
         vector3D_pimpl lowerLeftCorner_p("LowerLeftCorner");
         lenjonesmol_pimpl lenjonesmol_p;
         vector3D_pimpl center_p("Center");
+        vector3D_pimpl velocity_disc_p("Velocity_Disc");
 
         //velocity
         velocity_p.x_parser(double_p);
@@ -255,6 +283,12 @@ main (__attribute__((unused)) int argc, char* argv[])
         center_p.z_parser(double_p);
         disc_p.center_parser(center_p);
 
+        //velocity_disc
+        velocity_disc_p.x_parser(double_p);
+        velocity_disc_p.y_parser(double_p);
+        velocity_disc_p.z_parser(double_p);
+        disc_p.velocity_parser(velocity_disc_p);
+
         //other cuboid parameters
         cuboid_p.distance_parser(double_p);
         cuboid_p.mass_parser(double_p);
@@ -268,7 +302,6 @@ main (__attribute__((unused)) int argc, char* argv[])
         disc_p.radius_parser(int_p);
         disc_p.mass_parser(double_p);
         disc_p.distance_parser(double_p);
-        disc_p.velocity_parser(double_p);
         simulation_p.discs_parser(disc_p);
 
         //other parameters

@@ -28,4 +28,12 @@ class ParticleContainerInterface {
      * Updates the location and state of the particles in the container
      */
     virtual void updateParticles() = 0;
+
+
+    [[nodiscard]] virtual std::size_t size() const = 0;
+
+
+    virtual std::vector<Particle>::iterator begin() = 0;
+
+    virtual std::vector<Particle>::iterator end() = 0;
 };

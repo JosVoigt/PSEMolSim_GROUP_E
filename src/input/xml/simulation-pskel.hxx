@@ -53,6 +53,7 @@ class vector3D_pskel;
 class cuboid_pskel;
 class disc_pskel;
 class lenjonesmol_pskel;
+class linkedcell_pskel;
 class simulation_pskel;
 
 #ifndef XSD_USE_CHAR
@@ -504,7 +505,7 @@ class disc_pskel: public ::xml_schema::complex_content
   distance (double);
 
   virtual void
-  velocity (double);
+  velocity ();
 
   virtual void
   center ();
@@ -524,7 +525,7 @@ class disc_pskel: public ::xml_schema::complex_content
   distance_parser (::xml_schema::double_pskel&);
 
   void
-  velocity_parser (::xml_schema::double_pskel&);
+  velocity_parser (::vector3D_pskel&);
 
   void
   center_parser (::vector3D_pskel&);
@@ -533,7 +534,7 @@ class disc_pskel: public ::xml_schema::complex_content
   parsers (::xml_schema::int_pskel& /* radius */,
            ::xml_schema::double_pskel& /* mass */,
            ::xml_schema::double_pskel& /* distance */,
-           ::xml_schema::double_pskel& /* velocity */,
+           ::vector3D_pskel& /* velocity */,
            ::vector3D_pskel& /* center */);
 
   // Constructor.
@@ -556,7 +557,7 @@ class disc_pskel: public ::xml_schema::complex_content
   ::xml_schema::int_pskel* radius_parser_;
   ::xml_schema::double_pskel* mass_parser_;
   ::xml_schema::double_pskel* distance_parser_;
-  ::xml_schema::double_pskel* velocity_parser_;
+  ::vector3D_pskel* velocity_parser_;
   ::vector3D_pskel* center_parser_;
 
   protected:
@@ -650,6 +651,109 @@ class lenjonesmol_pskel: public ::xml_schema::complex_content
   struct v_state_descr_
   {
     void (::lenjonesmol_pskel::*func) (
+      unsigned long&,
+      unsigned long&,
+      const ::xml_schema::ro_string&,
+      const ::xml_schema::ro_string&,
+      const ::xml_schema::ro_string*,
+      bool);
+    unsigned long state;
+    unsigned long count;
+  };
+
+  struct v_state_
+  {
+    v_state_descr_ data[2UL];
+    unsigned long size;
+  };
+
+  v_state_ v_state_first_;
+  ::xsd::cxx::parser::pod_stack v_state_stack_;
+
+  virtual void
+  _pre_e_validate ();
+
+  virtual void
+  _post_e_validate ();
+
+  void
+  sequence_0 (unsigned long& state,
+              unsigned long& count,
+              const ::xml_schema::ro_string& ns,
+              const ::xml_schema::ro_string& n,
+              const ::xml_schema::ro_string* t,
+              bool start);
+};
+
+class linkedcell_pskel: public ::xml_schema::complex_content
+{
+  public:
+  // Parser callbacks. Override them in your implementation.
+  //
+  // virtual void
+  // pre ();
+
+  virtual void
+  amountcellsx (int);
+
+  virtual void
+  amountcellsy (int);
+
+  virtual void
+  amountcellsz (int);
+
+  virtual void
+  cellsidelength (double);
+
+  virtual void
+  post_linkedcell ();
+
+  // Parser construction API.
+  //
+  void
+  amountcellsx_parser (::xml_schema::int_pskel&);
+
+  void
+  amountcellsy_parser (::xml_schema::int_pskel&);
+
+  void
+  amountcellsz_parser (::xml_schema::int_pskel&);
+
+  void
+  cellsidelength_parser (::xml_schema::double_pskel&);
+
+  void
+  parsers (::xml_schema::int_pskel& /* amountcellsx */,
+           ::xml_schema::int_pskel& /* amountcellsy */,
+           ::xml_schema::int_pskel& /* amountcellsz */,
+           ::xml_schema::double_pskel& /* cellsidelength */);
+
+  // Constructor.
+  //
+  linkedcell_pskel ();
+
+  // Implementation.
+  //
+  protected:
+  virtual bool
+  _start_element_impl (const ::xml_schema::ro_string&,
+                       const ::xml_schema::ro_string&,
+                       const ::xml_schema::ro_string*);
+
+  virtual bool
+  _end_element_impl (const ::xml_schema::ro_string&,
+                     const ::xml_schema::ro_string&);
+
+  protected:
+  ::xml_schema::int_pskel* amountcellsx_parser_;
+  ::xml_schema::int_pskel* amountcellsy_parser_;
+  ::xml_schema::int_pskel* amountcellsz_parser_;
+  ::xml_schema::double_pskel* cellsidelength_parser_;
+
+  protected:
+  struct v_state_descr_
+  {
+    void (::linkedcell_pskel::*func) (
       unsigned long&,
       unsigned long&,
       const ::xml_schema::ro_string&,

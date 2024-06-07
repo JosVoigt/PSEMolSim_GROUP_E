@@ -23,6 +23,7 @@ struct options {
   std::string outfile;
   std::shared_ptr<Writer> writer_;
   std::shared_ptr<Force> force_;
+  std::shared_ptr<ParticleContainerInterface> container_;
 };
 
 // predeclaration

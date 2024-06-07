@@ -88,7 +88,7 @@ int main(int argc, char *argv[]) {
     exit(1);
   }
 
-  ParticleContainer container = ParticleContainer(init.size(), init);
+  std::shared_ptr<ParticleContainerInterface> container = opts.container_;
 
   Simulation sim(container, opts.force_, opts.writer_, opts.delta_t,
                  opts.writeoutFrequency, opts.outfile);

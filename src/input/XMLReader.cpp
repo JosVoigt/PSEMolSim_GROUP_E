@@ -5,6 +5,7 @@
 
 #include "force/LennardJonesForce.h"
 #include "utils/Parser.h"
+#include "container/LinkedCellContainer.h"
 
 XMLReader::XMLReader(const char* filename_) : filename(filename_) {}
 
@@ -22,9 +23,11 @@ void XMLReader::readData (parser::options &options) const {
   std::array<double, 3> velocity{};
   std::array<double, 3> lowerLeftCorner{};
   std::array<double, 3> center{};
+  std::array<double, 3> velocity_d{};
   double distance, mass, x, y, z, epsilon;
   int radius;
   double mass_disc, distance_disc;
+  int amountCellsX, amountCellsY, amountCellsZ;
 
   options.writer_ = std::shared_ptr<Writer>(new outputWriter::VTKWriter());
 
@@ -94,8 +97,24 @@ void XMLReader::readData (parser::options &options) const {
       } else if (key == "Distance_Disc") {
         distance_disc = std::stod(value);
       } else if (key == "Velocity_Disc") {
-        options.discs.emplace_back(radius, distance_disc, mass_disc, std::stod(value), center);
+        std::stringstream iss_vd(value);
+        char ignore;
+        double x_vd, y_vd, z_vd;
+        iss_vd >> ignore >> ignore >> x_vd >> ignore >> ignore >> ignore >> y_vd >> ignore >> ignore >> ignore >> z_vd;
+        velocity_d[0] = x_vd;
+        velocity_d[1] = y_vd;
+        velocity_d[2] = z_vd;
+        options.discs.emplace_back(radius, distance_disc, mass_disc, velocity_d, center);
       }
+    } else if (key == "AmountCellsX") {
+      amountCellsX = std::stoi(value);
+    } else if (key == "AmountCellsY") {
+      amountCellsY = std::stoi(value);
+    } else if (key == "AmountCellsZ") {
+      amountCellsZ = std::stoi(value);
+    } else if (key == "Sidelength") {
+      options.container_ =
+        std::shared_ptr<ParticleContainerInterface>(new LinkedCellContainer(amountCellsX, amountCellsY, amountCellsZ, std::stod(value)));
     }
   }
 

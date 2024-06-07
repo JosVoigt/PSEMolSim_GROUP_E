@@ -27,7 +27,7 @@
             <xs:element name="radius" type="xs:int"/>
             <xs:element name="mass" type="xs:double"/>
             <xs:element name="distance" type="xs:double"/>
-            <xs:element name="velocity" type="xs:double"/>
+            <xs:element name="velocity" type="vector3D"/>
             <xs:element name="center" type="vector3D"/>
         </xs:sequence>
     </xs:complexType>
@@ -36,6 +36,15 @@
         <xs:sequence>
             <xs:element name="epsilon" type="xs:double"/>
             <xs:element name="sigma" type="xs:double"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="linkedcell">
+        <xs:sequence>
+            <xs:element name="amountcellsx" type="xs:int"/>
+            <xs:element name="amountcellsy" type="xs:int"/>
+            <xs:element name="amountcellsz" type="xs:int"/>
+            <xs:element name="cellsidelength" type="xs:double"/>
         </xs:sequence>
     </xs:complexType>
 

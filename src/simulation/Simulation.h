@@ -14,7 +14,7 @@ private:
    * \brief
    *  The container containing all particles for the simulation.
    */
-  ParticleContainer container;
+  std::shared_ptr<ParticleContainerInterface> container;
 
   /**
    * \brief
@@ -85,7 +85,7 @@ public:
    *  The prefix for the files that are going to get outputted.
    */
   Simulation(
-      ParticleContainer &container_, std::shared_ptr<Force> method_,
+      std::shared_ptr<ParticleContainerInterface> &container_, std::shared_ptr<Force> method_,
       std::shared_ptr<Writer> writer_, double dt_, int outputFrequency,
       std::string filename_,
       std::array<int, 3> linkedCellDimensions = {1, 1, 1},

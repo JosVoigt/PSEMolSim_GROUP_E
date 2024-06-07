@@ -222,6 +222,23 @@ void LinkedCellContainer::updateParticles() {
     }
 }
 
+size_t LinkedCellContainer::size() const {
+
+    size_t size = 0;
+
+    for (const std::vector<Particle>& cell : cellVector) {
+        size += cell.size();
+    }
+    return size;
+}
+
+std::vector<Particle>::iterator LinkedCellContainer::begin() {
+    return cellVector[0].begin();
+}
+
+std::vector<Particle>::iterator LinkedCellContainer::end() {
+    return cellVector[0].end();
+}
 
 /**------------------------------------------ GETTERS ------------------------------------------**/
 

@@ -20,7 +20,7 @@ class XYZWriter : public Writer {
 
     ~XYZWriter();
 
-    void plotParticles(ParticleContainer &particles,
+    void plotParticles(std::shared_ptr<ParticleContainerInterface> &container,
                        const std::string &filename, int iteration) override;
     std::string typeString() override;
 };
