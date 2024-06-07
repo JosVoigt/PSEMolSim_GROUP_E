@@ -38,7 +38,7 @@ class StoermerVerletTest : public testing::Test {
 
     // particle mass
     double mass = 1;
-    ParticleContainer pc;
+    std::shared_ptr<ParticleContainerInterface> pc = std::shared_ptr<ParticleContainerInterface>(new ParticleContainer);
 
     double tolerance = TOLERANCE;
 };
@@ -55,10 +55,10 @@ TEST_F(StoermerVerletTest, testCalcX) {
     for (int i = 0; i < 5; i++) {
         calculateX(pc, 1, 1);
 
-        for (int j = 0; j < pc.size(); j++) {
-            EXPECT_NEAR((double)j, (*(pc.begin() + j)).getX()[0], tolerance);
-            EXPECT_NEAR((double)i, (*(pc.begin() + j)).getX()[1], tolerance);
-            EXPECT_NEAR((double)i, (*(pc.begin() + j)).getX()[2], tolerance);
+        for (int j = 0; j < pc->size(); j++) {
+            EXPECT_NEAR((double)j, (*(pc->begin() + j)).getX()[0], tolerance);
+            EXPECT_NEAR((double)i, (*(pc->begin() + j)).getX()[1], tolerance);
+            EXPECT_NEAR((double)i, (*(pc->begin() + j)).getX()[2], tolerance);
         }
     }
 }
@@ -76,10 +76,10 @@ TEST_F(StoermerVerletTest, testCalcV) {
     for (int i = 0; i < 5; i++) {
         calculateV(pc, 1);
 
-        for (int j = 0; j < pc.size(); j++) {
-            EXPECT_NEAR((double)j, (*(pc.begin() + j)).getV()[0], tolerance);
-            EXPECT_NEAR((double)i, (*(pc.begin() + j)).getV()[1], tolerance);
-            EXPECT_NEAR((double)i, (*(pc.begin() + j)).getV()[2], tolerance);
+        for (int j = 0; j < pc->size(); j++) {
+            EXPECT_NEAR((double)j, (*(pc->begin() + j)).getV()[0], tolerance);
+            EXPECT_NEAR((double)i, (*(pc->begin() + j)).getV()[1], tolerance);
+            EXPECT_NEAR((double)i, (*(pc->begin() + j)).getV()[2], tolerance);
         }
     }
 }
@@ -99,10 +99,10 @@ TEST_F(StoermerVerletTest, testCalcF) {
     for (int i = 0; i < 5; i++) {
         calculateF(pc, method);
 
-        for (int j = 0; j < pc.size(); j++) {
-            EXPECT_NEAR((double)j, (*(pc.begin() + j)).getV()[0], tolerance);
-            EXPECT_NEAR((double)i, (*(pc.begin() + j)).getV()[1], tolerance);
-            EXPECT_NEAR((double)i, (*(pc.begin() + j)).getV()[2], tolerance);
+        for (int j = 0; j < pc->size(); j++) {
+            EXPECT_NEAR((double)j, (*(pc->begin() + j)).getV()[0], tolerance);
+            EXPECT_NEAR((double)i, (*(pc->begin() + j)).getV()[1], tolerance);
+            EXPECT_NEAR((double)i, (*(pc->begin() + j)).getV()[2], tolerance);
         }
     }
 }

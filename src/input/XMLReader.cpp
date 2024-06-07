@@ -5,6 +5,7 @@
 
 #include "force/LennardJonesForce.h"
 #include "utils/Parser.h"
+#include "container/LinkedCellContainer.h"
 
 XMLReader::XMLReader(const char* filename_) : filename(filename_) {}
 
@@ -25,6 +26,7 @@ void XMLReader::readData (parser::options &options) const {
   double distance, mass, x, y, z, epsilon;
   int radius;
   double mass_disc, distance_disc;
+  int amountCellsX, amountCellsY, amountCellsZ;
 
   options.writer_ = std::shared_ptr<Writer>(new outputWriter::VTKWriter());
 
@@ -96,6 +98,15 @@ void XMLReader::readData (parser::options &options) const {
       } else if (key == "Velocity_Disc") {
         options.discs.emplace_back(radius, distance_disc, mass_disc, std::stod(value), center);
       }
+    } else if (key == "AmountCellsX") {
+      amountCellsX = std::stoi(value);
+    } else if (key == "AmountCellsY") {
+      amountCellsY = std::stoi(value);
+    } else if (key == "AmountCellsZ") {
+      amountCellsZ = std::stoi(value);
+    } else if (key == "Sidelength") {
+      options.container_ =
+        std::shared_ptr<ParticleContainerInterface>(new LinkedCellContainer(amountCellsX, amountCellsY, amountCellsZ, std::stod(value)));
     }
   }
 

@@ -162,6 +162,38 @@ public:
     }
 };
 
+class linked_cell_pimpl: public linkedcell_pskel {
+private:
+    int amountcellsX_{};
+    int amountcellsY_{};
+    int amountcellsZ_{};
+    double sidelength_{};
+
+public:
+    void amountcellsx(int x) override {
+        amountcellsX_ = x;
+    }
+
+    void amountcellsy(int y) override {
+        amountcellsY_ = y;
+    }
+
+    void amountcellsz(int z) override {
+        amountcellsZ_ = z;
+    }
+
+    void cellsidelength(double s) override {
+        sidelength_ = s;
+    }
+
+    void post_linkedcell() override {
+        std::cout << "AmountCellsX: " << amountcellsX_ << std::endl;
+        std::cout << "AmountCellsY: " << amountcellsY_ << std::endl;
+        std::cout << "AmountCellsZ: " << amountcellsZ_ << std::endl;
+        std::cout << "Sidelength: " << sidelength_ << std::endl;
+    }
+};
+
 
 class simulation_pimpl: public simulation_pskel
 {

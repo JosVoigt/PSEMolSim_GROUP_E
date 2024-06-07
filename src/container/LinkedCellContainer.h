@@ -9,7 +9,7 @@
  * \brief
  * A particle container that uses the linked cell algorithm
  */
-class LinkedCellContainer : ParticleContainerInterface {
+class LinkedCellContainer : public ParticleContainerInterface {
 private:
 
     /**
@@ -149,7 +149,11 @@ public:
      */
     void updateParticles() override;
 
+    [[nodiscard]] std::size_t size() const override;
 
+    std::vector<Particle>::iterator begin() override;
+
+    std::vector<Particle>::iterator end() override;
     //------------------------------------------ GETTERS ------------------------------------------
 
     /**

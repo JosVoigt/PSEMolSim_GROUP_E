@@ -57,4 +57,10 @@
         <epsilon>5.0</epsilon>
         <sigma>1.0</sigma>
     </lenjonesmol>
+    <linkedcell>
+        <amountcellsx>180</amountcellsx>
+        <amountcellsy>90</amountcellsy>
+        <amountcellsz>1</amountcellsz>
+        <cellsidelength>3.0</cellsidelength>
+    </linkedcell>
 </simulation>

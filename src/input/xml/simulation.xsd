@@ -39,6 +39,15 @@
         </xs:sequence>
     </xs:complexType>
 
+    <xs:complexType name="linkedcell">
+        <xs:sequence>
+            <xs:element name="amountcellsx" type="xs:int"/>
+            <xs:element name="amountcellsy" type="xs:int"/>
+            <xs:element name="amountcellsz" type="xs:int"/>
+            <xs:element name="cellsidelength" type="xs:double"/>
+        </xs:sequence>
+    </xs:complexType>
+
     <xs:complexType name="simulation">
             <xs:sequence>
                 <xs:element name="delta" type="xs:double"/>
