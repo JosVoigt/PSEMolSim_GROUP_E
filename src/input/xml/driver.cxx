@@ -103,11 +103,11 @@ private:
     int radius_{};
     double mass_{};
     double distance_{};
-    double velocity_{};
+    vector3D_pimpl velocity_;
     vector3D_pimpl center_;
 
 public:
-    disc_pimpl(): center_("Center") {}
+    disc_pimpl(): center_("Center"), velocity_("Velocity_Disc") {}
 
     void radius (int r) override
     {
@@ -124,17 +124,12 @@ public:
         distance_ = d;
     }
 
-    void velocity (double v) override
-    {
-        velocity_ = v;
-    }
 
     void post_disc () override
     {
         std::cout << "Radius: " << radius_ << std::endl;
         std::cout << "Mass_Disc: " << mass_ << std::endl;
         std::cout << "Distance_Disc: " << distance_ << std::endl;
-        std::cout << "Velocity_Disc: " << velocity_ << std::endl;
     }
 };
 
@@ -268,6 +263,7 @@ main (__attribute__((unused)) int argc, char* argv[])
         vector3D_pimpl lowerLeftCorner_p("LowerLeftCorner");
         lenjonesmol_pimpl lenjonesmol_p;
         vector3D_pimpl center_p("Center");
+        vector3D_pimpl velocity_disc_p("Velocity_Disc");
 
         //velocity
         velocity_p.x_parser(double_p);
@@ -287,6 +283,12 @@ main (__attribute__((unused)) int argc, char* argv[])
         center_p.z_parser(double_p);
         disc_p.center_parser(center_p);
 
+        //velocity_disc
+        velocity_disc_p.x_parser(double_p);
+        velocity_disc_p.y_parser(double_p);
+        velocity_disc_p.z_parser(double_p);
+        disc_p.velocity_parser(velocity_disc_p);
+
         //other cuboid parameters
         cuboid_p.distance_parser(double_p);
         cuboid_p.mass_parser(double_p);
@@ -300,7 +302,6 @@ main (__attribute__((unused)) int argc, char* argv[])
         disc_p.radius_parser(int_p);
         disc_p.mass_parser(double_p);
         disc_p.distance_parser(double_p);
-        disc_p.velocity_parser(double_p);
         simulation_p.discs_parser(disc_p);
 
         //other parameters

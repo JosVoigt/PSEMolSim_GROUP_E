@@ -27,7 +27,7 @@
             <xs:element name="radius" type="xs:int"/>
             <xs:element name="mass" type="xs:double"/>
             <xs:element name="distance" type="xs:double"/>
-            <xs:element name="velocity" type="xs:double"/>
+            <xs:element name="velocity" type="vector3D"/>
             <xs:element name="center" type="vector3D"/>
         </xs:sequence>
     </xs:complexType>
