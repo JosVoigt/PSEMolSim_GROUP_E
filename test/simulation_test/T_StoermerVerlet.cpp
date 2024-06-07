@@ -47,7 +47,7 @@ TEST_F(StoermerVerletTest, testCalcX) {
     std::array<double, 3> force = {0, 0, 0.5};
     std::array<double, 3> velocity = {0, 1, 0};
 
-    for (Particle& p : StoermerVerletTest::pc) {
+    for (Particle& p : StoermerVerletTest::pc->preprocessParticles()) {
         p.addF(force);
         p.addV(velocity);
     }
@@ -68,7 +68,7 @@ TEST_F(StoermerVerletTest, testCalcV) {
     std::array<double, 3> force = {0, 0, 0.5};
     std::array<double, 3> velocity = {0, 1, 0};
 
-    for (Particle& p : StoermerVerletTest::pc) {
+    for (Particle& p : StoermerVerletTest::pc->preprocessParticles()) {
         p.addF(force);
         p.addV(velocity);
     }
@@ -91,7 +91,7 @@ TEST_F(StoermerVerletTest, testCalcF) {
 
     std::shared_ptr<Force> method = std::shared_ptr<Force>(new LennardJonesForce(1,1));
 
-    for (Particle& p : StoermerVerletTest::pc) {
+    for (Particle& p : StoermerVerletTest::pc->preprocessParticles()) {
         p.addF(force);
         p.addV(velocity);
     }

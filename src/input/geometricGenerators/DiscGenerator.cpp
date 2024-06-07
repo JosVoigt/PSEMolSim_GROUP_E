@@ -10,7 +10,7 @@ DiscGenerator::DiscGenerator(int radius_, double distance_, double mass_,
       center(center_){};
 
 void DiscGenerator::readData(std::list<Particle> &list, int dimensions) {
-  std::array<double, 3> squareUpperLeft = {(double)-radius, (double)-radius, 0}j;
+  std::array<double, 3> squareUpperLeft = {(double)-radius, (double)-radius, 0};
   std::array<double, 3> upperLeftCorner = distance * squareUpperLeft + center;
   for (int i = 0; i < radius; i++) {
     for (int j = 0; j < radius; j++) {
