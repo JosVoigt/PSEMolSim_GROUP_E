@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <set>
 
+
 LinkedCellContainer::LinkedCellContainer(int const amountCellsX_, int const amountCellsY_, int const amountCellsZ_, double const r_c) :
 r_c(r_c), amountCellsX(amountCellsX_), amountCellsY(amountCellsY_), amountCellsZ(amountCellsZ_) {
     cellSize = r_c * r_c;
