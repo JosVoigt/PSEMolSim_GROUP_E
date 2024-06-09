@@ -9,13 +9,13 @@ class Particle;
 
 /* Interface for the force calculation
  */
-class Force {
+class PairwiseForce {
    public:
     /**
      *  \brief
      *  Destructor
      */
-    virtual ~Force() = default;
+    virtual ~PairwiseForce() = default;
 
     /**
      *  \brief

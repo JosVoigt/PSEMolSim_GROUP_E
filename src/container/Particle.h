@@ -8,7 +8,7 @@
 #pragma once
 
 //Force predecleration for the compiler
-class Force;
+class PairwiseForce;
 #include "force/Force.h"
 
 #include <array>
@@ -55,7 +55,7 @@ private:
   /**
    * Abstraction to calculate the force for the particles
    */
-  std::shared_ptr<Force> forcemode;
+  std::shared_ptr<PairwiseForce> forcemode;
 
 public:
   /**

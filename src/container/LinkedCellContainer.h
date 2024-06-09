@@ -1,8 +1,10 @@
 #pragma once
 
+#include <memory>
 #include <vector>
 
 #include "Particle.h"
+#include "LinkedCellBoundaryCondition/LinkedCellBoundary.h"
 #include "ParticleContainerInterface.h"
 
 /**
@@ -34,10 +36,12 @@ private:
      */
     std::vector<std::vector<Particle>> cellVector;
 
+	std::vector<std::unique_ptr<LinkedCellBoundary>> cellBoundarys;
+
 
     /**
      * \brief
-     * Returns the coordinates of the cell that contains the given particle
+     * returns the coordinates of the cell that contains the given particle
      * @param particle
      */
     [[nodiscard]] std::array<int, 3> getCellCoordinates(const Particle& particle) const;
@@ -60,6 +64,10 @@ private:
     [[nodiscard]] std::vector<Particle> retrieveHaloParticles(const std::vector<int>& cellIndices) const;
 
 public:
+	enum boundaryConditions{
+		outflow,
+		reflection
+	};
     /**
      * \brief
      * Constructs a container that uses the linked cell algorithm using the given container size and cutoff point
@@ -72,7 +80,7 @@ public:
      * @param r_c
      * The cutoff point
      */
-    LinkedCellContainer(int amountCellsX_, int amountCellsY_, int amountCellsZ_, double r_c);
+    LinkedCellContainer(int amountCellsX_, int amountCellsY_, int amountCellsZ_, double r_c, std::array<boundaryConditions, 6> conditions);
 
     /**
      * \brief

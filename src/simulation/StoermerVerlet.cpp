@@ -24,7 +24,7 @@ void calculateV(std::shared_ptr<ParticleContainerInterface> &container, double d
 }
 
 void calculateF(const std::shared_ptr<ParticleContainerInterface> &container,
-                const std::shared_ptr<Force> method) {
+                const std::shared_ptr<PairwiseForce> method) {
 
     std::vector<Particle> allParticles = container->preprocessParticles();
 

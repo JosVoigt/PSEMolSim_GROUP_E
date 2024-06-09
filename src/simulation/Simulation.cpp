@@ -8,7 +8,7 @@
 #include "simulation/StoermerVerlet.h"
 
 Simulation::Simulation(std::shared_ptr<ParticleContainerInterface> &container_,
-                       std::shared_ptr<Force> method_,
+                       std::shared_ptr<PairwiseForce> method_,
                        std::shared_ptr<Writer> writer_, double dt_,
                        int outputFrequency_, std::string filename_,
                        std::array<int, 3> linkedCellDimensions,

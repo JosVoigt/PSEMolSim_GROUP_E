@@ -48,4 +48,4 @@ void calculateV(std::shared_ptr<ParticleContainerInterface> &container, double d
  *  The force equation that describes the system
  *
  */
-void calculateF(std::shared_ptr<ParticleContainerInterface> &container, std::shared_ptr<Force> method);
+void calculateF(std::shared_ptr<ParticleContainerInterface> &container, std::shared_ptr<PairwiseForce> method);

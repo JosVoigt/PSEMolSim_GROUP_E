@@ -22,7 +22,7 @@ struct options {
     std::vector<DiscGenerator> discs;
   std::string outfile;
   std::shared_ptr<Writer> writer_;
-  std::shared_ptr<Force> force_;
+  std::shared_ptr<PairwiseForce> force_;
   std::shared_ptr<ParticleContainerInterface> container_;
 };
 

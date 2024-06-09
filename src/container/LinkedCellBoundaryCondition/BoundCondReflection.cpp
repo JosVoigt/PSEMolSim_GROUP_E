@@ -10,7 +10,7 @@
 BoundaryConditionReflection::BoundaryConditionReflection(
     std::vector<std::vector<Particle>>& haloCellList,
     std::vector<std::vector<Particle>>& boundaryCellList,
-    std::shared_ptr<Force> forcemode, std::array<double, 3>& surface_normal,
+    std::shared_ptr<PairwiseForce> forcemode, std::array<double, 3>& surface_normal,
     std::array<double, 3>& point_on_plane)
     : LinkedCellBoundary(haloCellList, boundaryCellList),
       forceMethod(forcemode),

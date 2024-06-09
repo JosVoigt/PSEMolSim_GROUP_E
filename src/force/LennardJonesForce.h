@@ -7,7 +7,7 @@
  *  The Lennard-Jones potential is a pairwise potential, so the force is only
  *  calculated between two particles.
  */
-class LennardJonesForce : public Force {
+class LennardJonesForce : public PairwiseForce {
    private:
     /** \brief
      *  The epsilon parameter of the Lennard-Jones potential

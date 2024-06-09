@@ -75,11 +75,11 @@ options parse(int argc, char *argv[]) {
       spdlog::get("console")->critical("Please choose EXACTLY ONE force mode");
       exit(1);
     } else if (vm.count("planet")) {
-      opts.force_ = std::shared_ptr<Force>(new PlanetForce());
+      opts.force_ = std::shared_ptr<PairwiseForce>(new PlanetForce());
     } else if (!vm["lenjonesmol"].empty() &&
                (ljm_args = vm["lenjonesmol"].as<std::vector<double>>())
                        .size() == 2) {
-      opts.force_ = std::shared_ptr<Force>(
+      opts.force_ = std::shared_ptr<PairwiseForce>(
           new LennardJonesForce(ljm_args[0], ljm_args[1]));
     } else {
       spdlog::get("console")->critical("Please provide a single force mode");

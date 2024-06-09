@@ -22,7 +22,7 @@ private:
    *  This will be used to calculate all forces between the particles in
    * container.
    */
-  std::shared_ptr<Force> method;
+  std::shared_ptr<PairwiseForce> method;
 
   /**
    * \brief
@@ -85,7 +85,7 @@ public:
    *  The prefix for the files that are going to get outputted.
    */
   Simulation(
-      std::shared_ptr<ParticleContainerInterface> &container_, std::shared_ptr<Force> method_,
+      std::shared_ptr<ParticleContainerInterface> &container_, std::shared_ptr<PairwiseForce> method_,
       std::shared_ptr<Writer> writer_, double dt_, int outputFrequency,
       std::string filename_,
       std::array<int, 3> linkedCellDimensions = {1, 1, 1},

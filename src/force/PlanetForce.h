@@ -4,7 +4,7 @@
 
 #include "Force.h"
 
-class PlanetForce : public Force {
+class PlanetForce : public PairwiseForce {
    public:
     /**
      *  \brief

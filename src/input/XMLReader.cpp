@@ -1,20 +1,22 @@
 #include "XMLReader.h"
-#include <fstream>
-#include <sstream>
+
 #include <spdlog/spdlog.h>
 
+#include <fstream>
+#include <sstream>
+
+#include "container/LinkedCellContainer.h"
 #include "force/LennardJonesForce.h"
 #include "utils/Parser.h"
-#include "container/LinkedCellContainer.h"
 
 XMLReader::XMLReader(const char* filename_) : filename(filename_) {}
 
-void XMLReader::readData (parser::options &options) const {
-    std::ifstream file(filename);
-    if (!file.is_open()) {
-        spdlog::get("console")->critical("Unable to open file: ", filename);
-        return;
-    }
+void XMLReader::readData(parser::options& options) const {
+  std::ifstream file(filename);
+  if (!file.is_open()) {
+    spdlog::get("console")->critical("Unable to open file: ", filename);
+    return;
+  }
 
   std::string line;
 
@@ -32,7 +34,6 @@ void XMLReader::readData (parser::options &options) const {
   options.writer_ = std::shared_ptr<Writer>(new outputWriter::VTKWriter());
 
   while (std::getline(file, line)) {
-
     std::istringstream iss(line);
 
     if (std::getline(iss, key, ':') && std::getline(iss, value)) {
@@ -40,7 +41,8 @@ void XMLReader::readData (parser::options &options) const {
         std::stringstream iss_v(value);
         char ignore;
         double x_v, y_v, z_v;
-        iss_v >> ignore >> ignore >> x_v >> ignore >> ignore >> ignore >> y_v >> ignore >> ignore >> ignore >> z_v;
+        iss_v >> ignore >> ignore >> x_v >> ignore >> ignore >> ignore >> y_v >>
+            ignore >> ignore >> ignore >> z_v;
         velocity[0] = x_v;
         velocity[1] = y_v;
         velocity[2] = z_v;
@@ -48,7 +50,8 @@ void XMLReader::readData (parser::options &options) const {
         std::stringstream iss_l(value);
         char ignore;
         double x_l, y_l, z_l;
-        iss_l >> ignore >> ignore >> x_l >> ignore >> ignore >> ignore >> y_l >> ignore >> ignore >> ignore >> z_l;
+        iss_l >> ignore >> ignore >> x_l >> ignore >> ignore >> ignore >> y_l >>
+            ignore >> ignore >> ignore >> z_l;
         lowerLeftCorner[0] = x_l;
         lowerLeftCorner[1] = y_l;
         lowerLeftCorner[2] = z_l;
@@ -68,7 +71,8 @@ void XMLReader::readData (parser::options &options) const {
       } else if (key == "Epsilon") {
         epsilon = std::stod(value);
       } else if (key == "Sigma") {
-        options.force_ = std::shared_ptr<Force>(new LennardJonesForce(epsilon, std::stod(value)));
+        options.force_ = std::shared_ptr<PairwiseForce>(
+            new LennardJonesForce(epsilon, std::stod(value)));
       } else if (key == "Delta") {
         options.delta_t = std::stod(value);
       } else if (key == "Frequency") {
@@ -86,7 +90,8 @@ void XMLReader::readData (parser::options &options) const {
         std::stringstream iss_c(value);
         char ignore;
         double x_c, y_c, z_c;
-        iss_c >> ignore >> ignore >> x_c >> ignore >> ignore >> ignore >> y_c >> ignore >> ignore >> ignore >> z_c;
+        iss_c >> ignore >> ignore >> x_c >> ignore >> ignore >> ignore >> y_c >>
+            ignore >> ignore >> ignore >> z_c;
         center[0] = x_c;
         center[1] = y_c;
         center[2] = z_c;
@@ -100,11 +105,13 @@ void XMLReader::readData (parser::options &options) const {
         std::stringstream iss_vd(value);
         char ignore;
         double x_vd, y_vd, z_vd;
-        iss_vd >> ignore >> ignore >> x_vd >> ignore >> ignore >> ignore >> y_vd >> ignore >> ignore >> ignore >> z_vd;
+        iss_vd >> ignore >> ignore >> x_vd >> ignore >> ignore >> ignore >>
+            y_vd >> ignore >> ignore >> ignore >> z_vd;
         velocity_d[0] = x_vd;
         velocity_d[1] = y_vd;
         velocity_d[2] = z_vd;
-        options.discs.emplace_back(radius, distance_disc, mass_disc, velocity_d, center);
+        options.discs.emplace_back(radius, distance_disc, mass_disc, velocity_d,
+                                   center);
       }
     } else if (key == "AmountCellsX") {
       amountCellsX = std::stoi(value);
@@ -114,7 +121,11 @@ void XMLReader::readData (parser::options &options) const {
       amountCellsZ = std::stoi(value);
     } else if (key == "Sidelength") {
       options.container_ =
-        std::shared_ptr<ParticleContainerInterface>(new LinkedCellContainer(amountCellsX, amountCellsY, amountCellsZ, std::stod(value)));
+          std::shared_ptr<ParticleContainerInterface>(new LinkedCellContainer(
+              amountCellsX, amountCellsY, amountCellsZ, std::stod(value),
+              {LinkedCellContainer::outflow, LinkedCellContainer::outflow,
+               LinkedCellContainer::outflow, LinkedCellContainer::outflow,
+               LinkedCellContainer::outflow, LinkedCellContainer::outflow}));
     }
   }
 
