@@ -96,10 +96,13 @@ void VTKWriter::plotParticle(const Particle &p) {
     pointsIterator->push_back(p.getX()[2]);
 }
 
-void VTKWriter::plotParticles(ParticleContainer &particles,
+void VTKWriter::plotParticles(std::shared_ptr<ParticleContainerInterface> &particles,
                               const std::string &filename, int iteration) {
-    initializeOutput(particles.size());
-    for (auto &p : particles) {
+    initializeOutput(particles->size());
+
+    std::vector<Particle> allParticles = particles->preprocessParticles();
+
+    for (auto &p : allParticles) {
         plotParticle(p);
     }
     writeFile(filename, iteration);

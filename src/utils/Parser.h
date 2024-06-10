@@ -5,26 +5,29 @@
 #include <vector>
 
 #include "force/Force.h"
-#include "input/CuboidGenerator.h"
+#include "input/geometricGenerators/CuboidGenerator.h"
+#include "input/geometricGenerators/DiscGenerator.h"
 #include "outputWriter/Writer.h"
 
 namespace parser {
 
 struct options {
-    bool executeTests = false;
-    double delta_t{};
-    double start{};
-    double end{};
-    int writeoutFrequency{};
-    std::vector<std::string> filepath;
-    std::vector<CuboidGenerator> cuboids;
-    std::string outfile;
-    std::shared_ptr<Writer> writer_;
-    std::shared_ptr<Force> force_;
+  double delta_t{};
+  double start{};
+  double end{};
+  int dimensions;
+  int writeoutFrequency{};
+  std::vector<std::string> filepath;
+  std::vector<CuboidGenerator> cuboids;
+    std::vector<DiscGenerator> discs;
+  std::string outfile;
+  std::shared_ptr<Writer> writer_;
+  std::shared_ptr<Force> force_;
+  std::shared_ptr<ParticleContainerInterface> container_;
 };
 
 // predeclaration
-void parseCuboids(std::string cuboid_s, std::vector<CuboidGenerator>& ret);
+void parseCuboids(std::string cuboid_s, std::vector<CuboidGenerator> &ret);
 
 /**
  *\brief
@@ -40,7 +43,7 @@ void parseCuboids(std::string cuboid_s, std::vector<CuboidGenerator>& ret);
  *\return
  *  an options struct containing the read options and settings
  */
-options parse(int ac, char* av[]);
+options parse(int ac, char *av[]);
 
 /**
  * \brief
@@ -59,6 +62,6 @@ options parse(int ac, char* av[]);
  * \return The list of CuboidGenerators that
  * have been extracted from the string
  */
-std::vector<CuboidGenerator>& parseCuboids(std::string cuboid_s);
+std::vector<CuboidGenerator> &parseCuboids(std::string cuboid_s);
 
 }  // namespace parser

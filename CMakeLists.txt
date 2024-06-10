@@ -2,12 +2,12 @@ cmake_minimum_required(VERSION 3.10)
 
 # define project name, version
 project(PSEMolSim_GroupE VERSION 0.0.1)
+#for clangd
+set (CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-option(DOWNLOAD_DEPENDENCIES "Downloads most dependencies (no xerces-c)" ON)
+option(DOWNLOAD_DEPENDENCIES "Downloads dependencies" ON)
 if (DOWNLOAD_DEPENDENCIES)
     include(FetchContent)
-
-    # Declare where to fetch Google Test from
     FetchContent_Declare(
         googletest
         GIT_REPOSITORY https://github.com/google/googletest.git
@@ -18,6 +18,7 @@ if (DOWNLOAD_DEPENDENCIES)
         GIT_REPOSITORY https://github.com/gabime/spdlog.git
         GIT_TAG v1.11.0
     )
+    #only compile boost:program_options
     set(BOOST_INCLUDE_LIBRARIES program_options)
     set(BOOST_ENABLE_CMAKE ON)
     FetchContent_Declare(
@@ -39,8 +40,10 @@ if (DOWNLOAD_DEPENDENCIES)
     FetchContent_MakeAvailable(spdlog)
     FetchContent_MakeAvailable(Boost)
     FetchContent_MakeAvailable(fmt)
-    FetchContent_MakeAvailable (xerces-c)
+    FetchContent_MakeAvailable(xerces-c)
 endif(DOWNLOAD_DEPENDENCIES)
+
+set (CMAKE_CXX_STANDARD 17)
 
 #define compile flags
 set (FLAGS "-Wall -Werror -Wpedantic")
@@ -58,10 +61,16 @@ if(NOT OUTPUT)
     add_compile_definitions(NO_OUT_FILE)
 endif(NOT OUTPUT)
 
+option(LOGGING "Enable non-critical logging (on by default)" ON)
+if (NOT LOGGING)
+	add_compile_definitions(NO_LOG)
+endif(NOT LOGGING)
+
+#----------------------------TESTING-----------------------#
 include(CTest)
-add_test(NAME Full_Test COMMAND MolSim -t)
+add_test(NAME Full_Test COMMAND MolSimTest)
 
-
+#----------------------------BUILD TYPE--------------------#
 # let ccmake and cmake-gui offer the default build type options
 set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug;Release;RelWithDebInfo;MinSizeRel")
 
@@ -72,48 +81,70 @@ if(NOT CMAKE_BUILD_TYPE)
             "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel." FORCE)
 endif(NOT CMAKE_BUILD_TYPE)
 
+#-----------------------------RESULTING DIRECTORY-----------#
 #create build directories
-file (MAKE_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/exec/bin")
-set (CMAKE_BINARY_DIR "${CMAKE_CURRENT_SOURCE_DIR}/exec/bin")
-set (EXECUTABLE_OUTPUT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/exec")
+file (MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/exec/bin")
+set (CMAKE_BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}/exec/bin")
+set (EXECUTABLE_OUTPUT_PATH "${CMAKE_CURRENT_BINARY_DIR}")
 
-# collect all cpp files
-file(GLOB_RECURSE MY_SRC
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/MolSim.cpp"
+#-----------------------------COLLECT SRC FILES--------------#
+file(GLOB_RECURSE molsimfiles
     "${CMAKE_CURRENT_SOURCE_DIR}/src/*/*.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/test/*/*.cpp"
-    # header don't need to be included but this might be necessary for some IDEs
     "${CMAKE_CURRENT_SOURCE_DIR}/src/*/*.h"
 )
 
-# create make target
-add_executable(MolSim ${MY_SRC})
-
-# set cxx standard. You may raise this if you want.
-target_compile_features(MolSim
-        PRIVATE
-            cxx_std_17
+#-----------------------------COLLECT TEST FILES-------------#
+file (GLOB_RECURSE molsimtests
+${CMAKE_CURRENT_SOURCE_DIR}/test/*/*.cpp
 )
 
-target_include_directories(MolSim
-        PUBLIC
-            ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd
-        PRIVATE
-            ${CMAKE_CURRENT_SOURCE_DIR}/src/
+#-----------------------------BUILD PROJECT LIB--------------#
+add_library ( ${PROJECT_NAME} STATIC
+${molsimfiles}
 )
 
-target_link_libraries(MolSim
-        # stuff that is used in headers and source files
-        PUBLIC
-            xerces-c
-            boost_program_options
-            gtest
-            gtest_main
-            spdlog
-            #for spdlog
-            fmt
-            )
+#-----------------------------LINK PROJECT LIB---------------#
+target_link_libraries (${PROJECT_NAME}
+PUBLIC
+    xerces-c
+    boost_program_options
+    spdlog
+    fmt #spdlog dependency
+    expat
+)
 
-list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
+#-----------------------------INCLUDE DIRECTORIES------------#
+target_include_directories (${PROJECT_NAME}
+PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd
+PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+)
 
-include(doxygen)
+#-----------------------------TEST EXECUTABLE----------------#
+add_executable (MolSimTest ${CMAKE_CURRENT_SOURCE_DIR}/test/test_suite_all.cpp ${molsimtests})
+target_link_libraries (MolSimTest
+    ${PROJECT_NAME}
+    #linking gtest only for testing not the actual exec.
+    gtest
+    gtest_main
+)
+target_include_directories (MolSimTest
+PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd
+PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+)
+
+#-----------------------------SRC EXECUTABLE-----------------#
+add_executable (MolSim ${CMAKE_CURRENT_SOURCE_DIR}/src/MolSim.cpp)
+target_link_libraries (MolSim
+    ${PROJECT_NAME}
+)
+target_include_directories (MolSim
+PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd
+PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+)
+

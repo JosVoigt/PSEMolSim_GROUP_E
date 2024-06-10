@@ -7,3 +7,6 @@ RelWithDebInfo/
 MinSizeRel/
 
 doxys_documentation/
+
+.clangd
+.compile-commands.json

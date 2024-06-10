@@ -7,7 +7,7 @@
  *  The Lennard-Jones potential is a pairwise potential, so the force is only
  *  calculated between two particles.
  */
-class LennardJonesMolecule : public Force {
+class LennardJonesForce : public Force {
    private:
     /** \brief
      *  The epsilon parameter of the Lennard-Jones potential
@@ -34,12 +34,12 @@ class LennardJonesMolecule : public Force {
      *  \param sigma
      *  The sigma parameter of the Lennard-Jones potential
      */
-    LennardJonesMolecule(double epsilon, double sigma);
+    LennardJonesForce(double epsilon, double sigma);
 
     /** \brief
      *  Destructor for the LennardJonesMolecule class
      */
-    ~LennardJonesMolecule() override = default;
+    ~LennardJonesForce() override = default;
 
     /** \brief
      *  Calculates the force between two particles according to the Lennard-Jones

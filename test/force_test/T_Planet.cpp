@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "container/Particle.h"
-#include "force/Planet.h"
+#include "force/PlanetForce.h"
 
 #ifndef TOLERANCE
 #define TOLERANCE 1e-7;
@@ -25,7 +25,7 @@ class P_test : public testing::Test {
     Particle planet1_displaced_and_mass = Particle(x1_displaced, v, 3.2, 0);
     Particle planet2_displaced_and_mass = Particle(x2_displaced, v, 6, 0);
 
-    Planet planet = Planet();
+    PlanetForce planet = PlanetForce();
 
     double tolerance = TOLERANCE;
 };
@@ -33,25 +33,25 @@ class P_test : public testing::Test {
 TEST_F(P_test, basic_functionality) {
     std::array<double, 3> res = planet.calculateForce(planet1, planet2);
 
-    ASSERT_EQ(-1, res[0]);
-    ASSERT_EQ(0, res[1]);
-    ASSERT_EQ(0, res[2]);
+    EXPECT_EQ(-1, res[0]);
+    EXPECT_EQ(0, res[1]);
+    EXPECT_EQ(0, res[2]);
 }
 
 TEST_F(P_test, displacement) {
     std::array<double, 3> res =
         planet.calculateForce(planet1_displaced, planet2_displaced);
 
-    ASSERT_NEAR(0.1111111, res[0], tolerance);
-    ASSERT_EQ(0, res[1]);
-    ASSERT_EQ(0, res[2]);
+    EXPECT_NEAR(0.1111111, res[0], tolerance);
+    EXPECT_EQ(0, res[1]);
+    EXPECT_EQ(0, res[2]);
 }
 
 TEST_F(P_test, displacement_and_mass) {
     std::array<double, 3> res = planet.calculateForce(
         planet1_displaced_and_mass, planet2_displaced_and_mass);
 
-    ASSERT_NEAR(2.1333333, res[0], tolerance);
-    ASSERT_EQ(0, res[1]);
-    ASSERT_EQ(0, res[2]);
+    EXPECT_NEAR(2.1333333, res[0], tolerance);
+    EXPECT_EQ(0, res[1]);
+    EXPECT_EQ(0, res[2]);
 }

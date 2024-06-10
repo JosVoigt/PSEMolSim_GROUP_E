@@ -47,6 +47,8 @@ class FileReader : public Initializer {
      *
      *  \param particles
      *  The list to store the particles in
+	 *  \param dimensions
+	 *  ignored
      */
-    void readData(std::list<Particle>& particles) override;
+    void readData(std::list<Particle>& particles, int dimensions) override;
 };

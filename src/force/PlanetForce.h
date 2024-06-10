@@ -4,13 +4,13 @@
 
 #include "Force.h"
 
-class Planet : public Force {
+class PlanetForce : public Force {
    public:
     /**
      *  \brief
      *  Default constructor
      */
-    Planet() = default;
+    PlanetForce() = default;
 
     /**
      *  \brief

@@ -4,12 +4,13 @@
 #include <vector>
 
 #include "Particle.h"
+#include "container/ParticleContainerInterface.h"
 
 /**
  * \brief
  *  A container for particles
  */
-class ParticleContainer {
+class ParticleContainer : public ParticleContainerInterface{
    private:
     /**
      * The array containing all particles
@@ -38,7 +39,7 @@ class ParticleContainer {
      * \brief
      *  Destructor for the ParticleContainer
      */
-    ~ParticleContainer() = default;
+    ~ParticleContainer() override = default;
 
     typedef std::vector<Particle>::iterator Iterator;
 
@@ -48,7 +49,7 @@ class ParticleContainer {
      * \return
      *  An iterator to the first particle in the container
      */
-    Iterator begin() { return particleArray.begin(); }
+    Iterator begin() override { return particleArray.begin(); }
 
     /**
      * \brief
@@ -56,7 +57,7 @@ class ParticleContainer {
      * \return
      *  An iterator to the end of the container
      */
-    Iterator end() { return particleArray.end(); }
+    Iterator end() override { return particleArray.end(); }
 
     /**
      * \brief
@@ -64,5 +65,11 @@ class ParticleContainer {
      * \return
      *  The amount of particles in the container
      */
-    [[nodiscard]] std::size_t size() const;
+    [[nodiscard]] std::size_t size() const override;
+
+	   std::vector<Particle> preprocessParticles() override;
+
+    std::vector<Particle> retrieveRelevantParticles(Particle& particle) override;
+
+	   void updateParticles() override;
 };
