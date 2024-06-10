@@ -65,6 +65,10 @@ void Particle::addV(std::array<double, 3>& aV) {
     }
 }
 
+void Particle::scaleV (double scale) {
+	v = scale * v;
+}
+
 void Particle::nextIteration() {
     old_f = f;
     f = {0, 0, 0};

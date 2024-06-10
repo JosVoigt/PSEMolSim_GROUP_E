@@ -172,6 +172,14 @@ public:
 
   /**
    * \brief
+   * Scales the velocity according to the provided scaling factor
+   * \param scale
+   * The scaling factor
+   */
+  void scaleV(double scale);
+
+  /**
+   * \brief
    *  Prepares the particles for the next iterations by making the current the
    *  old force and setting the current force to {0,0,0}
    */
