@@ -1,5 +1,6 @@
 #include "thermostat.h"
 
+#include <cstdlib>
 #include <limits>
 #include <vector>
 
@@ -13,7 +14,8 @@ Thermostat::Thermostat(double maxChangeRate_, int dimensions_)
     : maxChangeRate(maxChangeRate_), dimensions(dimensions_){};
 
 Thermostat::Thermostat(int dimensions_)
-    : maxChangeRate(std::numeric_limits<double>::infinity()), dimensions(dimensions_){};
+    : maxChangeRate(std::numeric_limits<double>::infinity()),
+      dimensions(dimensions_){};
 
 void Thermostat::adaptTemperature(std::vector<Particle>& particles,
                                   double targetTemperature) {
@@ -31,19 +33,16 @@ void Thermostat::adaptTemperature(std::vector<Particle>& particles,
       (2 * kinEnergySum) / (particleCount * dimensions * boltzmannConstant);
 
   double temperatureGradient = std::sqrt(targetTemperature / temperature);
-
   double scalingFactor;
-  if (temperatureGradient - 1 > maxChangeRate) {
-		scalingFactor = maxChangeRate;
-  }
-  else if (1 - maxChangeRate > temperatureGradient) {
-		scalingFactor = 1 - maxChangeRate;
-  }
-  else {
-		scalingFactor = temperatureGradient;
+
+  if (std::abs(temperature - (temperature * temperatureGradient)) >
+      maxChangeRate) {
+    scalingFactor = std::sqrt((temperature + maxChangeRate) / temperature);
+  } else {
+    scalingFactor = temperatureGradient;
   }
 
   for (Particle& p : particles) {
-	  p.scaleV(scalingFactor);
+    p.scaleV(scalingFactor);
   }
 }
