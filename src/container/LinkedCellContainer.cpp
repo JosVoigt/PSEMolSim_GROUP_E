@@ -5,12 +5,12 @@
 
 LinkedCellContainer::LinkedCellContainer(
     int const amountCellsX_, int const amountCellsY_, int const amountCellsZ_,
-    double const r_c, std::array<boundaryConditions, 6> conditions)
+    double const r_c, std::array<BoundaryConditions, 6> conditions)
     : r_c(r_c),
       amountCellsX(amountCellsX_),
       amountCellsY(amountCellsY_),
       amountCellsZ(amountCellsZ_) {
-  cellSize = r_c * r_c;
+  cellSize = r_c * r_c * r_c;
 
   amountCellsX += 2;
   amountCellsY += 2;
@@ -31,9 +31,9 @@ LinkedCellContainer::LinkedCellContainer(
     {containerSizeX, containerSizeY, containerSizeZ}, {0, 0, 0}};
 
   for (int i = 0; i < 6; i++) {
-	if (conditions[i] == outflow) {
-		
-	}
+	  if (conditions[i] == outflow) {
+		  //Implement boundary conditions
+	  }
   }
 }
 
@@ -128,41 +128,56 @@ std::vector<Particle> LinkedCellContainer::retrieveRelevantParticles(
   return retrieveNeighbors(particle);
 }
 
-std::vector<int> LinkedCellContainer::retrieveBoundaryCellIndices() const {
-  // Hashmap is used to ensure that no duplicate cells are found (might cause
-  // bugs with ghost cells)
-  std::set<int> indices;
+std::vector<int> LinkedCellContainer::retrieveBoundaryCellIndices(const ContainerSide side) const {
+  std::vector<int> indices;
 
-  // For start and end of x
-  for (int y = 1; y < amountCellsY - 1; y++) {
-    for (int z = 1; z < amountCellsZ - 1; z++) {
-      indices.insert(1 + amountCellsX * (y + amountCellsY * z));
-      indices.insert((amountCellsX - 2) +
-                     amountCellsX * (y + amountCellsY * z));
+  if (side == front) {
+    for (int x = 1; x < amountCellsX - 1; x++) {
+      for (int z = 1; z < amountCellsZ - 1; z++) {
+        indices.push_back(x + amountCellsX * ((amountCellsY - 2) + amountCellsY * z));
+      }
     }
+    return indices;
   }
-
-  // For start and end of y
+  if (side == back) {
+    for (int x = 1; x < amountCellsX - 1; x++) {
+      for (int z = 1; z < amountCellsZ - 1; z++) {
+        indices.push_back(x + amountCellsX * (1 + amountCellsY * z));
+      }
+    }
+    return indices;
+  }
+  if (side == left) {
+    for (int y = 1; y < amountCellsY - 1; y++) {
+      for (int z = 1; z < amountCellsZ - 1; z++) {
+        indices.push_back(1 + amountCellsX * (y + amountCellsY * z));
+      }
+    }
+    return indices;
+  }
+  if (side == right) {
+    for (int y = 1; y < amountCellsY - 1; y++) {
+      for (int z = 1; z < amountCellsZ - 1; z++) {
+        indices.push_back((amountCellsX-2) + amountCellsX * (y + amountCellsY * z));
+      }
+    }
+    return indices;
+  }
+  if (side == top) {
+    for (int x = 1; x < amountCellsX - 1; x++) {
+      for (int y = 1; y < amountCellsY - 1; y++) {
+        indices.push_back(x + amountCellsX * (y + amountCellsY * (amountCellsZ - 2)));
+      }
+    }
+    return indices;
+  }
+  //if (side == bottom)
   for (int x = 1; x < amountCellsX - 1; x++) {
-    for (int z = 1; z < amountCellsZ - 1; z++) {
-      indices.insert(x + amountCellsX * (1 + amountCellsY * z));
-      indices.insert(x +
-                     amountCellsX * ((amountCellsY - 2) + amountCellsY * z));
+    for (int y = 1; y < amountCellsY - 1; y++) {
+      indices.push_back(x + amountCellsX * (y + amountCellsY * 1));
     }
   }
-
-  // For start and end of z
-  for (int x = 1; x < amountCellsX - 1; x++) {
-    for (int y = 1; y < amountCellsZ - 1; y++) {
-      indices.insert(x + amountCellsX * (y + amountCellsZ));
-      indices.insert(x +
-                     amountCellsX * (y + amountCellsY * (amountCellsZ - 2)));
-    }
-  }
-
-  // Convert hash set to vector
-  std::vector<int> indicesVector(indices.begin(), indices.end());
-  return indicesVector;
+  return indices;
 }
 
 std::vector<Particle> LinkedCellContainer::retrieveBoundaryParticles(
@@ -177,41 +192,56 @@ std::vector<Particle> LinkedCellContainer::retrieveBoundaryParticles(
   return boundaryParticles;
 }
 
-std::vector<int> LinkedCellContainer::retrieveHaloCellIndices() const {
-  // Hashmap is used to ensure that no duplicate cells are found (might cause
-  // bugs with ghost cells)
-  std::set<int> indices;
+std::vector<int> LinkedCellContainer::retrieveHaloCellIndices(const ContainerSide side) const {
+  std::vector<int> indices;
 
-  // For start and end of x
-  for (int y = 0; y < amountCellsY; y++) {
-    for (int z = 0; z < amountCellsZ; z++) {
-      indices.insert(amountCellsX * (y + amountCellsY * z));
-      indices.insert((amountCellsX - 1) +
-                     amountCellsX * (y + amountCellsY * z));
+  if (side == front) {
+    for (int x = 0; x < amountCellsX; x++) {
+      for (int z = 0; z < amountCellsZ; z++) {
+        indices.push_back(x + amountCellsX * (amountCellsY + amountCellsY * z));
+      }
     }
+    return indices;
   }
-
-  // For start and end of y
+  if (side == back) {
+    for (int x = 0; x < amountCellsX; x++) {
+      for (int z = 0; z < amountCellsZ; z++) {
+        indices.push_back(x + amountCellsX * (0 + amountCellsY * z));
+      }
+    }
+    return indices;
+  }
+  if (side == left) {
+    for (int y = 0; y < amountCellsY; y++) {
+      for (int z = 0; z < amountCellsZ; z++) {
+        indices.push_back(0 + amountCellsX * (y + amountCellsY * z));
+      }
+    }
+    return indices;
+  }
+  if (side == right) {
+    for (int y = 0; y < amountCellsY; y++) {
+      for (int z = 0; z < amountCellsZ; z++) {
+        indices.push_back(amountCellsX + amountCellsX * (y + amountCellsY * z));
+      }
+    }
+    return indices;
+  }
+  if (side == top) {
+    for (int x = 0; x < amountCellsX; x++) {
+      for (int y = 0; y < amountCellsY; y++) {
+        indices.push_back(x + amountCellsX * (y + amountCellsY * amountCellsZ));
+      }
+    }
+    return indices;
+  }
+  //if (side == bottom)
   for (int x = 0; x < amountCellsX; x++) {
-    for (int z = 0; z < amountCellsZ; z++) {
-      indices.insert(x + amountCellsX * (amountCellsY * z));
-      indices.insert(x +
-                     amountCellsX * ((amountCellsY - 1) + amountCellsY * z));
+    for (int y = 0; y < amountCellsY; y++) {
+      indices.push_back(x + amountCellsX * (y + amountCellsY * 0));
     }
   }
-
-  // For start and end of z
-  for (int x = 0; x < amountCellsX; x++) {
-    for (int y = 0; y < amountCellsZ; y++) {
-      indices.insert(x + amountCellsX * y);
-      indices.insert(x +
-                     amountCellsX * (y + amountCellsY * (amountCellsZ - 1)));
-    }
-  }
-
-  // Convert hash set to vector
-  std::vector<int> indicesVector(indices.begin(), indices.end());
-  return indicesVector;
+  return indices;
 }
 
 std::vector<Particle> LinkedCellContainer::retrieveHaloParticles(
@@ -226,8 +256,23 @@ std::vector<Particle> LinkedCellContainer::retrieveHaloParticles(
   return haloParticles;
 }
 
+
+std::vector<int> LinkedCellContainer::retrieveAllHaloCellIndices() const {
+
+  std::vector<int> allIndices = retrieveHaloCellIndices(front);
+
+  //We start from 1 because we already have the front side
+  for (int i = 1; i < 5; i++) {
+    std::vector<int> currentSideIndices = retrieveHaloCellIndices(static_cast<ContainerSide>(i));
+    allIndices.insert(allIndices.end(), currentSideIndices.begin(), currentSideIndices.end());
+  }
+  return allIndices;
+}
+
+
 void LinkedCellContainer::deleteHaloParticles() {
-  std::vector<int> haloCells = retrieveHaloCellIndices();
+
+  std::vector<int> haloCells = retrieveAllHaloCellIndices();
 
   for (const int index : haloCells) {
     cellVector[index].clear();
@@ -273,8 +318,7 @@ std::vector<Particle>::iterator LinkedCellContainer::end() {
   return cellVector[0].end();
 }
 
-/**------------------------------------------ GETTERS
- * ------------------------------------------**/
+/**------------------------------------------ GETTERS ------------------------------------------**/
 
 double LinkedCellContainer::getSizeX() const { return containerSizeX; }
 

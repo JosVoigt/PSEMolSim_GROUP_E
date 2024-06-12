@@ -22,7 +22,9 @@ class LCC_test : public testing::Test {
   Particle p2 = Particle(x2,v2, 1, 0);
   Particle p3 = Particle(x3, v3, 1, 0);
 
-  LinkedCellContainer container = LinkedCellContainer(10, 10, 10, 2);
+  LinkedCellContainer container = LinkedCellContainer(10, 10, 10, 2,
+      std::array<LinkedCellContainer::BoundaryConditions, 6>
+      ({LinkedCellContainer::outflow, LinkedCellContainer::outflow, LinkedCellContainer::outflow, LinkedCellContainer::outflow, LinkedCellContainer::outflow, LinkedCellContainer::outflow}) );
 };
 
 TEST_F(LCC_test, insertParticle) {
@@ -54,7 +56,7 @@ TEST_F(LCC_test, updateParticles) {
 TEST_F(LCC_test, retrieveBoundaryParticles) {
     container.insertParticle(p1);
 
-    auto indices = container.retrieveBoundaryCellIndices();
+    auto indices = container.retrieveBoundaryCellIndices(LinkedCellContainer::top);
     std::vector<Particle> boundaryParticles = container.retrieveBoundaryParticles(indices);
 
     EXPECT_EQ(boundaryParticles, std::vector({p1}));

@@ -64,10 +64,28 @@ private:
     [[nodiscard]] std::vector<Particle> retrieveHaloParticles(const std::vector<int>& cellIndices) const;
 
 public:
-	enum boundaryConditions{
+ /**
+  *\brief
+  * The boundary conditions for the cells, enum used for better readability
+  */
+	enum BoundaryConditions{
 		outflow,
 		reflection
 	};
+
+ /**
+  * \brief
+  * The sides of the container
+  */
+ enum ContainerSide {
+  front = 0,
+  back = 1,
+  left = 2,
+  right = 3,
+  top = 4,
+  bottom = 5
+};
+
     /**
      * \brief
      * Constructs a container that uses the linked cell algorithm using the given container size and cutoff point
@@ -80,7 +98,7 @@ public:
      * @param r_c
      * The cutoff point
      */
-    LinkedCellContainer(int amountCellsX_, int amountCellsY_, int amountCellsZ_, double r_c, std::array<boundaryConditions, 6> conditions);
+    LinkedCellContainer(int amountCellsX_, int amountCellsY_, int amountCellsZ_, double r_c, std::array<BoundaryConditions, 6> conditions);
 
     /**
      * \brief
@@ -110,10 +128,12 @@ public:
     [[nodiscard]] std::vector<Particle> retrieveNeighbors(const Particle& particle) const;
 
     /**
-     * \brief
-     * Retrieve the indexes of boundary cells to save computation time
-     */
-    [[nodiscard]] std::vector<int> retrieveBoundaryCellIndices() const;
+    * \brief
+    * Retrieves the hallo cell indices of the given side of the container
+    * @param side
+    * The side of which the indices of the halo cells are to be retrieved
+    */
+    [[nodiscard]] std::vector<int> retrieveBoundaryCellIndices(ContainerSide side) const;
 
     /**
      * \brief
@@ -126,10 +146,19 @@ public:
 
     /**
      * \brief
-     * Retrieves the indices of all halo cells
+     * Retrieves the hallo cell indices of the given side of the container
+     * @param side
+     * The side of which the indices of the halo cells are to be retrieved
      */
-    [[nodiscard]] std::vector<int> retrieveHaloCellIndices() const;
+    [[nodiscard]] std::vector<int> retrieveHaloCellIndices(ContainerSide side) const;
 
+
+    /**
+     * /brief
+     * Retrieves the indices of all halo cells
+     *
+     */
+    [[nodiscard]] std::vector<int> retrieveAllHaloCellIndices() const;
 
     /**
      * \brief
