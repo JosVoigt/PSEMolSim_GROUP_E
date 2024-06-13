@@ -30,7 +30,7 @@ int main(int argc, char *argv[]) {
     auto file_logger = spdlog::basic_logger_mt("file", ss.str());
   }
   catch (const spdlog::spdlog_ex &ex) {
-    spdlog::get("console")->critical("File logger could not be initalizied: {}",
+    spdlog::get("console")->critical("File logger could not be initialized: {}",
                                      ex.what());
     exit(1);
   }
@@ -56,7 +56,7 @@ int main(int argc, char *argv[]) {
 
         std::stringstream expected_stream;
 
-        expected_stream << "The expected behaivour would be: " << "\n"
+        expected_stream << "The expected behaviour would be: " << "\n"
                         << "    Generated files: " << (opts.end - opts.start) / opts.writeoutFrequency / opts.delta_t << "\n"
                         << "    Iterations: " << (opts.end / opts.delta_t) << "\n";
 
