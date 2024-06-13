@@ -9,19 +9,19 @@
 #include "utils/ArrayUtils.h"
 
 BoundaryConditionReflection::BoundaryConditionReflection(
-    std::vector<std::vector<Particle>>& haloCellList,
-    std::vector<std::vector<Particle>>& boundaryCellList,
-    std::shared_ptr<PairwiseForce> forcemode, std::array<double, 3>& surface_normal,
-    std::array<double, 3>& point_on_plane)
+    std::vector<std::vector<Particle>> &haloCellList,
+    std::vector<std::vector<Particle>> &boundaryCellList,
+    std::shared_ptr<PairwiseForce> forcemode,
+    std::array<double, 3> &surface_normal,
+    std::array<double, 3> &point_on_plane)
     : LinkedCellBoundary(haloCellList, boundaryCellList),
-      forceMethod(std::move(forcemode)),
-      surface_normal(surface_normal),
+      forceMethod(std::move(forcemode)), surface_normal(surface_normal),
       point_on_plane(point_on_plane) {}
 
 std::shared_ptr<std::vector<Particle>>
 BoundaryConditionReflection::executeBoundaryCondition() {
-  for (auto& cell : haloCellList) {
-    for (Particle& p : cell) {
+  for (auto &cell : haloCellList) {
+    for (Particle &p : cell) {
       // calculate distance
       std::array<double, 3> p_x = p.getX();
       std::array<double, 3> distance_array =
@@ -43,5 +43,5 @@ BoundaryConditionReflection::executeBoundaryCondition() {
   }
   std::shared_ptr<std::vector<Particle>> removed =
       std::make_shared<std::vector<Particle>>();
-	return removed;
+  return removed;
 }
