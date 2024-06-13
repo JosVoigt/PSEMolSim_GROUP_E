@@ -12,18 +12,6 @@ protected:
 
     virtual ~LinkedCellBoundary();
 
-		virtual std::shared_ptr<std::vector<Particle>> executeBoundaryCondition ();
+	virtual std::shared_ptr<std::vector<Particle>> executeBoundaryCondition ();
 };
 
-std::shared_ptr<std::vector<Particle>> LinkedCellBoundary::executeBoundaryCondition() {
-    return {};
-}
-
-LinkedCellBoundary::LinkedCellBoundary(const std::vector<std::vector<Particle>>& haloCellList,
-                                       const std::vector<std::vector<Particle>>& boundaryCellList) {
-    this->haloCellList = haloCellList;
-    this->boundaryCellList = boundaryCellList;
-
-}
-
-LinkedCellBoundary::~LinkedCellBoundary() = default;
