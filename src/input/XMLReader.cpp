@@ -7,11 +7,12 @@
 
 #include "container/LinkedCellContainer.h"
 #include "force/LennardJonesForce.h"
+#include "outputWriter/VTKWriter.h"
 #include "utils/Parser.h"
 
-XMLReader::XMLReader(const char* filename_) : filename(filename_) {}
+XMLReader::XMLReader(const char *filename_) : filename(filename_) {}
 
-void XMLReader::readData(parser::options& options) const {
+void XMLReader::readData(parser::options &options) const {
   std::ifstream file(filename);
   if (!file.is_open()) {
     spdlog::get("console")->critical("Unable to open file: ", filename);
@@ -31,7 +32,7 @@ void XMLReader::readData(parser::options& options) const {
   double mass_disc, distance_disc;
   int amountCellsX, amountCellsY, amountCellsZ;
 
-  options.writer_ = std::shared_ptr<Writer>(new outputWriter::VTKWriter());
+  options.writer_ = std::make_shared<outputWriter::VTKWriter>();
 
   while (std::getline(file, line)) {
     std::istringstream iss(line);
@@ -71,8 +72,8 @@ void XMLReader::readData(parser::options& options) const {
       } else if (key == "Epsilon") {
         epsilon = std::stod(value);
       } else if (key == "Sigma") {
-        options.force_ = std::shared_ptr<PairwiseForce>(
-            new LennardJonesForce(epsilon, std::stod(value)));
+        options.force_ =
+            std::make_shared<LennardJonesForce>(epsilon, std::stod(value));
       } else if (key == "Delta") {
         options.delta_t = std::stod(value);
       } else if (key == "Frequency") {
@@ -120,12 +121,13 @@ void XMLReader::readData(parser::options& options) const {
     } else if (key == "AmountCellsZ") {
       amountCellsZ = std::stoi(value);
     } else if (key == "Sidelength") {
-      options.container_ =
-          std::shared_ptr<ParticleContainerInterface>(new LinkedCellContainer(
-              amountCellsX, amountCellsY, amountCellsZ, std::stod(value),
-              {LinkedCellContainer::outflow, LinkedCellContainer::outflow,
-               LinkedCellContainer::outflow, LinkedCellContainer::outflow,
-               LinkedCellContainer::outflow, LinkedCellContainer::outflow}));
+      std::array<LinkedCellContainer::BoundaryConditions, 6> conditions = {
+          LinkedCellContainer::outflow, LinkedCellContainer::outflow,
+          LinkedCellContainer::outflow, LinkedCellContainer::outflow,
+          LinkedCellContainer::outflow, LinkedCellContainer::outflow};
+      options.container_ = std::make_shared<LinkedCellContainer>(
+          amountCellsX, amountCellsY, amountCellsZ, std::stod(value),
+          conditions);
     }
   }
 

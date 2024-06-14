@@ -75,21 +75,20 @@ options parse(int argc, char *argv[]) {
       spdlog::get("console")->critical("Please choose EXACTLY ONE force mode");
       exit(1);
     } else if (vm.count("planet")) {
-      opts.force_ = std::shared_ptr<PairwiseForce>(new PlanetForce());
+      opts.force_ = std::make_shared<PlanetForce>();
     } else if (!vm["lenjonesmol"].empty() &&
                (ljm_args = vm["lenjonesmol"].as<std::vector<double>>())
                        .size() == 2) {
-      opts.force_ = std::shared_ptr<PairwiseForce>(
-          new LennardJonesForce(ljm_args[0], ljm_args[1]));
+      opts.force_ = std::make_shared<LennardJonesForce>(vm["lenjonesmol"].as<std::vector<double>>()[0], vm["lenjonesmol"].as<std::vector<double>>()[1]);
     } else {
       spdlog::get("console")->critical("Please provide a single force mode");
       exit(1);
     }
 
     if (vm["outformat"].as<std::string>() == "vtk") {
-      opts.writer_ = std::shared_ptr<Writer>(new outputWriter::VTKWriter());
+      opts.writer_ = std::make_shared<outputWriter::VTKWriter>();
     } else if (vm["outformat"].as<std::string>() == "xyz") {
-      opts.writer_ = std::shared_ptr<Writer>(new outputWriter::XYZWriter());
+      opts.writer_ = std::make_shared<outputWriter::XYZWriter>();
     } else {
       spdlog::get("console")->critical("{} is not a valid output type",
                                        vm["output"].as<std::string>());
