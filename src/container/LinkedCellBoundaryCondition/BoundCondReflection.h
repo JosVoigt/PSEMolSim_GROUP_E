@@ -1,3 +1,5 @@
+#pragma once
+
 #include <memory>
 #include <vector>
 
@@ -6,6 +8,7 @@
 
 class BoundaryConditionReflection : public LinkedCellBoundary {
  private:
+  std::vector<std::vector<Particle>> boundaryCellList;
   std::shared_ptr<PairwiseForce> forceMethod;
   std::array<double, 3> surface_normal;
   std::array<double, 3> point_on_plane;
@@ -19,8 +22,6 @@ class BoundaryConditionReflection : public LinkedCellBoundary {
    * for the condition.
    * \param haloCellList
    * The halo Cells that are managed by this Condition, for this condition may be empty
-   * \param boundaryCellList
-   * The boundary cells managed by this condition, particles in here will be affected by the repulsing force
    * \param forcemode
    * The force mode the simulation is run in
    * \param surface_normal_
@@ -32,7 +33,6 @@ class BoundaryConditionReflection : public LinkedCellBoundary {
    * Any point on the plane
    */
   BoundaryConditionReflection(std::vector<std::vector<Particle>>& haloCellList,
-                              std::vector<std::vector<Particle>>& boundaryCellList,
                               std::shared_ptr<PairwiseForce> forcemode,
                               std::array<double, 3>& surface_normal_,
                               std::array<double, 3>& point_on_plane_);

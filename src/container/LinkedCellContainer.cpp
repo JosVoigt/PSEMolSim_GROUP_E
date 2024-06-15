@@ -1,17 +1,15 @@
 #include "LinkedCellContainer.h"
 
 #include <algorithm>
-#include <set>
 
-#include "LinkedCellBoundaryCondition/BoundaryConditionOutflow.h"
 #include "LinkedCellBoundaryCondition/BoundCondReflection.h"
+#include "LinkedCellBoundaryCondition/BoundaryConditionOutflow.h"
+#include "force/PlanetForce.h"
 
 LinkedCellContainer::LinkedCellContainer(
     int const amountCellsX_, int const amountCellsY_, int const amountCellsZ_,
     double const r_c, std::array<BoundaryConditions, 6> conditions)
-    : r_c(r_c),
-      amountCellsX(amountCellsX_),
-      amountCellsY(amountCellsY_),
+    : r_c(r_c), amountCellsX(amountCellsX_), amountCellsY(amountCellsY_),
       amountCellsZ(amountCellsZ_) {
   cellSize = r_c * r_c * r_c;
 
@@ -26,41 +24,47 @@ LinkedCellContainer::LinkedCellContainer(
   cellVector.resize(amountCellsX * amountCellsY * amountCellsZ);
 
   // plane vector constants W,S,E,N,U,D
-  std::array<std::array<double, 3>, 6> plane_vectors = {{{0, 0, -1}, {-1, 0, 0}, {0, 0, 1},
-                                {1, 0, 0},  {0, 1, 0},  {0, -1, 0}}};
-  std::array<std::array<double, 3>, 6> point_vectors = {{
-    {0, 0, 0}, {0, 0, 0}, {containerSizeX, containerSizeY, containerSizeZ},
-    {containerSizeX, containerSizeY, containerSizeZ},
-    {containerSizeX, containerSizeY, containerSizeZ}, {0, 0, 0}}};
-
+  std::array<std::array<double, 3>, 6> plane_vectors = {
+      {{0, 0, -1}, {-1, 0, 0}, {0, 0, 1}, {1, 0, 0}, {0, 1, 0}, {0, -1, 0}}};
+  std::array<std::array<double, 3>, 6> point_vectors = {
+      {{0, 0, 0},
+       {0, 0, 0},
+       {containerSizeX, containerSizeY, containerSizeZ},
+       {containerSizeX, containerSizeY, containerSizeZ},
+       {containerSizeX, containerSizeY, containerSizeZ},
+       {0, 0, 0}}};
 
   std::vector<int> currentBoundaryIndices;
   std::vector<int> currentHaloIndices;
 
   for (int i = 0; i < 6; i++) {
-	  if (conditions[i] == outflow) {
+    if (conditions[i] == outflow) {
 
-      currentBoundaryIndices = retrieveBoundaryCellIndices(static_cast<ContainerSide>(i));
-	    currentHaloIndices = retrieveHaloCellIndices(static_cast<ContainerSide>(i));
+      currentBoundaryIndices =
+          retrieveBoundaryCellIndices(static_cast<ContainerSide>(i));
+      currentHaloIndices =
+          retrieveHaloCellIndices(static_cast<ContainerSide>(i));
 
-	    cellBoundaries[i] = std::make_unique<BoundaryConditionOutflow>(
-          retrieveHaloParticles(currentHaloIndices), retrieveBoundaryParticles(currentBoundaryIndices));
-	  }
-    else if (conditions[i] == reflection) {
+      cellBoundaries[i] = std::make_shared<BoundaryConditionOutflow>(
+          retrieveHaloParticles(currentHaloIndices));
+    } else if (conditions[i] == reflection) {
 
-      currentBoundaryIndices = retrieveBoundaryCellIndices(static_cast<ContainerSide>(i));
-      currentHaloIndices = retrieveHaloCellIndices(static_cast<ContainerSide>(i));
+      currentBoundaryIndices =
+          retrieveBoundaryCellIndices(static_cast<ContainerSide>(i));
+      currentHaloIndices =
+          retrieveHaloCellIndices(static_cast<ContainerSide>(i));
 
       cellBoundaries[i] = std::make_shared<BoundaryConditionReflection>(
-          retrieveHaloParticles(currentHaloIndices), retrieveBoundaryParticles(currentBoundaryIndices),
-          std::make_shared<PairwiseForce>(), plane_vectors[i], point_vectors[i]);
+          retrieveBoundaryParticles(currentBoundaryIndices),
+          std::make_shared<PlanetForce>(), plane_vectors[i],
+          point_vectors[i]);
     }
-    //add periodic when done
+    // add periodic when done
   }
 }
 
-std::array<int, 3> LinkedCellContainer::getCellCoordinates(
-    const Particle& particle) const {
+std::array<int, 3>
+LinkedCellContainer::getCellCoordinates(const Particle &particle) const {
   return {
       static_cast<int>(particle.getX()[0] / cellSize),
       static_cast<int>(particle.getX()[1] / cellSize),
@@ -75,7 +79,7 @@ int LinkedCellContainer::getIndexFromCoordinates(
              (cellCoordinates[1] + amountCellsY * cellCoordinates[2]);
 }
 
-void LinkedCellContainer::insertParticle(const Particle& particle) {
+void LinkedCellContainer::insertParticle(const Particle &particle) {
   std::array<int, 3> particleCellCoordinates = getCellCoordinates(particle);
   const int cellIndex = getIndexFromCoordinates(particleCellCoordinates);
 
@@ -83,7 +87,7 @@ void LinkedCellContainer::insertParticle(const Particle& particle) {
 }
 
 bool LinkedCellContainer::findAndremoveOldParticle(
-    const Particle& particle) const {
+    const Particle &particle) const {
   std::array<int, 3> particleCellCoordinates = getCellCoordinates(particle);
   const int cellIndex = getIndexFromCoordinates(particleCellCoordinates);
 
@@ -100,8 +104,8 @@ bool LinkedCellContainer::findAndremoveOldParticle(
   return true;
 }
 
-std::vector<Particle> LinkedCellContainer::retrieveNeighbors(
-    const Particle& particle) const {
+std::vector<Particle>
+LinkedCellContainer::retrieveNeighbors(const Particle &particle) const {
   const std::array<int, 3> particleCellCoordinates =
       getCellCoordinates(particle);
   std::vector<Particle> neighbours;
@@ -130,7 +134,7 @@ std::vector<Particle> LinkedCellContainer::retrieveNeighbors(
   for (int x = startX; x <= endX; x++) {
     for (int y = startY; y <= endY; y++) {
       for (int z = startZ; z <= endZ; z++) {
-        for (const Particle& neighbour :
+        for (const Particle &neighbour :
              cellVector[x + (amountCellsX) * (y + (amountCellsY)*z)]) {
           // Of course we wouldn't want to include the particle itself,
           // otherwise it would mess up the force calculation
@@ -145,18 +149,20 @@ std::vector<Particle> LinkedCellContainer::retrieveNeighbors(
   return neighbours;
 }
 
-std::vector<Particle> LinkedCellContainer::retrieveRelevantParticles(
-    Particle& particle) {
+std::vector<Particle>
+LinkedCellContainer::retrieveRelevantParticles(Particle &particle) {
   return retrieveNeighbors(particle);
 }
 
-std::vector<int> LinkedCellContainer::retrieveBoundaryCellIndices(const ContainerSide side) const {
+std::vector<int> LinkedCellContainer::retrieveBoundaryCellIndices(
+    const ContainerSide side) const {
   std::vector<int> indices;
 
   if (side == south) {
     for (int x = 1; x < amountCellsX - 1; x++) {
       for (int z = 1; z < amountCellsZ - 1; z++) {
-        indices.push_back(x + amountCellsX * ((amountCellsY - 2) + amountCellsY * z));
+        indices.push_back(x + amountCellsX *
+                                  ((amountCellsY - 2) + amountCellsY * z));
       }
     }
     return indices;
@@ -180,7 +186,8 @@ std::vector<int> LinkedCellContainer::retrieveBoundaryCellIndices(const Containe
   if (side == east) {
     for (int y = 1; y < amountCellsY - 1; y++) {
       for (int z = 1; z < amountCellsZ - 1; z++) {
-        indices.push_back((amountCellsX-2) + amountCellsX * (y + amountCellsY * z));
+        indices.push_back((amountCellsX - 2) +
+                          amountCellsX * (y + amountCellsY * z));
       }
     }
     return indices;
@@ -188,12 +195,13 @@ std::vector<int> LinkedCellContainer::retrieveBoundaryCellIndices(const Containe
   if (side == up) {
     for (int x = 1; x < amountCellsX - 1; x++) {
       for (int y = 1; y < amountCellsY - 1; y++) {
-        indices.push_back(x + amountCellsX * (y + amountCellsY * (amountCellsZ - 2)));
+        indices.push_back(x + amountCellsX *
+                                  (y + amountCellsY * (amountCellsZ - 2)));
       }
     }
     return indices;
   }
-  //if (side == down)
+  // if (side == down)
   for (int x = 1; x < amountCellsX - 1; x++) {
     for (int y = 1; y < amountCellsY - 1; y++) {
       indices.push_back(x + amountCellsX * (y + amountCellsY * 1));
@@ -202,8 +210,9 @@ std::vector<int> LinkedCellContainer::retrieveBoundaryCellIndices(const Containe
   return indices;
 }
 
-std::vector<std::vector<Particle>> &LinkedCellContainer::retrieveBoundaryParticles(
-  const std::vector<int> &cellIndices) const {
+std::vector<std::vector<Particle>> &
+LinkedCellContainer::retrieveBoundaryParticles(
+    const std::vector<int> &cellIndices) const {
   std::vector<std::vector<Particle>> boundaryCells;
 
   for (const int index : cellIndices) {
@@ -212,7 +221,8 @@ std::vector<std::vector<Particle>> &LinkedCellContainer::retrieveBoundaryParticl
   return boundaryCells;
 }
 
-std::vector<int> LinkedCellContainer::retrieveHaloCellIndices(const ContainerSide side) const {
+std::vector<int>
+LinkedCellContainer::retrieveHaloCellIndices(const ContainerSide side) const {
   std::vector<int> indices;
 
   if (side == south) {
@@ -255,7 +265,7 @@ std::vector<int> LinkedCellContainer::retrieveHaloCellIndices(const ContainerSid
     }
     return indices;
   }
-  //if (side == down)
+  // if (side == down)
   for (int x = 0; x < amountCellsX; x++) {
     for (int y = 0; y < amountCellsY; y++) {
       indices.push_back(x + amountCellsX * (y + amountCellsY * 0));
@@ -265,7 +275,7 @@ std::vector<int> LinkedCellContainer::retrieveHaloCellIndices(const ContainerSid
 }
 
 std::vector<std::vector<Particle>> &LinkedCellContainer::retrieveHaloParticles(
-  const std::vector<int> &cellIndices) const {
+    const std::vector<int> &cellIndices) const {
   std::vector<std::vector<Particle>> haloCells;
 
   for (const int index : cellIndices) {
@@ -274,19 +284,19 @@ std::vector<std::vector<Particle>> &LinkedCellContainer::retrieveHaloParticles(
   return haloCells;
 }
 
-
 std::vector<int> LinkedCellContainer::retrieveAllHaloCellIndices() const {
 
   std::vector<int> allIndices = retrieveHaloCellIndices(south);
 
-  //We start from 1 because we already have the front side
+  // We start from 1 because we already have the front side
   for (int i = 1; i < 5; i++) {
-    std::vector<int> currentSideIndices = retrieveHaloCellIndices(static_cast<ContainerSide>(i));
-    allIndices.insert(allIndices.end(), currentSideIndices.begin(), currentSideIndices.end());
+    std::vector<int> currentSideIndices =
+        retrieveHaloCellIndices(static_cast<ContainerSide>(i));
+    allIndices.insert(allIndices.end(), currentSideIndices.begin(),
+                      currentSideIndices.end());
   }
   return allIndices;
 }
-
 
 void LinkedCellContainer::deleteHaloParticles() {
 
@@ -300,8 +310,8 @@ void LinkedCellContainer::deleteHaloParticles() {
 std::vector<Particle> LinkedCellContainer::preprocessParticles() {
   std::vector<Particle> allParticles;
 
-  for (const std::vector<Particle>& cell : cellVector) {
-    for (const Particle& particle : cell) {
+  for (const std::vector<Particle> &cell : cellVector) {
+    for (const Particle &particle : cell) {
       allParticles.push_back(particle);
     }
   }
@@ -310,12 +320,12 @@ std::vector<Particle> LinkedCellContainer::preprocessParticles() {
 
 void LinkedCellContainer::updateParticles() {
 
-  for (const auto & boundary : cellBoundaries) {
+  for (const auto &boundary : cellBoundaries) {
     boundary->executeBoundaryCondition();
   }
 
-  for (std::vector<Particle>& cell : cellVector) {
-    for (Particle& particle : cell) {
+  for (std::vector<Particle> &cell : cellVector) {
+    for (Particle &particle : cell) {
       if (findAndremoveOldParticle(particle)) {
         insertParticle(particle);
       }
@@ -327,7 +337,7 @@ void LinkedCellContainer::updateParticles() {
 size_t LinkedCellContainer::size() const {
   size_t size = 0;
 
-  for (const std::vector<Particle>& cell : cellVector) {
+  for (const std::vector<Particle> &cell : cellVector) {
     size += cell.size();
   }
   return size;
@@ -341,7 +351,8 @@ std::vector<Particle>::iterator LinkedCellContainer::end() {
   return cellVector[0].end();
 }
 
-/**------------------------------------------ GETTERS ------------------------------------------**/
+/**------------------------------------------ GETTERS
+ * ------------------------------------------**/
 
 double LinkedCellContainer::getSizeX() const { return containerSizeX; }
 

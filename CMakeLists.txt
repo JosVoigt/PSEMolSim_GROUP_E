@@ -13,6 +13,11 @@ if (DOWNLOAD_DEPENDENCIES)
         GIT_REPOSITORY https://github.com/google/googletest.git
         GIT_TAG        v1.14.0  # adjust this to the version you want
     )
+	FetchContent_Declare(
+		googlebench
+		GIT_REPOSITORY https://github.com/google/benchmark.git
+		GIT_TAG		  main 
+	)
     FetchContent_Declare(
         spdlog
         GIT_REPOSITORY https://github.com/gabime/spdlog.git
@@ -29,6 +34,7 @@ if (DOWNLOAD_DEPENDENCIES)
         GIT_TAG v3.2.5
     )
     FetchContent_MakeAvailable(googletest)
+    FetchContent_MakeAvailable(googlebench)
     FetchContent_MakeAvailable(spdlog)
     FetchContent_MakeAvailable(fmt)
     FetchContent_MakeAvailable(xerces-c)
@@ -103,6 +109,10 @@ file (GLOB_RECURSE molsimtests
 ${CMAKE_CURRENT_SOURCE_DIR}/test/*/*.cpp
 )
 
+#-----------------------------COLLECT BENCH FILES------------#
+file (GLOB_RECURSE molsimbench
+	${CMAKE_CURRENT_SOURCE_DIR}/bench/*.cpp
+)
 #-----------------------------BUILD PROJECT LIB--------------#
 add_library ( ${PROJECT_NAME} STATIC
 ${molsimfiles}
@@ -135,6 +145,21 @@ target_link_libraries (MolSimTest
     gtest_main
 )
 target_include_directories (MolSimTest
+PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd
+PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+)
+
+#---------------------------BENCH EXECUTABLE-----------------#
+add_executable (MolSimBench ${molsimbench})
+target_link_libraries (MolSimBench
+    ${PROJECT_NAME}
+	#bench lib
+    benchmark
+    benchmark_main
+)
+target_include_directories (MolSimBench
 PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd
 PRIVATE

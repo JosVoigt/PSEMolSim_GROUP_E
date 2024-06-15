@@ -5,9 +5,8 @@
 #include "container/Particle.h"
 
 BoundaryConditionOutflow::BoundaryConditionOutflow(
-    std::vector<std::vector<Particle>>& haloCellList,
-    std::vector<std::vector<Particle>>& boundaryCellList)
-    : LinkedCellBoundary(haloCellList, boundaryCellList) {}
+    std::vector<std::vector<Particle>>& haloCellList)
+    : haloCellList(haloCellList){}
 
 std::shared_ptr<std::vector<Particle>>
 BoundaryConditionOutflow::executeBoundaryCondition() {

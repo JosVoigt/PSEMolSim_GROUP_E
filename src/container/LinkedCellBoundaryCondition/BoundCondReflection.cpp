@@ -9,18 +9,16 @@
 #include "utils/ArrayUtils.h"
 
 BoundaryConditionReflection::BoundaryConditionReflection(
-    std::vector<std::vector<Particle>> &haloCellList,
     std::vector<std::vector<Particle>> &boundaryCellList,
     std::shared_ptr<PairwiseForce> forcemode,
     std::array<double, 3> &surface_normal,
     std::array<double, 3> &point_on_plane)
-    : LinkedCellBoundary(haloCellList, boundaryCellList),
-      forceMethod(std::move(forcemode)), surface_normal(surface_normal),
-      point_on_plane(point_on_plane) {}
+    : boundaryCellList(boundaryCellList), forceMethod(std::move(forcemode)),
+      surface_normal(surface_normal), point_on_plane(point_on_plane) {}
 
 std::shared_ptr<std::vector<Particle>>
 BoundaryConditionReflection::executeBoundaryCondition() {
-  for (auto &cell : haloCellList) {
+  for (auto &cell : boundaryCellList) {
     for (Particle &p : cell) {
       // calculate distance
       std::array<double, 3> p_x = p.getX();
@@ -30,7 +28,7 @@ BoundaryConditionReflection::executeBoundaryCondition() {
 
       std::array<double, 3> zero = {0, 0, 0};
 
-      Particle halo = Particle(halo_x, zero, p.getM(), -1);
+      Particle halo = Particle(halo_x, zero, p.getM(), p.getType());
 
       std::array<double, 3> force = forceMethod->calculateForce(p, halo);
 

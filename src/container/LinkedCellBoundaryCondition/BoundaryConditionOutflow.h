@@ -4,10 +4,12 @@
 #include "LinkedCellBoundary.h"
 
 class BoundaryConditionOutflow : public LinkedCellBoundary {
+	private:
+		std::vector<std::vector<Particle>> haloCellList;
 	public:
 		~BoundaryConditionOutflow() = default;
 
-		BoundaryConditionOutflow (std::vector<std::vector<Particle>>& haloCellList, std::vector<std::vector<Particle>>& boundaryCellList);
+		BoundaryConditionOutflow (std::vector<std::vector<Particle>>& haloCellList);
 
 		/**
 		 * \brief
