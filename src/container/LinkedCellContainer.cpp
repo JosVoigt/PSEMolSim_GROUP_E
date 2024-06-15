@@ -3,6 +3,9 @@
 #include <algorithm>
 #include <set>
 
+#include "LinkedCellBoundaryCondition/BoundaryConditionOutflow.h"
+#include "LinkedCellBoundaryCondition/BoundCondReflection.h"
+
 LinkedCellContainer::LinkedCellContainer(
     int const amountCellsX_, int const amountCellsY_, int const amountCellsZ_,
     double const r_c, std::array<BoundaryConditions, 6> conditions)
@@ -23,17 +26,36 @@ LinkedCellContainer::LinkedCellContainer(
   cellVector.resize(amountCellsX * amountCellsY * amountCellsZ);
 
   // plane vector constants W,S,E,N,U,D
-  double plane_vectors[6][3] = {{0, 0, -1}, {-1, 0, 0}, {0, 0, 1},
-                                {1, 0, 0},  {0, 1, 0},  {0, -1, 0}};
-  double point_vectors[6][3] = {
+  std::array<std::array<double, 3>, 6> plane_vectors = {{{0, 0, -1}, {-1, 0, 0}, {0, 0, 1},
+                                {1, 0, 0},  {0, 1, 0},  {0, -1, 0}}};
+  std::array<std::array<double, 3>, 6> point_vectors = {{
     {0, 0, 0}, {0, 0, 0}, {containerSizeX, containerSizeY, containerSizeZ},
     {containerSizeX, containerSizeY, containerSizeZ},
-    {containerSizeX, containerSizeY, containerSizeZ}, {0, 0, 0}};
+    {containerSizeX, containerSizeY, containerSizeZ}, {0, 0, 0}}};
+
+
+  std::vector<int> currentBoundaryIndices;
+  std::vector<int> currentHaloIndices;
 
   for (int i = 0; i < 6; i++) {
 	  if (conditions[i] == outflow) {
-		  //Implement boundary conditions
+
+      currentBoundaryIndices = retrieveBoundaryCellIndices(static_cast<ContainerSide>(i));
+	    currentHaloIndices = retrieveHaloCellIndices(static_cast<ContainerSide>(i));
+
+	    cellBoundaries[i] = std::make_unique<BoundaryConditionOutflow>(
+          retrieveHaloParticles(currentHaloIndices), retrieveBoundaryParticles(currentBoundaryIndices));
 	  }
+    else if (conditions[i] == reflection) {
+
+      currentBoundaryIndices = retrieveBoundaryCellIndices(static_cast<ContainerSide>(i));
+      currentHaloIndices = retrieveHaloCellIndices(static_cast<ContainerSide>(i));
+
+      cellBoundaries[i] = std::make_shared<BoundaryConditionReflection>(
+          retrieveHaloParticles(currentHaloIndices), retrieveBoundaryParticles(currentBoundaryIndices),
+          std::make_shared<PairwiseForce>(), plane_vectors[i], point_vectors[i]);
+    }
+    //add periodic when done
   }
 }
 
@@ -131,7 +153,7 @@ std::vector<Particle> LinkedCellContainer::retrieveRelevantParticles(
 std::vector<int> LinkedCellContainer::retrieveBoundaryCellIndices(const ContainerSide side) const {
   std::vector<int> indices;
 
-  if (side == front) {
+  if (side == south) {
     for (int x = 1; x < amountCellsX - 1; x++) {
       for (int z = 1; z < amountCellsZ - 1; z++) {
         indices.push_back(x + amountCellsX * ((amountCellsY - 2) + amountCellsY * z));
@@ -139,7 +161,7 @@ std::vector<int> LinkedCellContainer::retrieveBoundaryCellIndices(const Containe
     }
     return indices;
   }
-  if (side == back) {
+  if (side == north) {
     for (int x = 1; x < amountCellsX - 1; x++) {
       for (int z = 1; z < amountCellsZ - 1; z++) {
         indices.push_back(x + amountCellsX * (1 + amountCellsY * z));
@@ -147,7 +169,7 @@ std::vector<int> LinkedCellContainer::retrieveBoundaryCellIndices(const Containe
     }
     return indices;
   }
-  if (side == left) {
+  if (side == west) {
     for (int y = 1; y < amountCellsY - 1; y++) {
       for (int z = 1; z < amountCellsZ - 1; z++) {
         indices.push_back(1 + amountCellsX * (y + amountCellsY * z));
@@ -155,7 +177,7 @@ std::vector<int> LinkedCellContainer::retrieveBoundaryCellIndices(const Containe
     }
     return indices;
   }
-  if (side == right) {
+  if (side == east) {
     for (int y = 1; y < amountCellsY - 1; y++) {
       for (int z = 1; z < amountCellsZ - 1; z++) {
         indices.push_back((amountCellsX-2) + amountCellsX * (y + amountCellsY * z));
@@ -163,7 +185,7 @@ std::vector<int> LinkedCellContainer::retrieveBoundaryCellIndices(const Containe
     }
     return indices;
   }
-  if (side == top) {
+  if (side == up) {
     for (int x = 1; x < amountCellsX - 1; x++) {
       for (int y = 1; y < amountCellsY - 1; y++) {
         indices.push_back(x + amountCellsX * (y + amountCellsY * (amountCellsZ - 2)));
@@ -171,7 +193,7 @@ std::vector<int> LinkedCellContainer::retrieveBoundaryCellIndices(const Containe
     }
     return indices;
   }
-  //if (side == bottom)
+  //if (side == down)
   for (int x = 1; x < amountCellsX - 1; x++) {
     for (int y = 1; y < amountCellsY - 1; y++) {
       indices.push_back(x + amountCellsX * (y + amountCellsY * 1));
@@ -180,22 +202,20 @@ std::vector<int> LinkedCellContainer::retrieveBoundaryCellIndices(const Containe
   return indices;
 }
 
-std::vector<Particle> LinkedCellContainer::retrieveBoundaryParticles(
-    const std::vector<int>& cellIndices) const {
-  std::vector<Particle> boundaryParticles;
+std::vector<std::vector<Particle>> &LinkedCellContainer::retrieveBoundaryParticles(
+  const std::vector<int> &cellIndices) const {
+  std::vector<std::vector<Particle>> boundaryCells;
 
   for (const int index : cellIndices) {
-    for (const Particle& particle : cellVector[index]) {
-      boundaryParticles.push_back(particle);
-    }
+    boundaryCells.push_back(cellVector[index]);
   }
-  return boundaryParticles;
+  return boundaryCells;
 }
 
 std::vector<int> LinkedCellContainer::retrieveHaloCellIndices(const ContainerSide side) const {
   std::vector<int> indices;
 
-  if (side == front) {
+  if (side == south) {
     for (int x = 0; x < amountCellsX; x++) {
       for (int z = 0; z < amountCellsZ; z++) {
         indices.push_back(x + amountCellsX * (amountCellsY + amountCellsY * z));
@@ -203,7 +223,7 @@ std::vector<int> LinkedCellContainer::retrieveHaloCellIndices(const ContainerSid
     }
     return indices;
   }
-  if (side == back) {
+  if (side == north) {
     for (int x = 0; x < amountCellsX; x++) {
       for (int z = 0; z < amountCellsZ; z++) {
         indices.push_back(x + amountCellsX * (0 + amountCellsY * z));
@@ -211,7 +231,7 @@ std::vector<int> LinkedCellContainer::retrieveHaloCellIndices(const ContainerSid
     }
     return indices;
   }
-  if (side == left) {
+  if (side == west) {
     for (int y = 0; y < amountCellsY; y++) {
       for (int z = 0; z < amountCellsZ; z++) {
         indices.push_back(0 + amountCellsX * (y + amountCellsY * z));
@@ -219,7 +239,7 @@ std::vector<int> LinkedCellContainer::retrieveHaloCellIndices(const ContainerSid
     }
     return indices;
   }
-  if (side == right) {
+  if (side == east) {
     for (int y = 0; y < amountCellsY; y++) {
       for (int z = 0; z < amountCellsZ; z++) {
         indices.push_back(amountCellsX + amountCellsX * (y + amountCellsY * z));
@@ -227,7 +247,7 @@ std::vector<int> LinkedCellContainer::retrieveHaloCellIndices(const ContainerSid
     }
     return indices;
   }
-  if (side == top) {
+  if (side == up) {
     for (int x = 0; x < amountCellsX; x++) {
       for (int y = 0; y < amountCellsY; y++) {
         indices.push_back(x + amountCellsX * (y + amountCellsY * amountCellsZ));
@@ -235,7 +255,7 @@ std::vector<int> LinkedCellContainer::retrieveHaloCellIndices(const ContainerSid
     }
     return indices;
   }
-  //if (side == bottom)
+  //if (side == down)
   for (int x = 0; x < amountCellsX; x++) {
     for (int y = 0; y < amountCellsY; y++) {
       indices.push_back(x + amountCellsX * (y + amountCellsY * 0));
@@ -244,22 +264,20 @@ std::vector<int> LinkedCellContainer::retrieveHaloCellIndices(const ContainerSid
   return indices;
 }
 
-std::vector<Particle> LinkedCellContainer::retrieveHaloParticles(
-    const std::vector<int>& cellIndices) const {
-  std::vector<Particle> haloParticles;
+std::vector<std::vector<Particle>> &LinkedCellContainer::retrieveHaloParticles(
+  const std::vector<int> &cellIndices) const {
+  std::vector<std::vector<Particle>> haloCells;
 
   for (const int index : cellIndices) {
-    for (const Particle& particle : cellVector[index]) {
-      haloParticles.push_back(particle);
-    }
+    haloCells.push_back(cellVector[index]);
   }
-  return haloParticles;
+  return haloCells;
 }
 
 
 std::vector<int> LinkedCellContainer::retrieveAllHaloCellIndices() const {
 
-  std::vector<int> allIndices = retrieveHaloCellIndices(front);
+  std::vector<int> allIndices = retrieveHaloCellIndices(south);
 
   //We start from 1 because we already have the front side
   for (int i = 1; i < 5; i++) {
@@ -291,6 +309,11 @@ std::vector<Particle> LinkedCellContainer::preprocessParticles() {
 }
 
 void LinkedCellContainer::updateParticles() {
+
+  for (const auto & boundary : cellBoundaries) {
+    boundary->executeBoundaryCondition();
+  }
+
   for (std::vector<Particle>& cell : cellVector) {
     for (Particle& particle : cell) {
       if (findAndremoveOldParticle(particle)) {

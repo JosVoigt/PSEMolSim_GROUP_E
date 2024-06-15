@@ -56,10 +56,12 @@ TEST_F(LCC_test, updateParticles) {
 TEST_F(LCC_test, retrieveBoundaryParticles) {
     container.insertParticle(p1);
 
-    auto indices = container.retrieveBoundaryCellIndices(LinkedCellContainer::top);
-    std::vector<Particle> boundaryParticles = container.retrieveBoundaryParticles(indices);
+    auto indices = container.retrieveBoundaryCellIndices(LinkedCellContainer::up);
+    const std::vector<std::vector<Particle>> boundaryParticles = container.retrieveBoundaryParticles(indices);
 
-    EXPECT_EQ(boundaryParticles, std::vector({p1}));
+    std::vector<std::vector<Particle>> expected = {{p1}};
+
+    EXPECT_EQ(boundaryParticles, expected);
 }
 
 TEST_F(LCC_test, retrieveNeighbors) {

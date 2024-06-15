@@ -36,7 +36,11 @@ private:
      */
     std::vector<std::vector<Particle>> cellVector;
 
-	std::vector<std::unique_ptr<LinkedCellBoundary>> cellBoundarys;
+    /**
+     * \brief
+     * The boundary for each side of the container
+     */
+    std::vector<std::shared_ptr<LinkedCellBoundary>> cellBoundaries;
 
 
     /**
@@ -57,20 +61,21 @@ private:
 
     /**
      * \brief
-     * Retrieves all particles that reside in the halo cells
+     * Retrieves the boundary cells that contain the particles according to the given cell indices
      * @param cellIndices
      * The vector of indices of the halo cells
      */
-    [[nodiscard]] std::vector<Particle> retrieveHaloParticles(const std::vector<int>& cellIndices) const;
+    [[nodiscard]] std::vector<std::vector<Particle>> &retrieveHaloParticles(const std::vector<int> &cellIndices) const;
 
 public:
  /**
   *\brief
-  * The boundary conditions for the cells, enum used for better readability
+  * The boundary conditions for the cells
   */
 	enum BoundaryConditions{
 		outflow,
-		reflection
+		reflection,
+	 periodic
 	};
 
  /**
@@ -78,12 +83,12 @@ public:
   * The sides of the container
   */
  enum ContainerSide {
-  front = 0,
-  back = 1,
-  left = 2,
-  right = 3,
-  top = 4,
-  bottom = 5
+  west = 0,
+  south = 1,
+  east = 2,
+  north = 3,
+  up = 4,
+  down = 5
 };
 
     /**
@@ -137,11 +142,12 @@ public:
 
     /**
      * \brief
-     * Retrieves all the particles residing in the boundary cells
+     * Retrieves all the boundary cells containing the particles according to the given cell indices
      * @param cellIndices
      * The vector of boundary cell indices
      */
-    [[nodiscard]] std::vector<Particle> retrieveBoundaryParticles(const std::vector<int>& cellIndices) const;
+    [[nodiscard]] std::vector<std::vector<Particle>> &retrieveBoundaryParticles(
+     const std::vector<int> &cellIndices) const;
 
 
     /**
