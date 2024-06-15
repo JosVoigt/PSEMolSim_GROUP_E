@@ -102,6 +102,8 @@ public:
      * The amount of cells on the Z axis
      * @param r_c
      * The cutoff point
+     * @param conditions
+     * An array of boundary conditions in the following order: West, South, East, North, Up, Down
      */
     LinkedCellContainer(int amountCellsX_, int amountCellsY_, int amountCellsZ_, double r_c, std::array<BoundaryConditions, 6> conditions);
 
@@ -160,7 +162,7 @@ public:
 
 
     /**
-     * /brief
+     * \brief
      * Retrieves the indices of all halo cells
      *
      */
@@ -192,10 +194,22 @@ public:
      */
     void updateParticles() override;
 
+    /**
+     * \brief
+     * Returns the total amount of particles in the container
+     */
     [[nodiscard]] std::size_t size() const override;
 
+    /**
+     * \brief
+     * Returns an iterator to the beginning of the first cell in cellVector
+     */
     std::vector<Particle>::iterator begin() override;
 
+    /**
+     * \brief
+     * Returns an iterator to the end of the first cell in cellVector
+     */
     std::vector<Particle>::iterator end() override;
     //------------------------------------------ GETTERS ------------------------------------------
 
