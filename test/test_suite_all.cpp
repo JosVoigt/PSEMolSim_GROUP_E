@@ -3,7 +3,7 @@
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/spdlog.h>
 
-int main (int argc, char* argv[]) {
+int main(int argc, char* argv[]) {
   auto console_logger = spdlog::stderr_color_mt("console");
   try {
     std::stringstream ss;
@@ -17,12 +17,11 @@ int main (int argc, char* argv[]) {
        << ".log";
 
     auto file_logger = spdlog::basic_logger_mt("file", ss.str());
-  }
-  catch (const spdlog::spdlog_ex &ex) {
+  } catch (const spdlog::spdlog_ex& ex) {
     spdlog::get("console")->critical("File logger could not be initalizied: {}",
                                      ex.what());
     exit(1);
   }
-    ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+  ::testing::InitGoogleTest(&argc, argv);
+  return RUN_ALL_TESTS();
 }

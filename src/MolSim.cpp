@@ -28,8 +28,7 @@ int main(int argc, char *argv[]) {
        << ".log";
 
     auto file_logger = spdlog::basic_logger_mt("file", ss.str());
-  }
-  catch (const spdlog::spdlog_ex &ex) {
+  } catch (const spdlog::spdlog_ex &ex) {
     spdlog::get("console")->critical("File logger could not be initialized: {}",
                                      ex.what());
     exit(1);

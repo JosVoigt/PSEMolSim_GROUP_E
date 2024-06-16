@@ -1,8 +1,8 @@
-#include "MaxwellBoltzmannDistribution.h"
-
 #include <random>
-std::array<double, 3> maxwellBoltzmannDistributedVelocity(double averageVelocity, size_t dimensions) {
 
+#include "MaxwellBoltzmannDistribution.h"
+std::array<double, 3> maxwellBoltzmannDistributedVelocity(
+    double averageVelocity, size_t dimensions) {
   // we use a constant seed for repeatability.
   // random engine needs static lifetime otherwise it would be recreated for every call.
   static std::default_random_engine randomEngine(42);

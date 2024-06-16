@@ -62,7 +62,7 @@ int inline LennardJonesForceMixed::z_curve_interleave(int a, int b) const {
 
 std::pair<double, double> LennardJonesForceMixed::calculateMixingRule(
     double sig_a, double eps_a, double sig_b, double eps_b) {
-	//already precalc the 24 for later
+  //already precalc the 24 for later
   double eps_mixed = 24 * std::sqrt(eps_a * eps_b);
   double sig_mixed = (sig_a + sig_b) / 2;
 

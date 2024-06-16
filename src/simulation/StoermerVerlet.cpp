@@ -2,7 +2,6 @@
 
 void calculateX(std::shared_ptr<ParticleContainerInterface> &container,
                 const double dt, const double dt_sq) {
-
   std::vector<Particle> allParticles = container->preprocessParticles();
 
   for (Particle &p : allParticles) {
@@ -14,7 +13,6 @@ void calculateX(std::shared_ptr<ParticleContainerInterface> &container,
 
 void calculateV(std::shared_ptr<ParticleContainerInterface> &container,
                 double dt) {
-
   std::vector<Particle> allParticles = container->preprocessParticles();
 
   for (Particle &p : allParticles) {
@@ -26,7 +24,6 @@ void calculateV(std::shared_ptr<ParticleContainerInterface> &container,
 
 void calculateF(std::shared_ptr<ParticleContainerInterface> &container,
                 std::shared_ptr<PairwiseForce> method) {
-
   std::vector<Particle> allParticles = container->preprocessParticles();
 
   for (Particle &p : allParticles) {
@@ -34,7 +31,6 @@ void calculateF(std::shared_ptr<ParticleContainerInterface> &container,
   }
 
   for (Particle &p : allParticles) {
-
     std::vector<Particle> neighbors = container->retrieveRelevantParticles(p);
 
     for (Particle &neighbor : neighbors) {

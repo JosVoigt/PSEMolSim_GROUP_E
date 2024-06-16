@@ -9,7 +9,7 @@
 #include "outputWriter/Writer.h"
 
 class Simulation {
-private:
+ private:
   /**
    * \brief
    *  The container containing all particles for the simulation.
@@ -56,11 +56,10 @@ private:
    */
   std::string filename;
 
-
   std::array<int, 3> linkedCellDimensions;
   double linkedCellSidelength;
 
-public:
+ public:
   /**
    * \brief
    *  Construct a new Simulation object.
@@ -85,9 +84,9 @@ public:
    *  The prefix for the files that are going to get outputted.
    */
   Simulation(
-      std::shared_ptr<ParticleContainerInterface> &container_, std::shared_ptr<PairwiseForce> method_,
-      std::shared_ptr<Writer> writer_, double dt_, int outputFrequency,
-      std::string filename_,
+      std::shared_ptr<ParticleContainerInterface> &container_,
+      std::shared_ptr<PairwiseForce> method_, std::shared_ptr<Writer> writer_,
+      double dt_, int outputFrequency, std::string filename_,
       std::array<int, 3> linkedCellDimensions = {1, 1, 1},
       double linkedCellSidelength = std::numeric_limits<double>::infinity());
 

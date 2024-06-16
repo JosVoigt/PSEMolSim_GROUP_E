@@ -9,18 +9,18 @@
 
 //Force predecleration for the compiler
 class PairwiseForce;
-#include "force/Force.h"
-
 #include <array>
 #include <memory>
 #include <string>
+
+#include "force/Force.h"
 
 /**
  * \brief
  *  Represents a particle in the simulation
  */
 class Particle {
-private:
+ private:
   /**
    * Position of the particle
    */
@@ -57,7 +57,7 @@ private:
    */
   std::shared_ptr<PairwiseForce> forcemode;
 
-public:
+ public:
   /**
    * \brief
    *  Default constructor

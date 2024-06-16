@@ -79,7 +79,9 @@ options parse(int argc, char *argv[]) {
     } else if (!vm["lenjonesmol"].empty() &&
                (ljm_args = vm["lenjonesmol"].as<std::vector<double>>())
                        .size() == 2) {
-      opts.force_ = std::make_shared<LennardJonesForce>(vm["lenjonesmol"].as<std::vector<double>>()[0], vm["lenjonesmol"].as<std::vector<double>>()[1]);
+      opts.force_ = std::make_shared<LennardJonesForce>(
+          vm["lenjonesmol"].as<std::vector<double>>()[0],
+          vm["lenjonesmol"].as<std::vector<double>>()[1]);
     } else {
       spdlog::get("console")->critical("Please provide a single force mode");
       exit(1);

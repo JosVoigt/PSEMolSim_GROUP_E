@@ -5,7 +5,7 @@
 #include "input/Initializer.h"
 
 class CuboidGenerator : public Initializer {
-private:
+ private:
   /**
    * \brief
    *  The dimensions of the cuboid in x-direction
@@ -55,7 +55,7 @@ private:
    */
   std::array<double, 3> initialVelocity;
 
-public:
+ public:
   /**
    * \brief
    *  Holds all the necessary information to construct the particle cuboid.

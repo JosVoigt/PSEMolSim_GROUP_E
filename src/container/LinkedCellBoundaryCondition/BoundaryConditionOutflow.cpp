@@ -6,7 +6,7 @@
 
 BoundaryConditionOutflow::BoundaryConditionOutflow(
     std::vector<std::vector<Particle>>& haloCellList)
-    : haloCellList(haloCellList){}
+    : haloCellList(haloCellList) {}
 
 std::shared_ptr<std::vector<Particle>>
 BoundaryConditionOutflow::executeBoundaryCondition() {

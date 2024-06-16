@@ -8,24 +8,24 @@
  *  calculated between two particles.
  */
 class LennardJonesForce : public PairwiseForce {
-   private:
-    /** \brief
+ private:
+  /** \brief
      *  The epsilon parameter of the Lennard-Jones potential
      */
-    double epsilon;
+  double epsilon;
 
-    /** \brief
+  /** \brief
      *  The sigma parameter of the Lennard-Jones potential
      */
-    double sigma;
+  double sigma;
 
-    /** \brief
+  /** \brief
      *  The epsilon parameter times 24
      */
-    double epsilon_24;
+  double epsilon_24;
 
-   public:
-    /** \brief
+ public:
+  /** \brief
      *  Constructor for the LennardJonesMolecule class
      *
      *  \param epsilon
@@ -34,14 +34,14 @@ class LennardJonesForce : public PairwiseForce {
      *  \param sigma
      *  The sigma parameter of the Lennard-Jones potential
      */
-    LennardJonesForce(double epsilon, double sigma);
+  LennardJonesForce(double epsilon, double sigma);
 
-    /** \brief
+  /** \brief
      *  Destructor for the LennardJonesMolecule class
      */
-    ~LennardJonesForce() override = default;
+  ~LennardJonesForce() override = default;
 
-    /** \brief
+  /** \brief
      *  Calculates the force between two particles according to the Lennard-Jones
      *  potential
      *
@@ -54,14 +54,14 @@ class LennardJonesForce : public PairwiseForce {
      *  \return
      *  The force between the two particles
      */
-    std::array<double, 3> calculateForce(Particle& p1,
-                                         Particle& p2) const override;
+  std::array<double, 3> calculateForce(Particle& p1,
+                                       Particle& p2) const override;
 
-    /** \brief
+  /** \brief
      *  Returns the type of the force
      *
      *  \return
      *  The type of the force
      */
-    std::string typeString() override;
+  std::string typeString() override;
 };

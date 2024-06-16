@@ -12,7 +12,7 @@ LennardJonesForce::LennardJonesForce(double epsilon_, double sigma_)
 }
 
 std::array<double, 3> LennardJonesForce::calculateForce(Particle& p1,
-                                                           Particle& p2) const {
+                                                        Particle& p2) const {
   double distance = ArrayUtils::L2Norm(p1.getX() - p2.getX());
 
   double summand_6 = std::pow((sigma / distance), 6);

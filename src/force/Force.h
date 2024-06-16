@@ -10,14 +10,14 @@ class Particle;
 /* Interface for the force calculation
  */
 class PairwiseForce {
-   public:
-    /**
+ public:
+  /**
      *  \brief
      *  Destructor
      */
-    virtual ~PairwiseForce() = default;
+  virtual ~PairwiseForce() = default;
 
-    /**
+  /**
      *  \brief
      *  Calculates the force between two particles
      *
@@ -30,14 +30,14 @@ class PairwiseForce {
      *  \return
      *  The force vector between the two particles
      */
-    virtual std::array<double, 3> calculateForce(Particle &p1,
-                                                 Particle &p2) const = 0;
+  virtual std::array<double, 3> calculateForce(Particle &p1,
+                                               Particle &p2) const = 0;
 
-    /** \brief
+  /** \brief
      *  Returns a string representation of the force
      *
      *  \return
      *  A string representation of the force
      */
-    virtual std::string typeString() = 0;
+  virtual std::string typeString() = 0;
 };

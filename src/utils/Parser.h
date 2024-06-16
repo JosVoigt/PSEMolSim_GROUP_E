@@ -19,7 +19,7 @@ struct options {
   int writeoutFrequency{};
   std::vector<std::string> filepath;
   std::vector<CuboidGenerator> cuboids;
-    std::vector<DiscGenerator> discs;
+  std::vector<DiscGenerator> discs;
   std::string outfile;
   std::shared_ptr<Writer> writer_;
   std::shared_ptr<PairwiseForce> force_;

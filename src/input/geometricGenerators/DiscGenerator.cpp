@@ -1,12 +1,17 @@
 #include "DiscGenerator.h"
-#include "utils/ArrayUtils.h"
-#include "utils/MaxwellBoltzmannDistribution.h"
 
 #include <cmath>
 
+#include "utils/ArrayUtils.h"
+#include "utils/MaxwellBoltzmannDistribution.h"
+
 DiscGenerator::DiscGenerator(int radius_, double distance_, double mass_,
-                             std::array<double, 3> velocity_, std::array<double, 3> &center_)
-    : radius(radius_), distance(distance_), mass(mass_), velocity(velocity_),
+                             std::array<double, 3> velocity_,
+                             std::array<double, 3> &center_)
+    : radius(radius_),
+      distance(distance_),
+      mass(mass_),
+      velocity(velocity_),
       center(center_){};
 
 void DiscGenerator::readData(std::list<Particle> &list, int dimensions) {
@@ -18,13 +23,14 @@ void DiscGenerator::readData(std::list<Particle> &list, int dimensions) {
                                                         0};
       std::array<double, 3> particleCoordinates =
           distance * currentParticlePostition + upperLeftCorner;
-	  double velo_norm = ArrayUtils::L2Norm(velocity);
+      double velo_norm = ArrayUtils::L2Norm(velocity);
 
       // check if particle is in circle
       if (ArrayUtils::L2Norm(particleCoordinates - center) <=
           (radius * distance)) {
         std::array<double, 3> distrVelocity =
-            maxwellBoltzmannDistributedVelocity(velo_norm, dimensions) + velocity;
+            maxwellBoltzmannDistributedVelocity(velo_norm, dimensions) +
+            velocity;
         list.emplace_back(particleCoordinates, distrVelocity, mass, 0);
       }
     }

@@ -1,11 +1,13 @@
 #include <vector>
+
 #include "container/Particle.h"
 class Thermostat {
-	private:
-		double maxChangeRate;
-		int dimensions;
-	public:
-		/**
+ private:
+  double maxChangeRate;
+  int dimensions;
+
+ public:
+  /**
 		 * /brief
 		 *	Constructor
 		 * /param maxChangeRate_
@@ -14,18 +16,18 @@ class Thermostat {
 		 * /param dimensions_
 		 * The dimensions the simulation is run in
 		 */
-		Thermostat (double maxChangeRate_, int dimensions_);
+  Thermostat(double maxChangeRate_, int dimensions_);
 
-		/**
+  /**
 		 * /brief
 		 * Constructor
 		 * Changerate defaults to INFINITY, so change is instant
 		 * /param dimensions
 		 * The amount of dimensions the simulation is run in
 		 */
-		Thermostat (int dimensions);
+  Thermostat(int dimensions);
 
-		/**
+  /**
 		 * /brief
 		 * Slowly scales the temperature over many time steps towards the target temperature.
 		 * Will not exceed the scaling rate provided in the constuctor.
@@ -34,5 +36,6 @@ class Thermostat {
 		 * /param targetTemperature
 		 * The targeted temperature
 		 */
-		void adaptTemperature (std::vector<Particle>& particles, double targetTemperature);
+  void adaptTemperature(std::vector<Particle>& particles,
+                        double targetTemperature);
 };

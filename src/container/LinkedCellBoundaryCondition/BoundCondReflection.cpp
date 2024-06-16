@@ -13,8 +13,10 @@ BoundaryConditionReflection::BoundaryConditionReflection(
     std::shared_ptr<PairwiseForce> forcemode,
     std::array<double, 3> &surface_normal,
     std::array<double, 3> &point_on_plane)
-    : boundaryCellList(boundaryCellList), forceMethod(std::move(forcemode)),
-      surface_normal(surface_normal), point_on_plane(point_on_plane) {}
+    : boundaryCellList(boundaryCellList),
+      forceMethod(std::move(forcemode)),
+      surface_normal(surface_normal),
+      point_on_plane(point_on_plane) {}
 
 std::shared_ptr<std::vector<Particle>>
 BoundaryConditionReflection::executeBoundaryCondition() {

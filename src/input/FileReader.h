@@ -24,25 +24,25 @@
  * velocity coordinates and m is the mass of the particle
  */
 class FileReader : public Initializer {
-   private:
-    /** The name of the file to read from */
-    const char* filename;
+ private:
+  /** The name of the file to read from */
+  const char* filename;
 
-   public:
-    /** \brief
+ public:
+  /** \brief
      *  Constructor
      *
      *  \param filename_
      *  The name of the file to read from
      */
-    explicit FileReader(const char* filename);
+  explicit FileReader(const char* filename);
 
-    /** \brief
+  /** \brief
      *  Destructor
      */
-    ~FileReader() override = default;
+  ~FileReader() override = default;
 
-    /** \brief
+  /** \brief
      *  Reads the data from the file and stores it in the given list
      *
      *  \param particles
@@ -50,5 +50,5 @@ class FileReader : public Initializer {
 	 *  \param dimensions
 	 *  ignored
      */
-    void readData(std::list<Particle>& particles, int dimensions) override;
+  void readData(std::list<Particle>& particles, int dimensions) override;
 };
