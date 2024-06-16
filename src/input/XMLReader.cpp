@@ -133,6 +133,8 @@ void XMLReader::readData(parser::options &options) const {
         maxChangeRate = std::stod(value);
     } else if (key == "Dimensions_Thermostat") {
         options.thermostat_ = std::make_shared<Thermostat>(maxChangeRate,std::stoi(value));
+    } else if (key == "GravConstant") {
+        options.gravity_ = std::make_shared<Gravity>(std::stod(value));
     }
   }
 

@@ -9,6 +9,7 @@
 #include "input/geometricGenerators/DiscGenerator.h"
 #include "outputWriter/Writer.h"
 #include "thermostat/thermostat.h"
+#include "force/Gravity.h"
 
 namespace parser {
 
@@ -26,6 +27,7 @@ struct options {
   std::shared_ptr<PairwiseForce> force_;
   std::shared_ptr<ParticleContainerInterface> container_;
   std::shared_ptr<Thermostat> thermostat_;
+  std::shared_ptr<Gravity> gravity_;
 };
 
 // predeclaration

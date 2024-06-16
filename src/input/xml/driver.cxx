@@ -226,6 +226,7 @@ private:
     static cuboid_pskel cuboid_;
     std::vector<cuboid_pimpl> cuboids;
     std::vector<disc_pimpl> discs;
+    double gravConstant_{};
 
 public:
     void delta (double d) override
@@ -258,6 +259,11 @@ public:
         outfile_ = o;
     }
 
+    void gravConstant (double g) override
+    {
+        gravConstant_ = g;
+    }
+
     void post_simulation () override
     {
         std::cout << "Delta: " << delta_ << std::endl;
@@ -266,6 +272,7 @@ public:
         std::cout << "Start: " << start_ << std::endl;
         std::cout << "End: " << end_ << std::endl;
         std::cout << "Outfile: " << outfile_ << std::endl;
+        std::cout << "GravConstant: " << gravConstant_ << std::endl;
     }
 };
 
@@ -337,6 +344,7 @@ main (__attribute__((unused)) int argc, char* argv[])
         simulation_p.start_parser (double_p);
         simulation_p.end_parser (double_p);
         simulation_p.outfile_parser (string_p);
+        simulation_p.gravConstant_parser(double_p);
 
         //lenjonesmol
         lenjonesmol_p.epsilon_parser(double_p);

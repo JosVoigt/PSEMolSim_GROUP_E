@@ -71,4 +71,5 @@
         <maxChangeRate>0.1</maxChangeRate>
         <dimensions>2</dimensions>
     </thermostat>
+    <gravConstant>9.81</gravConstant>
 </simulation>

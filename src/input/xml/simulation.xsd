@@ -68,6 +68,7 @@
                 <xs:element name="lenjonesmol" type="lenjonesmol"/>
                 <xs:element name="linkedcell" type="linkedcell"/>
                 <xs:element name="thermostat" type="thermostat"/>
+                <xs:element name="gravConstant" type="xs:double"/>
             </xs:sequence>
     </xs:complexType>
 

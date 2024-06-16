@@ -918,6 +918,9 @@ class simulation_pskel: public ::xml_schema::complex_content
   thermostat ();
 
   virtual void
+  gravConstant (double);
+
+  virtual void
   post_simulation ();
 
   // Parser construction API.
@@ -956,6 +959,9 @@ class simulation_pskel: public ::xml_schema::complex_content
   thermostat_parser (::thermostat_pskel&);
 
   void
+  gravConstant_parser (::xml_schema::double_pskel&);
+
+  void
   parsers (::xml_schema::double_pskel& /* delta */,
            ::xml_schema::int_pskel& /* frequency */,
            ::xml_schema::int_pskel& /* dimensions */,
@@ -966,7 +972,8 @@ class simulation_pskel: public ::xml_schema::complex_content
            ::disc_pskel& /* discs */,
            ::lenjonesmol_pskel& /* lenjonesmol */,
            ::linkedcell_pskel& /* linkedcell */,
-           ::thermostat_pskel& /* thermostat */);
+           ::thermostat_pskel& /* thermostat */,
+           ::xml_schema::double_pskel& /* gravConstant */);
 
   // Constructor.
   //
@@ -996,6 +1003,7 @@ class simulation_pskel: public ::xml_schema::complex_content
   ::lenjonesmol_pskel* lenjonesmol_parser_;
   ::linkedcell_pskel* linkedcell_parser_;
   ::thermostat_pskel* thermostat_parser_;
+  ::xml_schema::double_pskel* gravConstant_parser_;
 
   protected:
   struct v_state_descr_

@@ -404,6 +404,12 @@ thermostat_parser (::thermostat_pskel& p)
 }
 
 void simulation_pskel::
+gravConstant_parser (::xml_schema::double_pskel& p)
+{
+  this->gravConstant_parser_ = &p;
+}
+
+void simulation_pskel::
 parsers (::xml_schema::double_pskel& delta,
          ::xml_schema::int_pskel& frequency,
          ::xml_schema::int_pskel& dimensions,
@@ -414,7 +420,8 @@ parsers (::xml_schema::double_pskel& delta,
          ::disc_pskel& discs,
          ::lenjonesmol_pskel& lenjonesmol,
          ::linkedcell_pskel& linkedcell,
-         ::thermostat_pskel& thermostat)
+         ::thermostat_pskel& thermostat,
+         ::xml_schema::double_pskel& gravConstant)
 {
   this->delta_parser_ = &delta;
   this->frequency_parser_ = &frequency;
@@ -427,6 +434,7 @@ parsers (::xml_schema::double_pskel& delta,
   this->lenjonesmol_parser_ = &lenjonesmol;
   this->linkedcell_parser_ = &linkedcell;
   this->thermostat_parser_ = &thermostat;
+  this->gravConstant_parser_ = &gravConstant;
 }
 
 simulation_pskel::
@@ -442,6 +450,7 @@ simulation_pskel ()
   lenjonesmol_parser_ (0),
   linkedcell_parser_ (0),
   thermostat_parser_ (0),
+  gravConstant_parser_ (0),
   v_state_stack_ (sizeof (v_state_), &v_state_first_)
 {
 }
@@ -669,6 +678,11 @@ linkedcell ()
 
 void simulation_pskel::
 thermostat ()
+{
+}
+
+void simulation_pskel::
+gravConstant (double)
 {
 }
 
@@ -2950,7 +2964,7 @@ sequence_0 (unsigned long& state,
           }
 
           count = 0;
-          state = ~0UL;
+          state = 11UL;
         }
 
         break;
@@ -2961,6 +2975,43 @@ sequence_0 (unsigned long& state,
         if (count < 1UL)
           this->_expected_element (
             "", "thermostat",
+            ns, n);
+        count = 0;
+        state = 11UL;
+        // Fall through.
+      }
+    }
+    case 11UL:
+    {
+      if (n == "gravConstant" && ns.empty ())
+      {
+        if (start)
+        {
+          this->::xml_schema::complex_content::context_.top ().parser_ = this->gravConstant_parser_;
+
+          if (this->gravConstant_parser_)
+            this->gravConstant_parser_->pre ();
+        }
+        else
+        {
+          if (this->gravConstant_parser_)
+          {
+            double tmp (this->gravConstant_parser_->post_double ());
+            this->gravConstant (tmp);
+          }
+
+          count = 0;
+          state = ~0UL;
+        }
+
+        break;
+      }
+      else
+      {
+        assert (start);
+        if (count < 1UL)
+          this->_expected_element (
+            "", "gravConstant",
             ns, n);
         count = 0;
         state = ~0UL;
