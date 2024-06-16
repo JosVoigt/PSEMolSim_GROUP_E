@@ -303,6 +303,37 @@ linkedcell_pskel ()
 {
 }
 
+// thermostat_pskel
+//
+
+void thermostat_pskel::
+maxChangeRate_parser (::xml_schema::double_pskel& p)
+{
+  this->maxChangeRate_parser_ = &p;
+}
+
+void thermostat_pskel::
+dimensions_parser (::xml_schema::int_pskel& p)
+{
+  this->dimensions_parser_ = &p;
+}
+
+void thermostat_pskel::
+parsers (::xml_schema::double_pskel& maxChangeRate,
+         ::xml_schema::int_pskel& dimensions)
+{
+  this->maxChangeRate_parser_ = &maxChangeRate;
+  this->dimensions_parser_ = &dimensions;
+}
+
+thermostat_pskel::
+thermostat_pskel ()
+: maxChangeRate_parser_ (0),
+  dimensions_parser_ (0),
+  v_state_stack_ (sizeof (v_state_), &v_state_first_)
+{
+}
+
 // simulation_pskel
 //
 
@@ -367,6 +398,12 @@ linkedcell_parser (::linkedcell_pskel& p)
 }
 
 void simulation_pskel::
+thermostat_parser (::thermostat_pskel& p)
+{
+  this->thermostat_parser_ = &p;
+}
+
+void simulation_pskel::
 parsers (::xml_schema::double_pskel& delta,
          ::xml_schema::int_pskel& frequency,
          ::xml_schema::int_pskel& dimensions,
@@ -376,7 +413,8 @@ parsers (::xml_schema::double_pskel& delta,
          ::cuboid_pskel& cuboids,
          ::disc_pskel& discs,
          ::lenjonesmol_pskel& lenjonesmol,
-         ::linkedcell_pskel& linkedcell)
+         ::linkedcell_pskel& linkedcell,
+         ::thermostat_pskel& thermostat)
 {
   this->delta_parser_ = &delta;
   this->frequency_parser_ = &frequency;
@@ -388,6 +426,7 @@ parsers (::xml_schema::double_pskel& delta,
   this->discs_parser_ = &discs;
   this->lenjonesmol_parser_ = &lenjonesmol;
   this->linkedcell_parser_ = &linkedcell;
+  this->thermostat_parser_ = &thermostat;
 }
 
 simulation_pskel::
@@ -402,6 +441,7 @@ simulation_pskel ()
   discs_parser_ (0),
   lenjonesmol_parser_ (0),
   linkedcell_parser_ (0),
+  thermostat_parser_ (0),
   v_state_stack_ (sizeof (v_state_), &v_state_first_)
 {
 }
@@ -556,6 +596,24 @@ post_linkedcell ()
 {
 }
 
+// thermostat_pskel
+//
+
+void thermostat_pskel::
+maxChangeRate (double)
+{
+}
+
+void thermostat_pskel::
+dimensions (int)
+{
+}
+
+void thermostat_pskel::
+post_thermostat ()
+{
+}
+
 // simulation_pskel
 //
 
@@ -606,6 +664,11 @@ lenjonesmol ()
 
 void simulation_pskel::
 linkedcell ()
+{
+}
+
+void simulation_pskel::
+thermostat ()
 {
 }
 
@@ -2150,6 +2213,224 @@ sequence_0 (unsigned long& state,
   }
 }
 
+// Element validation and dispatch functions for thermostat_pskel.
+//
+bool thermostat_pskel::
+_start_element_impl (const ::xml_schema::ro_string& ns,
+                     const ::xml_schema::ro_string& n,
+                     const ::xml_schema::ro_string* t)
+{
+  XSD_UNUSED (t);
+
+  v_state_& vs = *static_cast< v_state_* > (this->v_state_stack_.top ());
+  v_state_descr_* vd = vs.data + (vs.size - 1);
+
+  if (vd->func == 0 && vd->state == 0)
+  {
+    if (this->::xml_schema::complex_content::_start_element_impl (ns, n, t))
+      return true;
+    else
+      vd->state = 1;
+  }
+
+  while (vd->func != 0)
+  {
+    (this->*vd->func) (vd->state, vd->count, ns, n, t, true);
+
+    vd = vs.data + (vs.size - 1);
+
+    if (vd->state == ~0UL)
+      vd = vs.data + (--vs.size - 1);
+    else
+      break;
+  }
+
+  if (vd->func == 0)
+  {
+    if (vd->state != ~0UL)
+    {
+      unsigned long s = ~0UL;
+
+      if (n == "maxChangeRate" && ns.empty ())
+        s = 0UL;
+
+      if (s != ~0UL)
+      {
+        vd->count++;
+        vd->state = ~0UL;
+
+        vd = vs.data + vs.size++;
+        vd->func = &thermostat_pskel::sequence_0;
+        vd->state = s;
+        vd->count = 0;
+
+        this->sequence_0 (vd->state, vd->count, ns, n, t, true);
+      }
+      else
+      {
+        if (vd->count < 1UL)
+          this->_expected_element (
+            "", "maxChangeRate",
+            ns, n);
+        return false;
+      }
+    }
+    else
+      return false;
+  }
+
+  return true;
+}
+
+bool thermostat_pskel::
+_end_element_impl (const ::xml_schema::ro_string& ns,
+                   const ::xml_schema::ro_string& n)
+{
+  v_state_& vs = *static_cast< v_state_* > (this->v_state_stack_.top ());
+  v_state_descr_& vd = vs.data[vs.size - 1];
+
+  if (vd.func == 0 && vd.state == 0)
+  {
+    if (!::xml_schema::complex_content::_end_element_impl (ns, n))
+      assert (false);
+    return true;
+  }
+
+  assert (vd.func != 0);
+  (this->*vd.func) (vd.state, vd.count, ns, n, 0, false);
+
+  if (vd.state == ~0UL)
+    vs.size--;
+
+  return true;
+}
+
+void thermostat_pskel::
+_pre_e_validate ()
+{
+  this->v_state_stack_.push ();
+  static_cast< v_state_* > (this->v_state_stack_.top ())->size = 0;
+
+  v_state_& vs = *static_cast< v_state_* > (this->v_state_stack_.top ());
+  v_state_descr_& vd = vs.data[vs.size++];
+
+  vd.func = 0;
+  vd.state = 0;
+  vd.count = 0;
+}
+
+void thermostat_pskel::
+_post_e_validate ()
+{
+  v_state_& vs = *static_cast< v_state_* > (this->v_state_stack_.top ());
+  v_state_descr_* vd = vs.data + (vs.size - 1);
+
+  ::xml_schema::ro_string empty;
+  while (vd->func != 0)
+  {
+    (this->*vd->func) (vd->state, vd->count, empty, empty, 0, true);
+    assert (vd->state == ~0UL);
+    vd = vs.data + (--vs.size - 1);
+  }
+
+  if (vd->count < 1UL)
+    this->_expected_element (
+      "", "maxChangeRate");
+
+  this->v_state_stack_.pop ();
+}
+
+void thermostat_pskel::
+sequence_0 (unsigned long& state,
+            unsigned long& count,
+            const ::xml_schema::ro_string& ns,
+            const ::xml_schema::ro_string& n,
+            const ::xml_schema::ro_string* t,
+            bool start)
+{
+  XSD_UNUSED (t);
+
+  switch (state)
+  {
+    case 0UL:
+    {
+      if (n == "maxChangeRate" && ns.empty ())
+      {
+        if (start)
+        {
+          this->::xml_schema::complex_content::context_.top ().parser_ = this->maxChangeRate_parser_;
+
+          if (this->maxChangeRate_parser_)
+            this->maxChangeRate_parser_->pre ();
+        }
+        else
+        {
+          if (this->maxChangeRate_parser_)
+          {
+            double tmp (this->maxChangeRate_parser_->post_double ());
+            this->maxChangeRate (tmp);
+          }
+
+          count = 0;
+          state = 1UL;
+        }
+
+        break;
+      }
+      else
+      {
+        assert (start);
+        if (count < 1UL)
+          this->_expected_element (
+            "", "maxChangeRate",
+            ns, n);
+        count = 0;
+        state = 1UL;
+        // Fall through.
+      }
+    }
+    case 1UL:
+    {
+      if (n == "dimensions" && ns.empty ())
+      {
+        if (start)
+        {
+          this->::xml_schema::complex_content::context_.top ().parser_ = this->dimensions_parser_;
+
+          if (this->dimensions_parser_)
+            this->dimensions_parser_->pre ();
+        }
+        else
+        {
+          if (this->dimensions_parser_)
+          {
+            int tmp (this->dimensions_parser_->post_int ());
+            this->dimensions (tmp);
+          }
+
+          count = 0;
+          state = ~0UL;
+        }
+
+        break;
+      }
+      else
+      {
+        assert (start);
+        if (count < 1UL)
+          this->_expected_element (
+            "", "dimensions",
+            ns, n);
+        count = 0;
+        state = ~0UL;
+        // Fall through.
+      }
+    }
+    case ~0UL:
+      break;
+  }
+}
+
 // Element validation and dispatch functions for simulation_pskel.
 //
 bool simulation_pskel::
@@ -2632,7 +2913,7 @@ sequence_0 (unsigned long& state,
           }
 
           count = 0;
-          state = ~0UL;
+          state = 10UL;
         }
 
         break;
@@ -2643,6 +2924,43 @@ sequence_0 (unsigned long& state,
         if (count < 1UL)
           this->_expected_element (
             "", "linkedcell",
+            ns, n);
+        count = 0;
+        state = 10UL;
+        // Fall through.
+      }
+    }
+    case 10UL:
+    {
+      if (n == "thermostat" && ns.empty ())
+      {
+        if (start)
+        {
+          this->::xml_schema::complex_content::context_.top ().parser_ = this->thermostat_parser_;
+
+          if (this->thermostat_parser_)
+            this->thermostat_parser_->pre ();
+        }
+        else
+        {
+          if (this->thermostat_parser_)
+          {
+            this->thermostat_parser_->post_thermostat ();
+            this->thermostat ();
+          }
+
+          count = 0;
+          state = ~0UL;
+        }
+
+        break;
+      }
+      else
+      {
+        assert (start);
+        if (count < 1UL)
+          this->_expected_element (
+            "", "thermostat",
             ns, n);
         count = 0;
         state = ~0UL;

@@ -8,6 +8,7 @@
 #include "input/geometricGenerators/CuboidGenerator.h"
 #include "input/geometricGenerators/DiscGenerator.h"
 #include "outputWriter/Writer.h"
+#include "thermostat/thermostat.h"
 
 namespace parser {
 
@@ -24,6 +25,7 @@ struct options {
   std::shared_ptr<Writer> writer_;
   std::shared_ptr<PairwiseForce> force_;
   std::shared_ptr<ParticleContainerInterface> container_;
+  std::shared_ptr<Thermostat> thermostat_;
 };
 
 // predeclaration

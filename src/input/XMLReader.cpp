@@ -31,6 +31,7 @@ void XMLReader::readData(parser::options &options) const {
   int radius;
   double mass_disc, distance_disc;
   int amountCellsX, amountCellsY, amountCellsZ;
+  double maxChangeRate;
 
   options.writer_ = std::make_shared<outputWriter::VTKWriter>();
 
@@ -128,6 +129,10 @@ void XMLReader::readData(parser::options &options) const {
       options.container_ = std::make_shared<LinkedCellContainer>(
           amountCellsX, amountCellsY, amountCellsZ, std::stod(value),
           conditions);
+    } else if (key == "MaxChangeRate") {
+        maxChangeRate = std::stod(value);
+    } else if (key == "Dimensions_Thermostat") {
+        options.thermostat_ = std::make_shared<Thermostat>(maxChangeRate,std::stoi(value));
     }
   }
 

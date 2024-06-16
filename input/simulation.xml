@@ -67,4 +67,8 @@
         <amountcellsz>1</amountcellsz>
         <cellsidelength>3.0</cellsidelength>
     </linkedcell>
+    <thermostat>
+        <maxChangeRate>0.1</maxChangeRate>
+        <dimensions>2</dimensions>
+    </thermostat>
 </simulation>

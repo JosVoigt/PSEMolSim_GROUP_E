@@ -189,6 +189,31 @@ public:
     }
 };
 
+class thermostat_pimpl: public thermostat_pskel
+{
+private:
+    double maxChangeRate_{};
+    int dimensions_{};
+
+public:
+    void maxChangeRate (double m) override
+    {
+        maxChangeRate_ = m;
+    }
+
+    void dimensions (int d) override
+    {
+        dimensions_ = d;
+    }
+
+    void post_thermostat () override
+    {
+        std::cout << "MaxChangeRate: " << maxChangeRate_ << std::endl;
+        std::cout << "Dimensions_Thermostat: " << dimensions_ << std::endl;
+    }
+};
+
+
 class simulation_pimpl: public simulation_pskel
 {
 private:
@@ -264,6 +289,7 @@ main (__attribute__((unused)) int argc, char* argv[])
         vector3D_pimpl center_p("Center");
         vector3D_pimpl velocity_disc_p("Velocity_Disc");
         linked_cell_pimpl linked_cell_p;
+        thermostat_pimpl thermostat_p;
 
         //velocity
         velocity_p.x_parser(double_p);
@@ -323,6 +349,11 @@ main (__attribute__((unused)) int argc, char* argv[])
         linked_cell_p.amountcellsz_parser(int_p);
         linked_cell_p.cellsidelength_parser(double_p);
         simulation_p.linkedcell_parser(linked_cell_p);
+
+        //thermostat
+        thermostat_p.maxChangeRate_parser(double_p);
+        thermostat_p.dimensions_parser(int_p);
+        simulation_p.thermostat_parser(thermostat_p);
 
 
         // Parse the XML instance.
