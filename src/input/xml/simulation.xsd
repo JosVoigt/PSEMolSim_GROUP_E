@@ -59,6 +59,7 @@
                 <xs:element name="cuboids" type="cuboid" minOccurs="0" maxOccurs="unbounded"/>
                 <xs:element name="discs" type="disc" minOccurs="0" maxOccurs="unbounded"/>
                 <xs:element name="lenjonesmol" type="lenjonesmol"/>
+                <xs:element name="linkedcell" type="linkedcell"/>
             </xs:sequence>
     </xs:complexType>
 

@@ -189,7 +189,6 @@ public:
     }
 };
 
-
 class simulation_pimpl: public simulation_pskel
 {
 private:
@@ -264,6 +263,7 @@ main (__attribute__((unused)) int argc, char* argv[])
         lenjonesmol_pimpl lenjonesmol_p;
         vector3D_pimpl center_p("Center");
         vector3D_pimpl velocity_disc_p("Velocity_Disc");
+        linked_cell_pimpl linked_cell_p;
 
         //velocity
         velocity_p.x_parser(double_p);
@@ -316,6 +316,13 @@ main (__attribute__((unused)) int argc, char* argv[])
         lenjonesmol_p.epsilon_parser(double_p);
         lenjonesmol_p.sigma_parser(double_p);
         simulation_p.lenjonesmol_parser(lenjonesmol_p);
+
+        //linkedcell
+        linked_cell_p.amountcellsx_parser(int_p);
+        linked_cell_p.amountcellsy_parser(int_p);
+        linked_cell_p.amountcellsz_parser(int_p);
+        linked_cell_p.cellsidelength_parser(double_p);
+        simulation_p.linkedcell_parser(linked_cell_p);
 
 
         // Parse the XML instance.

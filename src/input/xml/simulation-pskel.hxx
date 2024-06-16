@@ -824,6 +824,9 @@ class simulation_pskel: public ::xml_schema::complex_content
   lenjonesmol ();
 
   virtual void
+  linkedcell ();
+
+  virtual void
   post_simulation ();
 
   // Parser construction API.
@@ -856,6 +859,9 @@ class simulation_pskel: public ::xml_schema::complex_content
   lenjonesmol_parser (::lenjonesmol_pskel&);
 
   void
+  linkedcell_parser (::linkedcell_pskel&);
+
+  void
   parsers (::xml_schema::double_pskel& /* delta */,
            ::xml_schema::int_pskel& /* frequency */,
            ::xml_schema::int_pskel& /* dimensions */,
@@ -864,7 +870,8 @@ class simulation_pskel: public ::xml_schema::complex_content
            ::xml_schema::string_pskel& /* outfile */,
            ::cuboid_pskel& /* cuboids */,
            ::disc_pskel& /* discs */,
-           ::lenjonesmol_pskel& /* lenjonesmol */);
+           ::lenjonesmol_pskel& /* lenjonesmol */,
+           ::linkedcell_pskel& /* linkedcell */);
 
   // Constructor.
   //
@@ -892,6 +899,7 @@ class simulation_pskel: public ::xml_schema::complex_content
   ::cuboid_pskel* cuboids_parser_;
   ::disc_pskel* discs_parser_;
   ::lenjonesmol_pskel* lenjonesmol_parser_;
+  ::linkedcell_pskel* linkedcell_parser_;
 
   protected:
   struct v_state_descr_

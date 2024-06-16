@@ -361,6 +361,12 @@ lenjonesmol_parser (::lenjonesmol_pskel& p)
 }
 
 void simulation_pskel::
+linkedcell_parser (::linkedcell_pskel& p)
+{
+  this->linkedcell_parser_ = &p;
+}
+
+void simulation_pskel::
 parsers (::xml_schema::double_pskel& delta,
          ::xml_schema::int_pskel& frequency,
          ::xml_schema::int_pskel& dimensions,
@@ -369,7 +375,8 @@ parsers (::xml_schema::double_pskel& delta,
          ::xml_schema::string_pskel& outfile,
          ::cuboid_pskel& cuboids,
          ::disc_pskel& discs,
-         ::lenjonesmol_pskel& lenjonesmol)
+         ::lenjonesmol_pskel& lenjonesmol,
+         ::linkedcell_pskel& linkedcell)
 {
   this->delta_parser_ = &delta;
   this->frequency_parser_ = &frequency;
@@ -380,6 +387,7 @@ parsers (::xml_schema::double_pskel& delta,
   this->cuboids_parser_ = &cuboids;
   this->discs_parser_ = &discs;
   this->lenjonesmol_parser_ = &lenjonesmol;
+  this->linkedcell_parser_ = &linkedcell;
 }
 
 simulation_pskel::
@@ -393,6 +401,7 @@ simulation_pskel ()
   cuboids_parser_ (0),
   discs_parser_ (0),
   lenjonesmol_parser_ (0),
+  linkedcell_parser_ (0),
   v_state_stack_ (sizeof (v_state_), &v_state_first_)
 {
 }
@@ -592,6 +601,11 @@ discs ()
 
 void simulation_pskel::
 lenjonesmol ()
+{
+}
+
+void simulation_pskel::
+linkedcell ()
 {
 }
 
@@ -2581,7 +2595,7 @@ sequence_0 (unsigned long& state,
           }
 
           count = 0;
-          state = ~0UL;
+          state = 9UL;
         }
 
         break;
@@ -2592,6 +2606,43 @@ sequence_0 (unsigned long& state,
         if (count < 1UL)
           this->_expected_element (
             "", "lenjonesmol",
+            ns, n);
+        count = 0;
+        state = 9UL;
+        // Fall through.
+      }
+    }
+    case 9UL:
+    {
+      if (n == "linkedcell" && ns.empty ())
+      {
+        if (start)
+        {
+          this->::xml_schema::complex_content::context_.top ().parser_ = this->linkedcell_parser_;
+
+          if (this->linkedcell_parser_)
+            this->linkedcell_parser_->pre ();
+        }
+        else
+        {
+          if (this->linkedcell_parser_)
+          {
+            this->linkedcell_parser_->post_linkedcell ();
+            this->linkedcell ();
+          }
+
+          count = 0;
+          state = ~0UL;
+        }
+
+        break;
+      }
+      else
+      {
+        assert (start);
+        if (count < 1UL)
+          this->_expected_element (
+            "", "linkedcell",
             ns, n);
         count = 0;
         state = ~0UL;
