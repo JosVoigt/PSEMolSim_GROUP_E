@@ -2,7 +2,7 @@
 
 class GeneralForce {
  public:
-  virtual ~GeneralForce();
+  virtual ~GeneralForce() = default;
 
-  virtual std::array<double, 3> calculateForce(Particle& p);
+  virtual std::array<double, 3> calculateForce(Particle& p) = 0;
 };
