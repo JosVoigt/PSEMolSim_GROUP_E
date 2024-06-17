@@ -16,6 +16,7 @@ static void testBench(benchmark::State& state) {
   std::array<double, 3> zero = {0, 0, 0};
   Particle p = Particle(zero, zero, 0);
   Particle inc = Particle(zero, zero, 0);
+
   for (auto _ : state) {
     ljf.calculateForce(p, inc);
   }

@@ -1,8 +1,7 @@
-#include "LenJonesForceMixed.h"
+#include "LenJonesForceMixed.h"Cuboi
 
 #include <spdlog/spdlog.h>
 
-#include <algorithm>
 #include <array>
 #include <cmath>
 #include <utility>

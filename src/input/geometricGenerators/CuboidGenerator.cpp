@@ -7,6 +7,7 @@
 
 CuboidGenerator::CuboidGenerator(int x_, int y_, int z_, double distance,
                                  double mass_, double meanBrownMotion,
+                                 int type_,
                                  std::array<double, 3> lowerLeftFrontCorner_,
                                  std::array<double, 3> initialVelocity_)
     : x(x_),
@@ -16,7 +17,8 @@ CuboidGenerator::CuboidGenerator(int x_, int y_, int z_, double distance,
       h(distance),
       meanBrownianMotion(meanBrownMotion),
       lowerLeftFrontCorner(lowerLeftFrontCorner_),
-      initialVelocity(initialVelocity_) {}
+      initialVelocity(initialVelocity_),
+      type(type_) {}
 
 void CuboidGenerator::readData(std::list<Particle> &list, int dimensions) {
   if (x < 1 || y < 1 || z < 1) {
@@ -40,7 +42,7 @@ void CuboidGenerator::readData(std::list<Particle> &list, int dimensions) {
                                    " V: " + ArrayUtils::to_string(velocity) +
                                    " mass: " + std::to_string(mass));
 #endif
-        list.emplace_back(position, velocity, mass);
+        list.emplace_back(position, velocity, mass, type);
       }
     }
   }

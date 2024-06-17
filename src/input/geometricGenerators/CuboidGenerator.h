@@ -55,6 +55,12 @@ class CuboidGenerator : public Initializer {
    */
   std::array<double, 3> initialVelocity;
 
+  /**
+   * \brief
+   * The type of the particle
+   */
+  int type;
+
  public:
   /**
    * \brief
@@ -79,6 +85,7 @@ class CuboidGenerator : public Initializer {
    */
   CuboidGenerator(int x_, int y_, int z_, double distance, double mass_,
                   double meanBrownMotion,
+				  int type,
                   std::array<double, 3> lowerLeftFrontCorner_,
                   std::array<double, 3> initialVelocity_);
 

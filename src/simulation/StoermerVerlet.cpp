@@ -36,6 +36,7 @@ void calculateF(std::shared_ptr<ParticleContainerInterface> &container,
     for (Particle &neighbor : neighbors) {
       std::array<double, 3> f = method->calculateForce(p, neighbor);
       p.addF(f);
+	  //newtons 3rd law
       std::array<double, 3> invF = -1 * f;
       neighbor.addF(invF);
     }
