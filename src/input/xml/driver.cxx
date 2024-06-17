@@ -189,6 +189,30 @@ public:
     }
 };
 
+class thermostat_pimpl: public thermostat_pskel
+{
+private:
+    double maxChangeRate_{};
+    int dimensions_{};
+
+public:
+    void maxChangeRate (double m) override
+    {
+        maxChangeRate_ = m;
+    }
+
+    void dimensions (int d) override
+    {
+        dimensions_ = d;
+    }
+
+    void post_thermostat () override
+    {
+        std::cout << "MaxChangeRate: " << maxChangeRate_ << std::endl;
+        std::cout << "Dimensions_Thermostat: " << dimensions_ << std::endl;
+    }
+};
+
 
 class simulation_pimpl: public simulation_pskel
 {
@@ -202,6 +226,7 @@ private:
     static cuboid_pskel cuboid_;
     std::vector<cuboid_pimpl> cuboids;
     std::vector<disc_pimpl> discs;
+    double gravConstant_{};
 
 public:
     void delta (double d) override
@@ -234,6 +259,11 @@ public:
         outfile_ = o;
     }
 
+    void gravConstant (double g) override
+    {
+        gravConstant_ = g;
+    }
+
     void post_simulation () override
     {
         std::cout << "Delta: " << delta_ << std::endl;
@@ -242,6 +272,7 @@ public:
         std::cout << "Start: " << start_ << std::endl;
         std::cout << "End: " << end_ << std::endl;
         std::cout << "Outfile: " << outfile_ << std::endl;
+        std::cout << "GravConstant: " << gravConstant_ << std::endl;
     }
 };
 
@@ -264,6 +295,8 @@ main (__attribute__((unused)) int argc, char* argv[])
         lenjonesmol_pimpl lenjonesmol_p;
         vector3D_pimpl center_p("Center");
         vector3D_pimpl velocity_disc_p("Velocity_Disc");
+        linked_cell_pimpl linked_cell_p;
+        thermostat_pimpl thermostat_p;
 
         //velocity
         velocity_p.x_parser(double_p);
@@ -311,11 +344,24 @@ main (__attribute__((unused)) int argc, char* argv[])
         simulation_p.start_parser (double_p);
         simulation_p.end_parser (double_p);
         simulation_p.outfile_parser (string_p);
+        simulation_p.gravConstant_parser(double_p);
 
         //lenjonesmol
         lenjonesmol_p.epsilon_parser(double_p);
         lenjonesmol_p.sigma_parser(double_p);
         simulation_p.lenjonesmol_parser(lenjonesmol_p);
+
+        //linkedcell
+        linked_cell_p.amountcellsx_parser(int_p);
+        linked_cell_p.amountcellsy_parser(int_p);
+        linked_cell_p.amountcellsz_parser(int_p);
+        linked_cell_p.cellsidelength_parser(double_p);
+        simulation_p.linkedcell_parser(linked_cell_p);
+
+        //thermostat
+        thermostat_p.maxChangeRate_parser(double_p);
+        thermostat_p.dimensions_parser(int_p);
+        simulation_p.thermostat_parser(thermostat_p);
 
 
         // Parse the XML instance.

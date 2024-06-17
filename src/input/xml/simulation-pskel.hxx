@@ -54,6 +54,7 @@ class cuboid_pskel;
 class disc_pskel;
 class lenjonesmol_pskel;
 class linkedcell_pskel;
+class thermostat_pskel;
 class simulation_pskel;
 
 #ifndef XSD_USE_CHAR
@@ -788,6 +789,93 @@ class linkedcell_pskel: public ::xml_schema::complex_content
               bool start);
 };
 
+class thermostat_pskel: public ::xml_schema::complex_content
+{
+  public:
+  // Parser callbacks. Override them in your implementation.
+  //
+  // virtual void
+  // pre ();
+
+  virtual void
+  maxChangeRate (double);
+
+  virtual void
+  dimensions (int);
+
+  virtual void
+  post_thermostat ();
+
+  // Parser construction API.
+  //
+  void
+  maxChangeRate_parser (::xml_schema::double_pskel&);
+
+  void
+  dimensions_parser (::xml_schema::int_pskel&);
+
+  void
+  parsers (::xml_schema::double_pskel& /* maxChangeRate */,
+           ::xml_schema::int_pskel& /* dimensions */);
+
+  // Constructor.
+  //
+  thermostat_pskel ();
+
+  // Implementation.
+  //
+  protected:
+  virtual bool
+  _start_element_impl (const ::xml_schema::ro_string&,
+                       const ::xml_schema::ro_string&,
+                       const ::xml_schema::ro_string*);
+
+  virtual bool
+  _end_element_impl (const ::xml_schema::ro_string&,
+                     const ::xml_schema::ro_string&);
+
+  protected:
+  ::xml_schema::double_pskel* maxChangeRate_parser_;
+  ::xml_schema::int_pskel* dimensions_parser_;
+
+  protected:
+  struct v_state_descr_
+  {
+    void (::thermostat_pskel::*func) (
+      unsigned long&,
+      unsigned long&,
+      const ::xml_schema::ro_string&,
+      const ::xml_schema::ro_string&,
+      const ::xml_schema::ro_string*,
+      bool);
+    unsigned long state;
+    unsigned long count;
+  };
+
+  struct v_state_
+  {
+    v_state_descr_ data[2UL];
+    unsigned long size;
+  };
+
+  v_state_ v_state_first_;
+  ::xsd::cxx::parser::pod_stack v_state_stack_;
+
+  virtual void
+  _pre_e_validate ();
+
+  virtual void
+  _post_e_validate ();
+
+  void
+  sequence_0 (unsigned long& state,
+              unsigned long& count,
+              const ::xml_schema::ro_string& ns,
+              const ::xml_schema::ro_string& n,
+              const ::xml_schema::ro_string* t,
+              bool start);
+};
+
 class simulation_pskel: public ::xml_schema::complex_content
 {
   public:
@@ -824,6 +912,15 @@ class simulation_pskel: public ::xml_schema::complex_content
   lenjonesmol ();
 
   virtual void
+  linkedcell ();
+
+  virtual void
+  thermostat ();
+
+  virtual void
+  gravConstant (double);
+
+  virtual void
   post_simulation ();
 
   // Parser construction API.
@@ -856,6 +953,15 @@ class simulation_pskel: public ::xml_schema::complex_content
   lenjonesmol_parser (::lenjonesmol_pskel&);
 
   void
+  linkedcell_parser (::linkedcell_pskel&);
+
+  void
+  thermostat_parser (::thermostat_pskel&);
+
+  void
+  gravConstant_parser (::xml_schema::double_pskel&);
+
+  void
   parsers (::xml_schema::double_pskel& /* delta */,
            ::xml_schema::int_pskel& /* frequency */,
            ::xml_schema::int_pskel& /* dimensions */,
@@ -864,7 +970,10 @@ class simulation_pskel: public ::xml_schema::complex_content
            ::xml_schema::string_pskel& /* outfile */,
            ::cuboid_pskel& /* cuboids */,
            ::disc_pskel& /* discs */,
-           ::lenjonesmol_pskel& /* lenjonesmol */);
+           ::lenjonesmol_pskel& /* lenjonesmol */,
+           ::linkedcell_pskel& /* linkedcell */,
+           ::thermostat_pskel& /* thermostat */,
+           ::xml_schema::double_pskel& /* gravConstant */);
 
   // Constructor.
   //
@@ -892,6 +1001,9 @@ class simulation_pskel: public ::xml_schema::complex_content
   ::cuboid_pskel* cuboids_parser_;
   ::disc_pskel* discs_parser_;
   ::lenjonesmol_pskel* lenjonesmol_parser_;
+  ::linkedcell_pskel* linkedcell_parser_;
+  ::thermostat_pskel* thermostat_parser_;
+  ::xml_schema::double_pskel* gravConstant_parser_;
 
   protected:
   struct v_state_descr_

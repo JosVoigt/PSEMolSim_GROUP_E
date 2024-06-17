@@ -48,6 +48,13 @@
         </xs:sequence>
     </xs:complexType>
 
+    <xs:complexType name="thermostat">
+        <xs:sequence>
+            <xs:element name="maxChangeRate" type="xs:double"/>
+            <xs:element name="dimensions" type="xs:int"/>
+        </xs:sequence>
+    </xs:complexType>
+
     <xs:complexType name="simulation">
             <xs:sequence>
                 <xs:element name="delta" type="xs:double"/>
@@ -59,6 +66,9 @@
                 <xs:element name="cuboids" type="cuboid" minOccurs="0" maxOccurs="unbounded"/>
                 <xs:element name="discs" type="disc" minOccurs="0" maxOccurs="unbounded"/>
                 <xs:element name="lenjonesmol" type="lenjonesmol"/>
+                <xs:element name="linkedcell" type="linkedcell"/>
+                <xs:element name="thermostat" type="thermostat"/>
+                <xs:element name="gravConstant" type="xs:double"/>
             </xs:sequence>
     </xs:complexType>
 
