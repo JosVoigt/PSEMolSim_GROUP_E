@@ -6,9 +6,10 @@
 #include "utils/MaxwellBoltzmannDistribution.h"
 
 DiscGenerator::DiscGenerator(int radius_, double distance_, double mass_,
-                             std::array<double, 3> velocity_,
+                             int type_, std::array<double, 3> velocity_,
                              std::array<double, 3> &center_)
-    : radius(radius_),
+    : type(type_),
+      radius(radius_),
       distance(distance_),
       mass(mass_),
       velocity(velocity_),

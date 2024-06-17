@@ -2,17 +2,20 @@
 
 #include <spdlog/spdlog.h>
 
+#include <cmath>
 #include <utility>
 
 #include "force/Force.h"
 #include "simulation/StoermerVerlet.h"
+#include "utils/MaxwellBoltzmannDistribution.h"
 
 Simulation::Simulation(std::shared_ptr<ParticleContainerInterface> &container_,
                        std::shared_ptr<PairwiseForce> method_,
                        std::shared_ptr<Writer> writer_, double dt_,
                        int outputFrequency_, std::string filename_,
                        std::array<int, 3> linkedCellDimensions,
-                       double linkedCellSidelength)
+                       double linkedCellSidelength,
+					   int dimensions_)
     : container(std::move(container_)),
       method(std::move(method_)),
       out(std::move(writer_)),
@@ -20,8 +23,23 @@ Simulation::Simulation(std::shared_ptr<ParticleContainerInterface> &container_,
       outputFrequency(outputFrequency_),
       filename(std::move(filename_)),
       linkedCellDimensions(std::move(linkedCellDimensions)),
-      linkedCellSidelength(linkedCellSidelength) {
+      linkedCellSidelength(linkedCellSidelength),
+			  dimensions(dimensions_) {
   dt_sq = std::pow(dt, 2);
+}
+
+void Simulation::initialize (double init_temperature) {
+	for (auto p : container->preprocessParticles()){
+		auto particleMass = p.getM();
+
+		//brownian motion factor
+		double mean = std::sqrt(init_temperature / particleMass);
+
+		//hacky set way
+		p.scaleV(0);
+		std::array<double,3> mBD = maxwellBoltzmannDistributedVelocity(mean, dimensions);
+		p.addV(mBD);
+	} 
 }
 
 void Simulation::run(double start, double end) {

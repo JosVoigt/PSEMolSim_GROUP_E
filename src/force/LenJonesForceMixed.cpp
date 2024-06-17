@@ -1,4 +1,4 @@
-#include "LenJonesForceMixed.h"Cuboi
+#include "LenJonesForceMixed.h"
 
 #include <spdlog/spdlog.h>
 
