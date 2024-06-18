@@ -132,6 +132,12 @@ brownianMotionMean_parser (::xml_schema::double_pskel& p)
 }
 
 void cuboid_pskel::
+type_parser (::xml_schema::int_pskel& p)
+{
+  this->type_parser_ = &p;
+}
+
+void cuboid_pskel::
 parsers (::vector3D_pskel& velocity,
          ::vector3D_pskel& lowerLeftCorner,
          ::xml_schema::double_pskel& distance,
@@ -139,7 +145,8 @@ parsers (::vector3D_pskel& velocity,
          ::xml_schema::int_pskel& x,
          ::xml_schema::int_pskel& y,
          ::xml_schema::int_pskel& z,
-         ::xml_schema::double_pskel& brownianMotionMean)
+         ::xml_schema::double_pskel& brownianMotionMean,
+         ::xml_schema::int_pskel& type)
 {
   this->velocity_parser_ = &velocity;
   this->lowerLeftCorner_parser_ = &lowerLeftCorner;
@@ -149,6 +156,7 @@ parsers (::vector3D_pskel& velocity,
   this->y_parser_ = &y;
   this->z_parser_ = &z;
   this->brownianMotionMean_parser_ = &brownianMotionMean;
+  this->type_parser_ = &type;
 }
 
 cuboid_pskel::
@@ -161,6 +169,7 @@ cuboid_pskel ()
   y_parser_ (0),
   z_parser_ (0),
   brownianMotionMean_parser_ (0),
+  type_parser_ (0),
   v_state_stack_ (sizeof (v_state_), &v_state_first_)
 {
 }
@@ -199,17 +208,25 @@ center_parser (::vector3D_pskel& p)
 }
 
 void disc_pskel::
+type_parser (::xml_schema::int_pskel& p)
+{
+  this->type_parser_ = &p;
+}
+
+void disc_pskel::
 parsers (::xml_schema::int_pskel& radius,
          ::xml_schema::double_pskel& mass,
          ::xml_schema::double_pskel& distance,
          ::vector3D_pskel& velocity,
-         ::vector3D_pskel& center)
+         ::vector3D_pskel& center,
+         ::xml_schema::int_pskel& type)
 {
   this->radius_parser_ = &radius;
   this->mass_parser_ = &mass;
   this->distance_parser_ = &distance;
   this->velocity_parser_ = &velocity;
   this->center_parser_ = &center;
+  this->type_parser_ = &type;
 }
 
 disc_pskel::
@@ -219,6 +236,7 @@ disc_pskel ()
   distance_parser_ (0),
   velocity_parser_ (0),
   center_parser_ (0),
+  type_parser_ (0),
   v_state_stack_ (sizeof (v_state_), &v_state_first_)
 {
 }
@@ -239,17 +257,26 @@ sigma_parser (::xml_schema::double_pskel& p)
 }
 
 void lenjonesmol_pskel::
+type_parser (::xml_schema::int_pskel& p)
+{
+  this->type_parser_ = &p;
+}
+
+void lenjonesmol_pskel::
 parsers (::xml_schema::double_pskel& epsilon,
-         ::xml_schema::double_pskel& sigma)
+         ::xml_schema::double_pskel& sigma,
+         ::xml_schema::int_pskel& type)
 {
   this->epsilon_parser_ = &epsilon;
   this->sigma_parser_ = &sigma;
+  this->type_parser_ = &type;
 }
 
 lenjonesmol_pskel::
 lenjonesmol_pskel ()
 : epsilon_parser_ (0),
   sigma_parser_ (0),
+  type_parser_ (0),
   v_state_stack_ (sizeof (v_state_), &v_state_first_)
 {
 }
@@ -338,6 +365,12 @@ thermostat_pskel ()
 //
 
 void simulation_pskel::
+gravConstant_parser (::xml_schema::double_pskel& p)
+{
+  this->gravConstant_parser_ = &p;
+}
+
+void simulation_pskel::
 delta_parser (::xml_schema::double_pskel& p)
 {
   this->delta_parser_ = &p;
@@ -404,13 +437,8 @@ thermostat_parser (::thermostat_pskel& p)
 }
 
 void simulation_pskel::
-gravConstant_parser (::xml_schema::double_pskel& p)
-{
-  this->gravConstant_parser_ = &p;
-}
-
-void simulation_pskel::
-parsers (::xml_schema::double_pskel& delta,
+parsers (::xml_schema::double_pskel& gravConstant,
+         ::xml_schema::double_pskel& delta,
          ::xml_schema::int_pskel& frequency,
          ::xml_schema::int_pskel& dimensions,
          ::xml_schema::double_pskel& start,
@@ -420,9 +448,9 @@ parsers (::xml_schema::double_pskel& delta,
          ::disc_pskel& discs,
          ::lenjonesmol_pskel& lenjonesmol,
          ::linkedcell_pskel& linkedcell,
-         ::thermostat_pskel& thermostat,
-         ::xml_schema::double_pskel& gravConstant)
+         ::thermostat_pskel& thermostat)
 {
+  this->gravConstant_parser_ = &gravConstant;
   this->delta_parser_ = &delta;
   this->frequency_parser_ = &frequency;
   this->dimensions_parser_ = &dimensions;
@@ -434,12 +462,12 @@ parsers (::xml_schema::double_pskel& delta,
   this->lenjonesmol_parser_ = &lenjonesmol;
   this->linkedcell_parser_ = &linkedcell;
   this->thermostat_parser_ = &thermostat;
-  this->gravConstant_parser_ = &gravConstant;
 }
 
 simulation_pskel::
 simulation_pskel ()
-: delta_parser_ (0),
+: gravConstant_parser_ (0),
+  delta_parser_ (0),
   frequency_parser_ (0),
   dimensions_parser_ (0),
   start_parser_ (0),
@@ -450,7 +478,6 @@ simulation_pskel ()
   lenjonesmol_parser_ (0),
   linkedcell_parser_ (0),
   thermostat_parser_ (0),
-  gravConstant_parser_ (0),
   v_state_stack_ (sizeof (v_state_), &v_state_first_)
 {
 }
@@ -522,6 +549,11 @@ brownianMotionMean (double)
 }
 
 void cuboid_pskel::
+type (int)
+{
+}
+
+void cuboid_pskel::
 post_cuboid ()
 {
 }
@@ -555,6 +587,11 @@ center ()
 }
 
 void disc_pskel::
+type (int)
+{
+}
+
+void disc_pskel::
 post_disc ()
 {
 }
@@ -569,6 +606,11 @@ epsilon (double)
 
 void lenjonesmol_pskel::
 sigma (double)
+{
+}
+
+void lenjonesmol_pskel::
+type (int)
 {
 }
 
@@ -627,6 +669,11 @@ post_thermostat ()
 //
 
 void simulation_pskel::
+gravConstant (double)
+{
+}
+
+void simulation_pskel::
 delta (double)
 {
 }
@@ -678,11 +725,6 @@ linkedcell ()
 
 void simulation_pskel::
 thermostat ()
-{
-}
-
-void simulation_pskel::
-gravConstant (double)
 {
 }
 
@@ -1366,7 +1408,7 @@ sequence_0 (unsigned long& state,
           }
 
           count = 0;
-          state = ~0UL;
+          state = 8UL;
         }
 
         break;
@@ -1377,6 +1419,43 @@ sequence_0 (unsigned long& state,
         if (count < 1UL)
           this->_expected_element (
             "", "brownianMotionMean",
+            ns, n);
+        count = 0;
+        state = 8UL;
+        // Fall through.
+      }
+    }
+    case 8UL:
+    {
+      if (n == "type" && ns.empty ())
+      {
+        if (start)
+        {
+          this->::xml_schema::complex_content::context_.top ().parser_ = this->type_parser_;
+
+          if (this->type_parser_)
+            this->type_parser_->pre ();
+        }
+        else
+        {
+          if (this->type_parser_)
+          {
+            int tmp (this->type_parser_->post_int ());
+            this->type (tmp);
+          }
+
+          count = 0;
+          state = ~0UL;
+        }
+
+        break;
+      }
+      else
+      {
+        assert (start);
+        if (count < 1UL)
+          this->_expected_element (
+            "", "type",
             ns, n);
         count = 0;
         state = ~0UL;
@@ -1695,7 +1774,7 @@ sequence_0 (unsigned long& state,
           }
 
           count = 0;
-          state = ~0UL;
+          state = 5UL;
         }
 
         break;
@@ -1706,6 +1785,43 @@ sequence_0 (unsigned long& state,
         if (count < 1UL)
           this->_expected_element (
             "", "center",
+            ns, n);
+        count = 0;
+        state = 5UL;
+        // Fall through.
+      }
+    }
+    case 5UL:
+    {
+      if (n == "type" && ns.empty ())
+      {
+        if (start)
+        {
+          this->::xml_schema::complex_content::context_.top ().parser_ = this->type_parser_;
+
+          if (this->type_parser_)
+            this->type_parser_->pre ();
+        }
+        else
+        {
+          if (this->type_parser_)
+          {
+            int tmp (this->type_parser_->post_int ());
+            this->type (tmp);
+          }
+
+          count = 0;
+          state = ~0UL;
+        }
+
+        break;
+      }
+      else
+      {
+        assert (start);
+        if (count < 1UL)
+          this->_expected_element (
+            "", "type",
             ns, n);
         count = 0;
         state = ~0UL;
@@ -1913,7 +2029,7 @@ sequence_0 (unsigned long& state,
           }
 
           count = 0;
-          state = ~0UL;
+          state = 2UL;
         }
 
         break;
@@ -1924,6 +2040,43 @@ sequence_0 (unsigned long& state,
         if (count < 1UL)
           this->_expected_element (
             "", "sigma",
+            ns, n);
+        count = 0;
+        state = 2UL;
+        // Fall through.
+      }
+    }
+    case 2UL:
+    {
+      if (n == "type" && ns.empty ())
+      {
+        if (start)
+        {
+          this->::xml_schema::complex_content::context_.top ().parser_ = this->type_parser_;
+
+          if (this->type_parser_)
+            this->type_parser_->pre ();
+        }
+        else
+        {
+          if (this->type_parser_)
+          {
+            int tmp (this->type_parser_->post_int ());
+            this->type (tmp);
+          }
+
+          count = 0;
+          state = ~0UL;
+        }
+
+        break;
+      }
+      else
+      {
+        assert (start);
+        if (count < 1UL)
+          this->_expected_element (
+            "", "type",
             ns, n);
         count = 0;
         state = ~0UL;
@@ -2483,7 +2636,7 @@ _start_element_impl (const ::xml_schema::ro_string& ns,
     {
       unsigned long s = ~0UL;
 
-      if (n == "delta" && ns.empty ())
+      if (n == "gravConstant" && ns.empty ())
         s = 0UL;
 
       if (s != ~0UL)
@@ -2502,7 +2655,7 @@ _start_element_impl (const ::xml_schema::ro_string& ns,
       {
         if (vd->count < 1UL)
           this->_expected_element (
-            "", "delta",
+            "", "gravConstant",
             ns, n);
         return false;
       }
@@ -2567,7 +2720,7 @@ _post_e_validate ()
 
   if (vd->count < 1UL)
     this->_expected_element (
-      "", "delta");
+      "", "gravConstant");
 
   this->v_state_stack_.pop ();
 }
@@ -2585,6 +2738,43 @@ sequence_0 (unsigned long& state,
   switch (state)
   {
     case 0UL:
+    {
+      if (n == "gravConstant" && ns.empty ())
+      {
+        if (start)
+        {
+          this->::xml_schema::complex_content::context_.top ().parser_ = this->gravConstant_parser_;
+
+          if (this->gravConstant_parser_)
+            this->gravConstant_parser_->pre ();
+        }
+        else
+        {
+          if (this->gravConstant_parser_)
+          {
+            double tmp (this->gravConstant_parser_->post_double ());
+            this->gravConstant (tmp);
+          }
+
+          count = 0;
+          state = 1UL;
+        }
+
+        break;
+      }
+      else
+      {
+        assert (start);
+        if (count < 1UL)
+          this->_expected_element (
+            "", "gravConstant",
+            ns, n);
+        count = 0;
+        state = 1UL;
+        // Fall through.
+      }
+    }
+    case 1UL:
     {
       if (n == "delta" && ns.empty ())
       {
@@ -2604,7 +2794,7 @@ sequence_0 (unsigned long& state,
           }
 
           count = 0;
-          state = 1UL;
+          state = 2UL;
         }
 
         break;
@@ -2617,11 +2807,11 @@ sequence_0 (unsigned long& state,
             "", "delta",
             ns, n);
         count = 0;
-        state = 1UL;
+        state = 2UL;
         // Fall through.
       }
     }
-    case 1UL:
+    case 2UL:
     {
       if (n == "frequency" && ns.empty ())
       {
@@ -2641,7 +2831,7 @@ sequence_0 (unsigned long& state,
           }
 
           count = 0;
-          state = 2UL;
+          state = 3UL;
         }
 
         break;
@@ -2649,16 +2839,12 @@ sequence_0 (unsigned long& state,
       else
       {
         assert (start);
-        if (count < 1UL)
-          this->_expected_element (
-            "", "frequency",
-            ns, n);
         count = 0;
-        state = 2UL;
+        state = 3UL;
         // Fall through.
       }
     }
-    case 2UL:
+    case 3UL:
     {
       if (n == "dimensions" && ns.empty ())
       {
@@ -2678,7 +2864,7 @@ sequence_0 (unsigned long& state,
           }
 
           count = 0;
-          state = 3UL;
+          state = 4UL;
         }
 
         break;
@@ -2691,11 +2877,11 @@ sequence_0 (unsigned long& state,
             "", "dimensions",
             ns, n);
         count = 0;
-        state = 3UL;
+        state = 4UL;
         // Fall through.
       }
     }
-    case 3UL:
+    case 4UL:
     {
       if (n == "start" && ns.empty ())
       {
@@ -2715,7 +2901,7 @@ sequence_0 (unsigned long& state,
           }
 
           count = 0;
-          state = 4UL;
+          state = 5UL;
         }
 
         break;
@@ -2723,16 +2909,12 @@ sequence_0 (unsigned long& state,
       else
       {
         assert (start);
-        if (count < 1UL)
-          this->_expected_element (
-            "", "start",
-            ns, n);
         count = 0;
-        state = 4UL;
+        state = 5UL;
         // Fall through.
       }
     }
-    case 4UL:
+    case 5UL:
     {
       if (n == "end" && ns.empty ())
       {
@@ -2752,7 +2934,7 @@ sequence_0 (unsigned long& state,
           }
 
           count = 0;
-          state = 5UL;
+          state = 6UL;
         }
 
         break;
@@ -2765,11 +2947,11 @@ sequence_0 (unsigned long& state,
             "", "end",
             ns, n);
         count = 0;
-        state = 5UL;
+        state = 6UL;
         // Fall through.
       }
     }
-    case 5UL:
+    case 6UL:
     {
       if (n == "outfile" && ns.empty ())
       {
@@ -2789,7 +2971,7 @@ sequence_0 (unsigned long& state,
           }
 
           count = 0;
-          state = 6UL;
+          state = 7UL;
         }
 
         break;
@@ -2797,16 +2979,12 @@ sequence_0 (unsigned long& state,
       else
       {
         assert (start);
-        if (count < 1UL)
-          this->_expected_element (
-            "", "outfile",
-            ns, n);
         count = 0;
-        state = 6UL;
+        state = 7UL;
         // Fall through.
       }
     }
-    case 6UL:
+    case 7UL:
     {
       if (n == "cuboids" && ns.empty ())
       {
@@ -2834,11 +3012,11 @@ sequence_0 (unsigned long& state,
       {
         assert (start);
         count = 0;
-        state = 7UL;
+        state = 8UL;
         // Fall through.
       }
     }
-    case 7UL:
+    case 8UL:
     {
       if (n == "discs" && ns.empty ())
       {
@@ -2866,11 +3044,11 @@ sequence_0 (unsigned long& state,
       {
         assert (start);
         count = 0;
-        state = 8UL;
+        state = 9UL;
         // Fall through.
       }
     }
-    case 8UL:
+    case 9UL:
     {
       if (n == "lenjonesmol" && ns.empty ())
       {
@@ -2889,8 +3067,7 @@ sequence_0 (unsigned long& state,
             this->lenjonesmol ();
           }
 
-          count = 0;
-          state = 9UL;
+          count++;
         }
 
         break;
@@ -2903,11 +3080,11 @@ sequence_0 (unsigned long& state,
             "", "lenjonesmol",
             ns, n);
         count = 0;
-        state = 9UL;
+        state = 10UL;
         // Fall through.
       }
     }
-    case 9UL:
+    case 10UL:
     {
       if (n == "linkedcell" && ns.empty ())
       {
@@ -2927,7 +3104,7 @@ sequence_0 (unsigned long& state,
           }
 
           count = 0;
-          state = 10UL;
+          state = 11UL;
         }
 
         break;
@@ -2940,11 +3117,11 @@ sequence_0 (unsigned long& state,
             "", "linkedcell",
             ns, n);
         count = 0;
-        state = 10UL;
+        state = 11UL;
         // Fall through.
       }
     }
-    case 10UL:
+    case 11UL:
     {
       if (n == "thermostat" && ns.empty ())
       {
@@ -2964,43 +3141,6 @@ sequence_0 (unsigned long& state,
           }
 
           count = 0;
-          state = 11UL;
-        }
-
-        break;
-      }
-      else
-      {
-        assert (start);
-        if (count < 1UL)
-          this->_expected_element (
-            "", "thermostat",
-            ns, n);
-        count = 0;
-        state = 11UL;
-        // Fall through.
-      }
-    }
-    case 11UL:
-    {
-      if (n == "gravConstant" && ns.empty ())
-      {
-        if (start)
-        {
-          this->::xml_schema::complex_content::context_.top ().parser_ = this->gravConstant_parser_;
-
-          if (this->gravConstant_parser_)
-            this->gravConstant_parser_->pre ();
-        }
-        else
-        {
-          if (this->gravConstant_parser_)
-          {
-            double tmp (this->gravConstant_parser_->post_double ());
-            this->gravConstant (tmp);
-          }
-
-          count = 0;
           state = ~0UL;
         }
 
@@ -3011,7 +3151,7 @@ sequence_0 (unsigned long& state,
         assert (start);
         if (count < 1UL)
           this->_expected_element (
-            "", "gravConstant",
+            "", "thermostat",
             ns, n);
         count = 0;
         state = ~0UL;

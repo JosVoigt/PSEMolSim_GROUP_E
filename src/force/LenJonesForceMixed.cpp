@@ -101,3 +101,7 @@ std::array<double, 3> LennardJonesForceMixed::calculateForce(
 
   return force;
 }
+
+std::string LennardJonesForceMixed::typeString() {
+    return {};
+}

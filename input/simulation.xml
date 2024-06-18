@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <simulation>
+    <gravConstant>9.81</gravConstant>
     <delta>0.0002</delta>
     <frequency>10</frequency>
     <dimensions>2</dimensions>
@@ -23,6 +24,7 @@
         <y>8</y>
         <z>1</z>
         <brownianMotionMean>0.1</brownianMotionMean>
+        <type>1</type>
     </cuboids>
     <cuboids>
         <velocity>
@@ -41,6 +43,7 @@
         <y>8</y>
         <z>1</z>
         <brownianMotionMean>0.1</brownianMotionMean>
+        <type>1</type>
     </cuboids>
     <discs>
         <radius>15</radius>
@@ -56,10 +59,17 @@
             <y>20.0</y>
             <z>0.0</z>
         </center>
+        <type>2</type>
     </discs>
     <lenjonesmol>
         <epsilon>5.0</epsilon>
         <sigma>1.0</sigma>
+        <type>1</type>
+    </lenjonesmol>
+    <lenjonesmol>
+        <epsilon>5.0</epsilon>
+        <sigma>1.0</sigma>
+        <type>1</type>
     </lenjonesmol>
     <linkedcell>
         <amountcellsx>180</amountcellsx>
@@ -71,5 +81,4 @@
         <maxChangeRate>0.1</maxChangeRate>
         <dimensions>2</dimensions>
     </thermostat>
-    <gravConstant>9.81</gravConstant>
 </simulation>

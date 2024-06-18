@@ -51,6 +51,7 @@ private:
     int y_{};
     int z_{};
     double brownianMotionMean_{};
+    int type_{};
 
 public:
 
@@ -86,6 +87,11 @@ public:
         brownianMotionMean_ = bmm;
     }
 
+    void type (int t) override
+    {
+        type_ = t;
+    }
+
     void post_cuboid () override
     {
         std::cout << "Distance: " << distance_ << std::endl;
@@ -94,6 +100,7 @@ public:
         std::cout << "Y: " << y_ << std::endl;
         std::cout << "Z: " << z_ << std::endl;
         std::cout << "BrownianMotionMean: " << brownianMotionMean_ << std::endl;
+        std::cout << "Type_Cuboid: " << type_ << std::endl;
     }
 };
 
@@ -105,6 +112,7 @@ private:
     double distance_{};
     vector3D_pimpl velocity_;
     vector3D_pimpl center_;
+    int type_{};
 
 public:
     disc_pimpl(): center_("Center"), velocity_("Velocity_Disc") {}
@@ -124,12 +132,17 @@ public:
         distance_ = d;
     }
 
+    void type (int t) override
+    {
+        type_ = t;
+    }
 
     void post_disc () override
     {
         std::cout << "Radius: " << radius_ << std::endl;
         std::cout << "Mass_Disc: " << mass_ << std::endl;
         std::cout << "Distance_Disc: " << distance_ << std::endl;
+        std::cout << "Type_Disc: " << type_ << std::endl;
     }
 };
 
@@ -138,6 +151,7 @@ class lenjonesmol_pimpl: public lenjonesmol_pskel
 private:
     double epsilon_{};
     double sigma_{};
+    int type_{};
 
 public:
     void epsilon (double e) override
@@ -150,10 +164,16 @@ public:
         sigma_ = s;
     }
 
+    void type (int t) override
+    {
+        type_ = t;
+    }
+
     void post_lenjonesmol () override
     {
         std::cout << "Epsilon: " << epsilon_ << std::endl;
         std::cout << "Sigma: " << sigma_ << std::endl;
+        std::cout << "Type: " << type_ << std::endl;
     }
 };
 
@@ -329,12 +349,14 @@ main (__attribute__((unused)) int argc, char* argv[])
         cuboid_p.y_parser(int_p);
         cuboid_p.z_parser(int_p);
         cuboid_p.brownianMotionMean_parser(double_p);
+        cuboid_p.type_parser(int_p);
         simulation_p.cuboids_parser(cuboid_p);
 
         //disc
         disc_p.radius_parser(int_p);
         disc_p.mass_parser(double_p);
         disc_p.distance_parser(double_p);
+        disc_p.type_parser(int_p);
         simulation_p.discs_parser(disc_p);
 
         //other parameters
@@ -349,6 +371,7 @@ main (__attribute__((unused)) int argc, char* argv[])
         //lenjonesmol
         lenjonesmol_p.epsilon_parser(double_p);
         lenjonesmol_p.sigma_parser(double_p);
+        lenjonesmol_p.type_parser(int_p);
         simulation_p.lenjonesmol_parser(lenjonesmol_p);
 
         //linkedcell
