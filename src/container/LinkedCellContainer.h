@@ -63,9 +63,11 @@ class LinkedCellContainer : public ParticleContainerInterface {
      * Retrieves the boundary cells that contain the particles according to the given cell indices
      * @param cellIndices
      * The vector of indices of the halo cells
+     * @param haloCells
+     * The vector where the halo particles are to be returned in
      */
   [[nodiscard]] std::vector<std::vector<Particle>>& retrieveHaloParticles(
-      const std::vector<int>& cellIndices) const;
+      const std::vector<int>& cellIndices, std::vector<std::vector<Particle>>& haloCells) const;
 
  public:
   /**
@@ -144,9 +146,11 @@ class LinkedCellContainer : public ParticleContainerInterface {
      * Retrieves all the boundary cells containing the particles according to the given cell indices
      * @param cellIndices
      * The vector of boundary cell indices
+     * @param boundaryCells
+     * The vector where the boundary particles are to be returned in
      */
   [[nodiscard]] std::vector<std::vector<Particle>>& retrieveBoundaryParticles(
-      const std::vector<int>& cellIndices) const;
+      const std::vector<int>& cellIndices, std::vector<std::vector<Particle>>& boundaryCells) const;
 
   /**
      * \brief
