@@ -19,6 +19,7 @@
             <xs:element name="y" type="xs:int"/>
             <xs:element name="z" type="xs:int"/>
             <xs:element name="brownianMotionMean" type="xs:double"/>
+            <xs:element name="type" type="xs:int"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -29,6 +30,7 @@
             <xs:element name="distance" type="xs:double"/>
             <xs:element name="velocity" type="vector3D"/>
             <xs:element name="center" type="vector3D"/>
+            <xs:element name="type" type="xs:int"/>
         </xs:sequence>
     </xs:complexType>
     
@@ -36,6 +38,7 @@
         <xs:sequence>
             <xs:element name="epsilon" type="xs:double"/>
             <xs:element name="sigma" type="xs:double"/>
+            <xs:element name="type" type="xs:int"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -57,18 +60,18 @@
 
     <xs:complexType name="simulation">
             <xs:sequence>
+                <xs:element name="gravConstant" type="xs:double"/>
                 <xs:element name="delta" type="xs:double"/>
-                <xs:element name="frequency" type="xs:int"/>
+                <xs:element name="frequency" type="xs:int" minOccurs="0"/>
                 <xs:element name="dimensions" type="xs:int"/>
-                <xs:element name="start" type="xs:double"/>
+                <xs:element name="start" type="xs:double" minOccurs="0"/>
                 <xs:element name="end" type="xs:double"/>
-                <xs:element name="outfile" type="xs:string"/>
+                <xs:element name="outfile" type="xs:string" minOccurs="0"/>
                 <xs:element name="cuboids" type="cuboid" minOccurs="0" maxOccurs="unbounded"/>
                 <xs:element name="discs" type="disc" minOccurs="0" maxOccurs="unbounded"/>
-                <xs:element name="lenjonesmol" type="lenjonesmol"/>
+                <xs:element name="lenjonesmol" type="lenjonesmol" maxOccurs="unbounded"/>
                 <xs:element name="linkedcell" type="linkedcell"/>
                 <xs:element name="thermostat" type="thermostat"/>
-                <xs:element name="gravConstant" type="xs:double"/>
             </xs:sequence>
     </xs:complexType>
 

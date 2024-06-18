@@ -6,7 +6,7 @@
 #include <sstream>
 
 #include "container/LinkedCellContainer.h"
-#include "force/LennardJonesForce.h"
+#include "force/LenJonesForceMixed.h"
 #include "outputWriter/VTKWriter.h"
 #include "utils/Parser.h"
 
@@ -19,19 +19,12 @@ void XMLReader::readData(parser::options &options) const {
     return;
   }
 
-  std::string line;
-
-  std::string key;
-  std::string value;
-  std::array<double, 3> velocity{};
-  std::array<double, 3> lowerLeftCorner{};
-  std::array<double, 3> center{};
-  std::array<double, 3> velocity_d{};
-  double distance, mass, x, y, z, epsilon;
-  int radius;
-  double mass_disc, distance_disc;
-  int amountCellsX, amountCellsY, amountCellsZ;
-  double maxChangeRate;
+  std::string line, key, value;
+  std::array<double, 3> velocity{}, lowerLeftCorner{}, center{}, velocity_d{};
+  int radius, amountCellsX, amountCellsY, amountCellsZ;
+  double distance, mass, x, y, z, mass_disc, distance_disc, maxChangeRate, brownianMotionMean;
+  std::vector<double> epsilon, sigma;
+  std::vector<int> type;
 
   options.writer_ = std::make_shared<outputWriter::VTKWriter>();
 
@@ -68,13 +61,16 @@ void XMLReader::readData(parser::options &options) const {
       } else if (key == "Z") {
         z = std::stod(value);
       } else if (key == "BrownianMotionMean") {
-        options.cuboids.emplace_back(x, y, z, distance, mass, std::stod(value),
-                                     lowerLeftCorner, velocity);
+        brownianMotionMean = std::stod(value);
+      } else if (key == "Type_Cuboid") {
+          options.cuboids.emplace_back(x, y, z, distance, mass, brownianMotionMean, std::stoi(value), lowerLeftCorner, velocity);
       } else if (key == "Epsilon") {
-        epsilon = std::stod(value);
+        epsilon.emplace_back(std::stod(value));
       } else if (key == "Sigma") {
-        options.force_ =
-            std::make_shared<LennardJonesForce>(epsilon, std::stod(value));
+        sigma.emplace_back(std::stod(value));
+      } else if(key == "Type") {
+        type.emplace_back(std::stoi(value));
+        options.force_ = std::make_shared<LennardJonesForceMixed>(epsilon, sigma, type);
       } else if (key == "Delta") {
         options.delta_t = std::stod(value);
       } else if (key == "Frequency") {
@@ -112,8 +108,8 @@ void XMLReader::readData(parser::options &options) const {
         velocity_d[0] = x_vd;
         velocity_d[1] = y_vd;
         velocity_d[2] = z_vd;
-        options.discs.emplace_back(radius, distance_disc, mass_disc, velocity_d,
-                                   center);
+      } else if (key == "Type_Disc") {
+          options.discs.emplace_back(radius, distance_disc, mass_disc, std::stoi(value), velocity_d, center);
       }
     } else if (key == "AmountCellsX") {
       amountCellsX = std::stoi(value);

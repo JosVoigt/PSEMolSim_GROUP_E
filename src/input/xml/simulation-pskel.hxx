@@ -386,6 +386,9 @@ class cuboid_pskel: public ::xml_schema::complex_content
   brownianMotionMean (double);
 
   virtual void
+  type (int);
+
+  virtual void
   post_cuboid ();
 
   // Parser construction API.
@@ -415,6 +418,9 @@ class cuboid_pskel: public ::xml_schema::complex_content
   brownianMotionMean_parser (::xml_schema::double_pskel&);
 
   void
+  type_parser (::xml_schema::int_pskel&);
+
+  void
   parsers (::vector3D_pskel& /* velocity */,
            ::vector3D_pskel& /* lowerLeftCorner */,
            ::xml_schema::double_pskel& /* distance */,
@@ -422,7 +428,8 @@ class cuboid_pskel: public ::xml_schema::complex_content
            ::xml_schema::int_pskel& /* x */,
            ::xml_schema::int_pskel& /* y */,
            ::xml_schema::int_pskel& /* z */,
-           ::xml_schema::double_pskel& /* brownianMotionMean */);
+           ::xml_schema::double_pskel& /* brownianMotionMean */,
+           ::xml_schema::int_pskel& /* type */);
 
   // Constructor.
   //
@@ -449,6 +456,7 @@ class cuboid_pskel: public ::xml_schema::complex_content
   ::xml_schema::int_pskel* y_parser_;
   ::xml_schema::int_pskel* z_parser_;
   ::xml_schema::double_pskel* brownianMotionMean_parser_;
+  ::xml_schema::int_pskel* type_parser_;
 
   protected:
   struct v_state_descr_
@@ -512,6 +520,9 @@ class disc_pskel: public ::xml_schema::complex_content
   center ();
 
   virtual void
+  type (int);
+
+  virtual void
   post_disc ();
 
   // Parser construction API.
@@ -532,11 +543,15 @@ class disc_pskel: public ::xml_schema::complex_content
   center_parser (::vector3D_pskel&);
 
   void
+  type_parser (::xml_schema::int_pskel&);
+
+  void
   parsers (::xml_schema::int_pskel& /* radius */,
            ::xml_schema::double_pskel& /* mass */,
            ::xml_schema::double_pskel& /* distance */,
            ::vector3D_pskel& /* velocity */,
-           ::vector3D_pskel& /* center */);
+           ::vector3D_pskel& /* center */,
+           ::xml_schema::int_pskel& /* type */);
 
   // Constructor.
   //
@@ -560,6 +575,7 @@ class disc_pskel: public ::xml_schema::complex_content
   ::xml_schema::double_pskel* distance_parser_;
   ::vector3D_pskel* velocity_parser_;
   ::vector3D_pskel* center_parser_;
+  ::xml_schema::int_pskel* type_parser_;
 
   protected:
   struct v_state_descr_
@@ -614,6 +630,9 @@ class lenjonesmol_pskel: public ::xml_schema::complex_content
   sigma (double);
 
   virtual void
+  type (int);
+
+  virtual void
   post_lenjonesmol ();
 
   // Parser construction API.
@@ -625,8 +644,12 @@ class lenjonesmol_pskel: public ::xml_schema::complex_content
   sigma_parser (::xml_schema::double_pskel&);
 
   void
+  type_parser (::xml_schema::int_pskel&);
+
+  void
   parsers (::xml_schema::double_pskel& /* epsilon */,
-           ::xml_schema::double_pskel& /* sigma */);
+           ::xml_schema::double_pskel& /* sigma */,
+           ::xml_schema::int_pskel& /* type */);
 
   // Constructor.
   //
@@ -647,6 +670,7 @@ class lenjonesmol_pskel: public ::xml_schema::complex_content
   protected:
   ::xml_schema::double_pskel* epsilon_parser_;
   ::xml_schema::double_pskel* sigma_parser_;
+  ::xml_schema::int_pskel* type_parser_;
 
   protected:
   struct v_state_descr_
@@ -885,6 +909,9 @@ class simulation_pskel: public ::xml_schema::complex_content
   // pre ();
 
   virtual void
+  gravConstant (double);
+
+  virtual void
   delta (double);
 
   virtual void
@@ -918,13 +945,13 @@ class simulation_pskel: public ::xml_schema::complex_content
   thermostat ();
 
   virtual void
-  gravConstant (double);
-
-  virtual void
   post_simulation ();
 
   // Parser construction API.
   //
+  void
+  gravConstant_parser (::xml_schema::double_pskel&);
+
   void
   delta_parser (::xml_schema::double_pskel&);
 
@@ -959,10 +986,8 @@ class simulation_pskel: public ::xml_schema::complex_content
   thermostat_parser (::thermostat_pskel&);
 
   void
-  gravConstant_parser (::xml_schema::double_pskel&);
-
-  void
-  parsers (::xml_schema::double_pskel& /* delta */,
+  parsers (::xml_schema::double_pskel& /* gravConstant */,
+           ::xml_schema::double_pskel& /* delta */,
            ::xml_schema::int_pskel& /* frequency */,
            ::xml_schema::int_pskel& /* dimensions */,
            ::xml_schema::double_pskel& /* start */,
@@ -972,8 +997,7 @@ class simulation_pskel: public ::xml_schema::complex_content
            ::disc_pskel& /* discs */,
            ::lenjonesmol_pskel& /* lenjonesmol */,
            ::linkedcell_pskel& /* linkedcell */,
-           ::thermostat_pskel& /* thermostat */,
-           ::xml_schema::double_pskel& /* gravConstant */);
+           ::thermostat_pskel& /* thermostat */);
 
   // Constructor.
   //
@@ -992,6 +1016,7 @@ class simulation_pskel: public ::xml_schema::complex_content
                      const ::xml_schema::ro_string&);
 
   protected:
+  ::xml_schema::double_pskel* gravConstant_parser_;
   ::xml_schema::double_pskel* delta_parser_;
   ::xml_schema::int_pskel* frequency_parser_;
   ::xml_schema::int_pskel* dimensions_parser_;
@@ -1003,7 +1028,6 @@ class simulation_pskel: public ::xml_schema::complex_content
   ::lenjonesmol_pskel* lenjonesmol_parser_;
   ::linkedcell_pskel* linkedcell_parser_;
   ::thermostat_pskel* thermostat_parser_;
-  ::xml_schema::double_pskel* gravConstant_parser_;
 
   protected:
   struct v_state_descr_
