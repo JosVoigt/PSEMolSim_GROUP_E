@@ -407,7 +407,7 @@ void parseCuboids(std::string cuboid_s, std::vector<CuboidGenerator> &ret) {
                 << "    velocity: " << velo;
         // clang-format on
         spdlog::get("file")->debug(ss.str());
-        ret.emplace_back(xc, yc, zc, d, m, aBM, 0,llfc, velo);
+        ret.emplace_back(xc, yc, zc, d, m, aBM, 0, llfc, velo);
         if (currentChar == ',')
           state = cuboid_parser_state::start;
         else
@@ -441,7 +441,7 @@ void parseCuboids(std::string cuboid_s, std::vector<CuboidGenerator> &ret) {
 #ifndef NO_LOG
     spdlog::get("file")->debug(ss.str());
 #endif
-    ret.emplace_back(xc, yc, zc, d, m, aBM, 0,llfc, velo);
+    ret.emplace_back(xc, yc, zc, d, m, aBM, 0, llfc, velo);
   }
 }
 
