@@ -108,7 +108,7 @@ std::vector<Particle> LinkedCellContainer::retrieveNeighbors(
     const Particle &particle) const {
   const std::array<int, 3> particleCellCoordinates =
       getCellCoordinates(particle);
-  std::set<Particle> neighbours;
+  std::vector<Particle> neighbours;
 
   // Find bounds of neighbouring cells (this is needed so that cellOfParticle -1
   // / +1 doesn't go out of bounds)
@@ -154,7 +154,7 @@ std::vector<Particle> LinkedCellContainer::retrieveNeighbors(
   for (int y = startY; y <= endY; y++) {
     for (int z = startZ; z <= endZ; z++) {
       for (const Particle &neighbour : cellVector[endX + (amountCellsX) * (y + (amountCellsY)*z)]) {
-        neighbours.insert(neighbour);
+        neighbours.push_back(neighbour);
       }
     }
   }
@@ -162,13 +162,13 @@ std::vector<Particle> LinkedCellContainer::retrieveNeighbors(
   //Middle stripe along the Z axis in south side of neighbours
   for (int z = startZ; z <= endZ; z++) {
     for (const Particle &neighbour : cellVector[particleCellCoordinates[0] + amountCellsX * (endY + amountCellsY*z)]) {
-      neighbours.insert(neighbour);
+      neighbours.push_back(neighbour);
     }
   }
 
   //Cell neighbour, directly under the particle's cell
   for (const Particle &neighbour : cellVector[particleCellCoordinates[0] + amountCellsX * (particleCellCoordinates[1] + amountCellsY * startZ)]) {
-    neighbours.insert(neighbour);
+    neighbours.push_back(neighbour);
   }
 
   //The particle's cell itself
@@ -180,12 +180,10 @@ std::vector<Particle> LinkedCellContainer::retrieveNeighbors(
       continue;
     }
 
-    neighbours.insert(neighbour);
+    neighbours.push_back(neighbour);
   }
 
-  std::vector neighbours_vector(neighbours.begin(), neighbours.end());
-
-  return neighbours_vector;
+  return neighbours;
 }
 
 std::vector<Particle> LinkedCellContainer::retrieveRelevantParticles(
