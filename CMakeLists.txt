@@ -28,16 +28,10 @@ if (DOWNLOAD_DEPENDENCIES)
         GIT_REPOSITORY https://github.com/fmtlib/fmt.git
         GIT_TAG 10.2.1
     )
-    FetchContent_Declare (
-        xerces-c
-        GIT_REPOSITORY https://github.com/apache/xerces-c.git
-        GIT_TAG v3.2.5
-    )
     FetchContent_MakeAvailable(googletest)
     FetchContent_MakeAvailable(googlebench)
     FetchContent_MakeAvailable(spdlog)
     FetchContent_MakeAvailable(fmt)
-    FetchContent_MakeAvailable(xerces-c)
 endif(DOWNLOAD_DEPENDENCIES)
 
 option(DOWNLOAD_BOOST "Downloads Boost, not recommended" OFF)
