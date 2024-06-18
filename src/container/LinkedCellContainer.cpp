@@ -1,6 +1,7 @@
 #include "LinkedCellContainer.h"
 
 #include <algorithm>
+#include <set>
 
 #include "LinkedCellBoundaryCondition/BoundCondReflection.h"
 #include "LinkedCellBoundaryCondition/BoundaryConditionOutflow.h"
@@ -107,7 +108,7 @@ std::vector<Particle> LinkedCellContainer::retrieveNeighbors(
     const Particle &particle) const {
   const std::array<int, 3> particleCellCoordinates =
       getCellCoordinates(particle);
-  std::vector<Particle> neighbours;
+  std::set<Particle> neighbours;
 
   // Find bounds of neighbouring cells (this is needed so that cellOfParticle -1
   // / +1 doesn't go out of bounds)
@@ -130,22 +131,61 @@ std::vector<Particle> LinkedCellContainer::retrieveNeighbors(
                        : particleCellCoordinates[2] + 1;
 
   // Iterate over them and add all the cells into the list
-  for (int x = startX; x <= endX; x++) {
-    for (int y = startY; y <= endY; y++) {
-      for (int z = startZ; z <= endZ; z++) {
-        for (const Particle &neighbour :
-             cellVector[x + (amountCellsX) * (y + (amountCellsY)*z)]) {
-          // Of course we wouldn't want to include the particle itself,
-          // otherwise it would mess up the force calculation
-          if (neighbour == particle) {
-            continue;
-          }
-          neighbours.push_back(neighbour);
-        }
+  // for (int x = startX; x <= endX; x++) {
+  //   for (int y = startY; y <= endY; y++) {
+  //     for (int z = startZ; z <= endZ; z++) {
+  //       for (const Particle &neighbour :
+  //            cellVector[x + (amountCellsX) * (y + (amountCellsY)*z)]) {
+  //         // Of course we wouldn't want to include the particle itself,
+  //         // otherwise it would mess up the force calculation
+  //         if (neighbour == particle) {
+  //           continue;
+  //         }
+  //         neighbours.insert(neighbour);
+  //       }
+  //     }
+  //   }
+  // }
+
+
+  //Only including certain parts of the neighbours so that cells do not get counted twice, which messes up with Newton's third law
+
+  //East side of the neighbours
+  for (int y = startY; y <= endY; y++) {
+    for (int z = startZ; z <= endZ; z++) {
+      for (const Particle &neighbour : cellVector[endX + (amountCellsX) * (y + (amountCellsY)*z)]) {
+        neighbours.insert(neighbour);
       }
     }
   }
-  return neighbours;
+
+  //Middle stripe along the Z axis in south side of neighbours
+  for (int z = startZ; z <= endZ; z++) {
+    for (const Particle &neighbour : cellVector[particleCellCoordinates[0] + amountCellsX * (endY + amountCellsY*z)]) {
+      neighbours.insert(neighbour);
+    }
+  }
+
+  //Cell neighbour, directly under the particle's cell
+  for (const Particle &neighbour : cellVector[particleCellCoordinates[0] + amountCellsX * (particleCellCoordinates[1] + amountCellsY * startZ)]) {
+    neighbours.insert(neighbour);
+  }
+
+  //The particle's cell itself
+  for (const Particle &neighbour : cellVector[particleCellCoordinates[0] + amountCellsX * (particleCellCoordinates[1] + amountCellsY * particleCellCoordinates[2])]) {
+
+    // Of course we wouldn't want to include the particle itself,
+    //otherwise it would mess up the force calculation
+    if (neighbour == particle) {
+      continue;
+    }
+
+    neighbours.insert(neighbour);
+  }
+
+  std::vector neighbours_vector(neighbours.begin(), neighbours.end());
+
+  return neighbours_vector;
 }
 
 std::vector<Particle> LinkedCellContainer::retrieveRelevantParticles(
