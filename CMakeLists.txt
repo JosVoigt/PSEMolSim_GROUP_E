@@ -131,12 +131,13 @@ PRIVATE
 )
 
 #-----------------------------TEST EXECUTABLE----------------#
+enable_testing()
 add_executable (MolSimTest ${CMAKE_CURRENT_SOURCE_DIR}/test/test_suite_all.cpp ${molsimtests})
 target_link_libraries (MolSimTest
     ${PROJECT_NAME}
     #linking gtest only for testing not the actual exec.
-    gtest
-    gtest_main
+	gtest_main
+	gtest
 )
 target_include_directories (MolSimTest
 PUBLIC
