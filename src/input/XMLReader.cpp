@@ -22,11 +22,13 @@ void XMLReader::readData(parser::options &options) const {
   std::string line, key, value;
   std::array<double, 3> velocity{}, lowerLeftCorner{}, center{}, velocity_d{};
   int radius, amountCellsX, amountCellsY, amountCellsZ;
-  double distance, mass, x, y, z, mass_disc, distance_disc, maxChangeRate, brownianMotionMean;
+  double distance, mass, x, y, z, mass_disc, distance_disc, maxChangeRate;
   std::vector<double> epsilon, sigma;
   std::vector<int> type;
+  double brownianMotionMean = 0;
 
   options.writer_ = std::make_shared<outputWriter::VTKWriter>();
+  options.dimensions = 2;
 
   while (std::getline(file, line)) {
     std::istringstream iss(line);

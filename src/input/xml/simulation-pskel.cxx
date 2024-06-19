@@ -1416,10 +1416,6 @@ sequence_0 (unsigned long& state,
       else
       {
         assert (start);
-        if (count < 1UL)
-          this->_expected_element (
-            "", "brownianMotionMean",
-            ns, n);
         count = 0;
         state = 8UL;
         // Fall through.
@@ -2872,10 +2868,6 @@ sequence_0 (unsigned long& state,
       else
       {
         assert (start);
-        if (count < 1UL)
-          this->_expected_element (
-            "", "dimensions",
-            ns, n);
         count = 0;
         state = 4UL;
         // Fall through.
