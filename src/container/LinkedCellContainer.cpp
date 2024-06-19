@@ -51,8 +51,8 @@ LinkedCellContainer::LinkedCellContainer(
       currentHaloIndices =
           retrieveHaloCellIndices(static_cast<ContainerSide>(i));
 
-      cellBoundaries[i] = std::make_shared<BoundaryConditionOutflow>(
-          retrieveHaloParticles(currentHaloIndices, haloCells));
+      cellBoundaries.push_back(std::make_shared<BoundaryConditionOutflow>(
+          retrieveHaloParticles(currentHaloIndices, haloCells)));
     }
      if (conditions[i] == reflection) {
       currentBoundaryIndices =
@@ -60,9 +60,9 @@ LinkedCellContainer::LinkedCellContainer(
       currentHaloIndices =
           retrieveHaloCellIndices(static_cast<ContainerSide>(i));
 
-      cellBoundaries[i] = std::make_shared<BoundaryConditionReflection>(
+      cellBoundaries.push_back(std::make_shared<BoundaryConditionReflection>(
           retrieveBoundaryParticles(currentBoundaryIndices, boundaryCells),
-          std::make_shared<PlanetForce>(), plane_vectors[i], point_vectors[i]);
+          std::make_shared<PlanetForce>(), plane_vectors[i], point_vectors[i]));
     }
     // add periodic when done
   }
@@ -114,6 +114,8 @@ std::vector<Particle> LinkedCellContainer::retrieveNeighbors(
   const std::array<int, 3> particleCellCoordinates =
       getCellCoordinates(particle);
   std::vector<Particle> neighbours;
+  //To check for duplicate indices in edge cases
+  std::vector<int> insertedIndices;
 
   // Find bounds of neighbouring cells (this is needed so that cellOfParticle -1
   // / +1 doesn't go out of bounds)
@@ -154,38 +156,74 @@ std::vector<Particle> LinkedCellContainer::retrieveNeighbors(
 
 
   //Only including certain parts of the neighbours so that cells do not get counted twice, which messes up with Newton's third law
+  //index = x * (lengthY * lengthZ) + y * lengthZ + z
 
   //East side of the neighbours
   for (int y = startY; y <= endY; y++) {
     for (int z = startZ; z <= endZ; z++) {
-      for (const Particle &neighbour : cellVector[endX + (amountCellsX) * (y + (amountCellsY)*z)]) {
+
+      int currentIndex = endX * (amountCellsY * amountCellsZ) + y * amountCellsZ + z;
+
+      if (std::find(insertedIndices.begin(), insertedIndices.end(), currentIndex) != insertedIndices.end()) {
+        continue;
+      }
+
+      for (const Particle &neighbour : cellVector[currentIndex]) {
         neighbours.push_back(neighbour);
+        insertedIndices.push_back(currentIndex);
       }
     }
   }
 
-  //Middle stripe along the Z axis in south side of neighbours
+  //Middle stripe along the Y axis in south side of neighbours
   for (int z = startZ; z <= endZ; z++) {
-    for (const Particle &neighbour : cellVector[particleCellCoordinates[0] + amountCellsX * (endY + amountCellsY*z)]) {
+
+    int currentIndex = particleCellCoordinates[0] * (amountCellsY * amountCellsZ) + startY * amountCellsZ + z;
+
+    if (std::find(insertedIndices.begin(), insertedIndices.end(), currentIndex) != insertedIndices.end()) {
+      continue;
+    }
+    for (const Particle &neighbour : cellVector[currentIndex]) {
+
+      if (neighbour == particle) {
+        continue;
+      }
+
       neighbours.push_back(neighbour);
+      insertedIndices.push_back(currentIndex);
     }
   }
 
   //Cell neighbour, directly under the particle's cell
-  for (const Particle &neighbour : cellVector[particleCellCoordinates[0] + amountCellsX * (particleCellCoordinates[1] + amountCellsY * startZ)]) {
-    neighbours.push_back(neighbour);
+
+  int currentIndex = particleCellCoordinates[0] * (amountCellsY * amountCellsZ) + particleCellCoordinates[1] * amountCellsZ + startZ;
+
+  if (std::find(insertedIndices.begin(), insertedIndices.end(), currentIndex) == insertedIndices.end()) {
+    for (const Particle &neighbour : cellVector[currentIndex]) {
+
+      if (neighbour == particle) {
+        continue;
+      }
+
+      neighbours.push_back(neighbour);
+      insertedIndices.push_back(currentIndex);
+    }
   }
 
   //The particle's cell itself
-  for (const Particle &neighbour : cellVector[particleCellCoordinates[0] + amountCellsX * (particleCellCoordinates[1] + amountCellsY * particleCellCoordinates[2])]) {
+  currentIndex = particleCellCoordinates[0] * (amountCellsY * amountCellsZ) + particleCellCoordinates[1] * amountCellsZ + particleCellCoordinates[2];
 
-    // Of course we wouldn't want to include the particle itself,
-    //otherwise it would mess up the force calculation
-    if (neighbour == particle) {
-      continue;
+  if (std::find(insertedIndices.begin(), insertedIndices.end(), currentIndex) == insertedIndices.end()) {
+    for (const Particle &neighbour : cellVector[currentIndex]) {
+
+      // Of course we wouldn't want to include the particle itself,
+      //otherwise it would mess up the force calculation
+      if (neighbour == particle) {
+        continue;
+      }
+      neighbours.push_back(neighbour);
+      insertedIndices.push_back(currentIndex);
     }
-
-    neighbours.push_back(neighbour);
   }
 
   return neighbours;
@@ -200,11 +238,12 @@ std::vector<int> LinkedCellContainer::retrieveBoundaryCellIndices(
     const ContainerSide side) const {
   std::vector<int> indices;
 
+  //index = x * (lengthY * lengthZ) + y * lengthZ + z
+
   if (side == south) {
     for (int x = 1; x < amountCellsX - 1; x++) {
       for (int z = 1; z < amountCellsZ - 1; z++) {
-        indices.push_back(x + amountCellsX *
-                                  ((amountCellsY - 2) + amountCellsY * z));
+        indices.push_back(x * (amountCellsY * amountCellsZ) + 1 * amountCellsZ + z);
       }
     }
     return indices;
@@ -212,7 +251,7 @@ std::vector<int> LinkedCellContainer::retrieveBoundaryCellIndices(
   if (side == north) {
     for (int x = 1; x < amountCellsX - 1; x++) {
       for (int z = 1; z < amountCellsZ - 1; z++) {
-        indices.push_back(x + amountCellsX * (1 + amountCellsY * z));
+        indices.push_back(x * (amountCellsY * amountCellsZ) + (amountCellsY - 2) * amountCellsZ + z);
       }
     }
     return indices;
@@ -220,7 +259,7 @@ std::vector<int> LinkedCellContainer::retrieveBoundaryCellIndices(
   if (side == west) {
     for (int y = 1; y < amountCellsY - 1; y++) {
       for (int z = 1; z < amountCellsZ - 1; z++) {
-        indices.push_back(1 + amountCellsX * (y + amountCellsY * z));
+        indices.push_back(1 * (amountCellsY * amountCellsZ) + y * amountCellsZ + z);
       }
     }
     return indices;
@@ -228,8 +267,7 @@ std::vector<int> LinkedCellContainer::retrieveBoundaryCellIndices(
   if (side == east) {
     for (int y = 1; y < amountCellsY - 1; y++) {
       for (int z = 1; z < amountCellsZ - 1; z++) {
-        indices.push_back((amountCellsX - 2) +
-                          amountCellsX * (y + amountCellsY * z));
+        indices.push_back((amountCellsX - 2) * (amountCellsY * amountCellsZ) - 1 - y * amountCellsZ - z);
       }
     }
     return indices;
@@ -237,8 +275,7 @@ std::vector<int> LinkedCellContainer::retrieveBoundaryCellIndices(
   if (side == up) {
     for (int x = 1; x < amountCellsX - 1; x++) {
       for (int y = 1; y < amountCellsY - 1; y++) {
-        indices.push_back(x + amountCellsX *
-                                  (y + amountCellsY * (amountCellsZ - 2)));
+        indices.push_back(x * (amountCellsY * amountCellsZ) + y * amountCellsZ + (amountCellsZ - 2));
       }
     }
     return indices;
@@ -246,7 +283,7 @@ std::vector<int> LinkedCellContainer::retrieveBoundaryCellIndices(
   // if (side == down)
   for (int x = 1; x < amountCellsX - 1; x++) {
     for (int y = 1; y < amountCellsY - 1; y++) {
-      indices.push_back(x + amountCellsX * (y + amountCellsY * 1));
+      indices.push_back(x * (amountCellsY * amountCellsZ) + y * amountCellsZ + 1);
     }
   }
   return indices;
@@ -266,18 +303,22 @@ std::vector<int> LinkedCellContainer::retrieveHaloCellIndices(
     const ContainerSide side) const {
   std::vector<int> indices;
 
+
+  //index = x * (lengthY * lengthZ) + y * lengthZ + z
+
   if (side == south) {
     for (int x = 0; x < amountCellsX; x++) {
       for (int z = 0; z < amountCellsZ; z++) {
-        indices.push_back(x + amountCellsX * (amountCellsY + amountCellsY * z));
+        indices.push_back(x * (amountCellsY * amountCellsZ) + 0 * amountCellsZ + z);
       }
+      indices.back() -= 1;
     }
     return indices;
   }
   if (side == north) {
     for (int x = 0; x < amountCellsX; x++) {
       for (int z = 0; z < amountCellsZ; z++) {
-        indices.push_back(x + amountCellsX * (0 + amountCellsY * z));
+        indices.push_back(x * (amountCellsY * amountCellsZ) + (amountCellsY-1) * amountCellsZ + z);
       }
     }
     return indices;
@@ -285,7 +326,7 @@ std::vector<int> LinkedCellContainer::retrieveHaloCellIndices(
   if (side == west) {
     for (int y = 0; y < amountCellsY; y++) {
       for (int z = 0; z < amountCellsZ; z++) {
-        indices.push_back(0 + amountCellsX * (y + amountCellsY * z));
+        indices.push_back(0 * (amountCellsY * amountCellsZ) + y * amountCellsZ + z);
       }
     }
     return indices;
@@ -293,7 +334,7 @@ std::vector<int> LinkedCellContainer::retrieveHaloCellIndices(
   if (side == east) {
     for (int y = 0; y < amountCellsY; y++) {
       for (int z = 0; z < amountCellsZ; z++) {
-        indices.push_back(amountCellsX + amountCellsX * (y + amountCellsY * z));
+        indices.push_back(amountCellsX * (amountCellsY * amountCellsZ) - 1 - y * amountCellsZ - z);
       }
     }
     return indices;
@@ -301,7 +342,7 @@ std::vector<int> LinkedCellContainer::retrieveHaloCellIndices(
   if (side == up) {
     for (int x = 0; x < amountCellsX; x++) {
       for (int y = 0; y < amountCellsY; y++) {
-        indices.push_back(x + amountCellsX * (y + amountCellsY * amountCellsZ));
+        indices.push_back(x * (amountCellsY * amountCellsZ) + y * amountCellsZ + (amountCellsZ-1));
       }
     }
     return indices;
@@ -309,7 +350,7 @@ std::vector<int> LinkedCellContainer::retrieveHaloCellIndices(
   // if (side == down)
   for (int x = 0; x < amountCellsX; x++) {
     for (int y = 0; y < amountCellsY; y++) {
-      indices.push_back(x + amountCellsX * (y + amountCellsY * 0));
+      indices.push_back(x * (amountCellsY * amountCellsZ) + y * amountCellsZ + 0);
     }
   }
   return indices;
