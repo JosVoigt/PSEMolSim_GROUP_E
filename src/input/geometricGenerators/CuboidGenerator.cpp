@@ -69,3 +69,5 @@ const std::array<double, 3> &CuboidGenerator::getLLFC() const {
 const std::array<double, 3> &CuboidGenerator::getInitialVelocity() const {
   return initialVelocity;
 }
+
+int CuboidGenerator::getType() const { return type; }

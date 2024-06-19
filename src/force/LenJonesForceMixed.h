@@ -10,8 +10,8 @@ class LennardJonesForceMixed : public PairwiseForce {
  private:
   std::map<int, std::pair<double, double>> force_constants;
 
-  int inline z_curve_interleave(int a, int b) const;
-  std::pair<double, double> calculateMixingRule(double sig_a, double eps_a,
+  static int inline z_curve_interleave(int a, int b) ;
+  static std::pair<double, double> calculateMixingRule(double sig_a, double eps_a,
                                                 double sig_b, double eps_b);
 
  public:

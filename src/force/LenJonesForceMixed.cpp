@@ -13,16 +13,16 @@
 LennardJonesForceMixed::LennardJonesForceMixed(std::vector<double> epsilon,
                                                std::vector<double> sigma,
                                                std::vector<int> type) {
-  if (epsilon.size() != sigma.size() != type.size()) {
+  if (epsilon.size() != sigma.size() || epsilon.size() != type.size() || sigma.size() != type.size()){
     spdlog::get("console")->critical(
         "Provided LenJones constant list length does not match up. \n"
-        "Lengths were: epsilson {} sigma {} type{}",
+        "Lengths were: epsilon {} sigma {} type {}",
         epsilon.size(), sigma.size(), type.size());
     exit(1);
   }
 
-  while (type.size() != 0) {
-    // find lowest element
+  while (!type.empty()) {
+    // find the lowest element
     int min_idx = 0;
     int min = type[0];
     for (int i = 0; i < type.size(); i++) {
@@ -45,9 +45,9 @@ LennardJonesForceMixed::LennardJonesForceMixed(std::vector<double> epsilon,
     sigma.erase(sigma.begin() + min_idx);
     type.erase(type.begin() + min_idx);
   }
-};
+}
 
-int inline LennardJonesForceMixed::z_curve_interleave(int a, int b) const {
+int inline LennardJonesForceMixed::z_curve_interleave(int a, int b) {
   // interleave with 0
   a *= a;
   b *= b;
@@ -65,7 +65,7 @@ std::pair<double, double> LennardJonesForceMixed::calculateMixingRule(
   double eps_mixed = 24 * std::sqrt(eps_a * eps_b);
   double sig_mixed = (sig_a + sig_b) / 2;
 
-  return std::pair(sig_mixed, eps_mixed);
+  return {sig_mixed, eps_mixed};
 }
 
 std::array<double, 3> LennardJonesForceMixed::calculateForce(

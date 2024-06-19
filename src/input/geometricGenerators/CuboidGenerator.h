@@ -174,4 +174,12 @@ class CuboidGenerator : public Initializer {
    *  The average initial velocity of all the particles in the cuboid
    */
   [[nodiscard]] const std::array<double, 3> &getInitialVelocity() const;
+
+    /**
+     * \brief
+     *  Getter for the type of the particle
+     * \return
+     *  The type of the particle
+     */
+    [[nodiscard]] int getType() const;
 };
