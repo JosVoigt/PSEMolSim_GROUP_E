@@ -137,23 +137,6 @@ std::vector<Particle> LinkedCellContainer::retrieveNeighbors(
                        ? amountCellsZ - 2
                        : particleCellCoordinates[2] + 1;
 
-  // Iterate over them and add all the cells into the list
-  // for (int x = startX; x <= endX; x++) {
-  //   for (int y = startY; y <= endY; y++) {
-  //     for (int z = startZ; z <= endZ; z++) {
-  //       for (const Particle &neighbour :
-  //            cellVector[x + (amountCellsX) * (y + (amountCellsY)*z)]) {
-  //         // Of course we wouldn't want to include the particle itself,
-  //         // otherwise it would mess up the force calculation
-  //         if (neighbour == particle) {
-  //           continue;
-  //         }
-  //         neighbours.insert(neighbour);
-  //       }
-  //     }
-  //   }
-  // }
-
 
   //Only including certain parts of the neighbours so that cells do not get counted twice, which messes up with Newton's third law
   //index = x * (lengthY * lengthZ) + y * lengthZ + z
