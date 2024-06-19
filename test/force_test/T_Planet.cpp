@@ -7,7 +7,7 @@
 #define TOLERANCE 1e-7;
 #endif
 
-class P_test : public testing::Test {
+class Planet_test : public testing::Test {
  protected:
   std::array<double, 3> v = {0, 0, 0};
   std::array<double, 3> x1_basic = {1, 0, 0};
@@ -30,7 +30,7 @@ class P_test : public testing::Test {
   double tolerance = TOLERANCE;
 };
 
-TEST_F(P_test, basic_functionality) {
+TEST_F(Planet_test, basic_functionality) {
   std::array<double, 3> res = planet.calculateForce(planet1, planet2);
 
   EXPECT_EQ(-1, res[0]);
@@ -38,7 +38,7 @@ TEST_F(P_test, basic_functionality) {
   EXPECT_EQ(0, res[2]);
 }
 
-TEST_F(P_test, displacement) {
+TEST_F(Planet_test, displacement) {
   std::array<double, 3> res =
       planet.calculateForce(planet1_displaced, planet2_displaced);
 
@@ -47,7 +47,7 @@ TEST_F(P_test, displacement) {
   EXPECT_EQ(0, res[2]);
 }
 
-TEST_F(P_test, displacement_and_mass) {
+TEST_F(Planet_test, displacement_and_mass) {
   std::array<double, 3> res = planet.calculateForce(planet1_displaced_and_mass,
                                                     planet2_displaced_and_mass);
 
