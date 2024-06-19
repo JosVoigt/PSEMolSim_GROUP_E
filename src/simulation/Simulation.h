@@ -78,25 +78,15 @@ class Simulation {
    * \param outputFrequency_
    * The frequency at which output will be generated. For every
    * n-th iteration. (calculated by iteration % n)
-   * \param linkedCellDimensions
-   *    The amount of cubes in the space used for linked cells given as {x,y,z}.
-   *    Defaults to {1,1,1}.
-   * \param linkedCellSidelength
-   *    Sets the cube side length for the linkedCell algortihm
-   *    To deactivate set to double:infinity
-   *    Will exit on values <= 0
    * \param filename_
    *  The prefix for the files that are going to get outputted.
    *  \param dimensions
    *  The dimensions the simulation is run in (2 or 3)
    */
-  Simulation(
-      std::shared_ptr<ParticleContainerInterface> &container_,
-      std::shared_ptr<PairwiseForce> method_, std::shared_ptr<Writer> writer_,
-      double dt_, int outputFrequency, std::string filename_,
-      std::array<int, 3> linkedCellDimensions = {1, 1, 1},
-      double linkedCellSidelength = std::numeric_limits<double>::infinity(),
-	  int dimensions_ = 3);
+  Simulation(std::shared_ptr<ParticleContainerInterface> &container_,
+             std::shared_ptr<PairwiseForce> method_,
+             std::shared_ptr<Writer> writer_, double dt_, int outputFrequency,
+             std::string filename_, int dimensions_ = 3);
 
   /**
    * \brief
@@ -112,12 +102,11 @@ class Simulation {
    */
   void run(double start, double end);
 
-
   /**
    * \brief
    * Initializes all particles to a set starting temperature
    * \param init_temperature
    * The desired initial temperature
    */
-	void initialize (double init_temperature);
+  void initialize(double init_temperature);
 };

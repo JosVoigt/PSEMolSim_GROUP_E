@@ -6,8 +6,8 @@
 
 #include <chrono>
 #include <ctime>
+#include <limits>
 
-#include "container/ParticleContainerBasic.h"
 #include "input/FileReader.h"
 #include "input/geometricGenerators/CuboidGenerator.h"
 #include "simulation/Simulation.h"
@@ -90,7 +90,7 @@ int main(int argc, char *argv[]) {
   std::shared_ptr<ParticleContainerInterface> container = opts.container_;
 
   Simulation sim(container, opts.force_, opts.writer_, opts.delta_t,
-                 opts.writeoutFrequency, opts.outfile);
+                 opts.writeoutFrequency, opts.outfile, opts.dimensions);
 
   sim.run(opts.start, opts.end);
 }
