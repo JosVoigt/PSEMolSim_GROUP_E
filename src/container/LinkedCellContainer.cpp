@@ -41,6 +41,10 @@ LinkedCellContainer::LinkedCellContainer(
   std::vector<int> currentHaloIndices;
 
   for (int i = 0; i < 6; i++) {
+
+    std::vector<std::vector<Particle>> boundaryCells = {};
+    std::vector<std::vector<Particle>> haloCells = {};
+
     if (conditions[i] == outflow) {
       currentBoundaryIndices =
           retrieveBoundaryCellIndices(static_cast<ContainerSide>(i));
@@ -48,15 +52,16 @@ LinkedCellContainer::LinkedCellContainer(
           retrieveHaloCellIndices(static_cast<ContainerSide>(i));
 
       cellBoundaries[i] = std::make_shared<BoundaryConditionOutflow>(
-          retrieveHaloParticles(currentHaloIndices));
-    } else if (conditions[i] == reflection) {
+          retrieveHaloParticles(currentHaloIndices, haloCells));
+    }
+     if (conditions[i] == reflection) {
       currentBoundaryIndices =
           retrieveBoundaryCellIndices(static_cast<ContainerSide>(i));
       currentHaloIndices =
           retrieveHaloCellIndices(static_cast<ContainerSide>(i));
 
       cellBoundaries[i] = std::make_shared<BoundaryConditionReflection>(
-          retrieveBoundaryParticles(currentBoundaryIndices),
+          retrieveBoundaryParticles(currentBoundaryIndices, boundaryCells),
           std::make_shared<PlanetForce>(), plane_vectors[i], point_vectors[i]);
     }
     // add periodic when done
@@ -249,8 +254,7 @@ std::vector<int> LinkedCellContainer::retrieveBoundaryCellIndices(
 
 std::vector<std::vector<Particle>>
     &LinkedCellContainer::retrieveBoundaryParticles(
-        const std::vector<int> &cellIndices) const {
-  std::vector<std::vector<Particle>> boundaryCells;
+        const std::vector<int> &cellIndices, std::vector<std::vector<Particle>>& boundaryCells) const {
 
   for (const int index : cellIndices) {
     boundaryCells.push_back(cellVector[index]);
@@ -312,8 +316,7 @@ std::vector<int> LinkedCellContainer::retrieveHaloCellIndices(
 }
 
 std::vector<std::vector<Particle>> &LinkedCellContainer::retrieveHaloParticles(
-    const std::vector<int> &cellIndices) const {
-  std::vector<std::vector<Particle>> haloCells;
+    const std::vector<int> &cellIndices, std::vector<std::vector<Particle>>& haloCells) const {
 
   for (const int index : cellIndices) {
     haloCells.push_back(cellVector[index]);
