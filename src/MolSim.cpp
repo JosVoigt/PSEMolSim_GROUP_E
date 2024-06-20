@@ -89,6 +89,10 @@ int main(int argc, char *argv[]) {
 
   std::shared_ptr<ParticleContainerInterface> container = opts.container_;
 
+  for (auto& p : init) {
+		container->insertParticle(p);
+  }
+
   Simulation sim(container, opts.force_, opts.writer_, opts.delta_t,
                  opts.writeoutFrequency, opts.outfile, opts.dimensions);
 
