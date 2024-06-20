@@ -1,6 +1,7 @@
 #include "thermostat.h"
 
 #include <cstdlib>
+#include <iostream>
 #include <limits>
 #include <vector>
 
@@ -28,7 +29,9 @@ void Thermostat::adaptTemperature(std::vector<Particle>& particles,
   int particleCount = particles.size();
 
   double temperature =
-      (2 * kinEnergySum) / (particleCount * dimensions * k_B);
+      kinEnergySum / (particleCount * dimensions * k_B);
+
+  std::cout << temperature << std::endl;
 
   double temperatureGradient = std::sqrt(targetTemperature / temperature);
   double scalingFactor;
@@ -39,6 +42,7 @@ void Thermostat::adaptTemperature(std::vector<Particle>& particles,
   } else {
     scalingFactor = temperatureGradient;
   }
+  std::cout << scalingFactor << std::endl;
 
   for (Particle& p : particles) {
     p.scaleV(scalingFactor);

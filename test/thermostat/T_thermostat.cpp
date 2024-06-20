@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include <cmath>
 #include <vector>
 
 #include "container/Particle.h"
@@ -26,7 +27,7 @@ TEST_F (T_Thermostat, holdingTemp) {
 
 	std::vector<Particle> p = {p1,p2,p3};
 
-	thermo.adaptTemperature(p, 3);
+	thermo.adaptTemperature(p, 1.03231);
 
 	EXPECT_NEAR (p1.getV()[0], v1[0], error);
 	EXPECT_NEAR (p1.getV()[1], v1[1], error);
@@ -37,4 +38,21 @@ TEST_F (T_Thermostat, holdingTemp) {
 	EXPECT_NEAR (p3.getV()[0], v3[0], error);
 	EXPECT_NEAR (p3.getV()[1], v3[1], error);
 	EXPECT_NEAR (p3.getV()[2], v3[2], error);
+}
+
+TEST_F (T_Thermostat, raisingTempNoLimit) {
+	std::array<double, 3> x = {0,0,0};
+	std::array<double, 3> v1 = {1,1,1};
+	Particle p1 = Particle(x,v1,2,0);
+
+	std::vector<Particle> p = {p1};
+
+	Thermostat thermo = Thermostat(3,1);
+
+	thermo.adaptTemperature(p, 2);
+	double expectedScale = 1.31607;
+
+	EXPECT_NEAR (p1.getV()[0],v1[0]*expectedScale,error);
+	EXPECT_NEAR (p1.getV()[1],v1[1]*expectedScale,error);
+	EXPECT_NEAR (p1.getV()[2],v1[2]*expectedScale,error);
 }
