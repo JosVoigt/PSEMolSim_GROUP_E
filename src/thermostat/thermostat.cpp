@@ -1,7 +1,6 @@
 #include "thermostat.h"
 
 #include <cstdlib>
-#include <iostream>
 #include <limits>
 #include <vector>
 
