@@ -13,9 +13,11 @@ class ParticleContainerInterface {
      */
   virtual ~ParticleContainerInterface() = default;
 
-  ParticleContainerInterface(std::list<Particle> &init) {
+  explicit ParticleContainerInterface(std::list<Particle> &init) {
      initialize(init);
-  };
+  }
+
+    ParticleContainerInterface() = default;
 
   void initialize(std::list<Particle> &particleList) {
      for (Particle &p : particleList) {

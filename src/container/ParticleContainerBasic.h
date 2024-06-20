@@ -20,7 +20,7 @@ class ParticleContainer : public ParticleContainerInterface {
   /**
      * The amount of particles in the container
      */
-  std::size_t length;
+  std::size_t length{};
 
  public:
   /**
