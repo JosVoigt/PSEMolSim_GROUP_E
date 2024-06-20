@@ -7,23 +7,18 @@
 
 class ParticleContainerInterface {
  public:
+
+   std::list<Particle> particleList;
+
   /**
      * \brief
      * Destructor
      */
   virtual ~ParticleContainerInterface() = default;
 
-  explicit ParticleContainerInterface(std::list<Particle> &init) {
-     initialize(init);
-  }
+  explicit ParticleContainerInterface(std::list<Particle> &init) : particleList(init){}
 
-    ParticleContainerInterface() = default;
-
-  void initialize(std::list<Particle> &particleList) {
-     for (Particle &p : particleList) {
-       insertParticle(p);
-     }
-  }
+  ParticleContainerInterface() = default;
 
   virtual void insertParticle(const Particle &particle) = 0;
 

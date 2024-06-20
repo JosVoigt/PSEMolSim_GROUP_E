@@ -42,9 +42,6 @@ class ParticleContainer : public ParticleContainerInterface {
 
   typedef std::vector<Particle>::iterator Iterator;
 
-
-  void insertParticle(const Particle &particle) override;
-
   /**
      * \brief
      *  Returns an iterator to the first particle in the container
@@ -74,4 +71,6 @@ class ParticleContainer : public ParticleContainerInterface {
   std::vector<Particle> retrieveRelevantParticles(Particle& particle) override;
 
   void updateParticles() override;
+
+   void insertParticle(const Particle& particle) override;
 };
