@@ -1,36 +1,32 @@
 #include "StoermerVerlet.h"
+#include <memory>
+#include "container/ParticleContainerInterface.h"
 
-void calculateX(std::shared_ptr<ParticleContainerInterface> &container,
+void calculateX(std::vector<Particle>& particleList,
                 const double dt, const double dt_sq) {
-  std::vector<Particle> allParticles = container->preprocessParticles();
-
-  for (Particle &p : allParticles) {
+  for (Particle &p : particleList) {
     std::array<double, 3> res =
         (dt * p.getV()) + (dt_sq / (2 * p.getM())) * p.getF();
     p.addX(res);
   }
 }
 
-void calculateV(std::shared_ptr<ParticleContainerInterface> &container,
+void calculateV(std::vector<Particle>& particleList,
                 double dt) {
-  std::vector<Particle> allParticles = container->preprocessParticles();
-
-  for (Particle &p : allParticles) {
+  for (Particle &p : particleList) {
     std::array<double, 3> res =
         (dt / (2 * p.getM())) * (p.getF() + p.getOldF());
     p.addV(res);
   }
 }
 
-void calculateF(std::shared_ptr<ParticleContainerInterface> &container,
+void calculateF(std::vector<Particle>& particleList, std::shared_ptr<ParticleContainerInterface>& container,
                 std::shared_ptr<PairwiseForce> method) {
-  std::vector<Particle> allParticles = container->preprocessParticles();
-
-  for (Particle &p : allParticles) {
+  for (Particle &p : particleList) {
     p.nextIteration();
   }
 
-  for (Particle &p : allParticles) {
+  for (Particle &p : particleList) {
     std::vector<Particle> neighbors = container->retrieveRelevantParticles(p);
 
     for (Particle &neighbor : neighbors) {
@@ -41,4 +37,11 @@ void calculateF(std::shared_ptr<ParticleContainerInterface> &container,
       neighbor.addF(invF);
     }
   }
+}
+
+void calculateGeneralF(std::vector<Particle> &particleList, std::shared_ptr<GeneralForce> &force) {
+	for (auto& p : particleList) {
+		auto particleForce = force->calculateForce(p);
+		p.addF(particleForce);
+	}
 }

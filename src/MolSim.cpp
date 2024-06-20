@@ -94,7 +94,7 @@ int main(int argc, char *argv[]) {
   }
 
   Simulation sim(container, opts.force_, opts.writer_, opts.delta_t,
-                 opts.writeoutFrequency, opts.outfile, opts.dimensions);
+                 opts.writeoutFrequency, opts.outfile, opts.dimensions, opts.gravity_);
 
   sim.run(opts.start, opts.end);
 }

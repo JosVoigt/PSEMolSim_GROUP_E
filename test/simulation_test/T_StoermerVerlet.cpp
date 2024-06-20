@@ -54,7 +54,8 @@ TEST_F(StoermerVerletTest, testCalcX) {
   }
 
   for (int i = 0; i < 5; i++) {
-    calculateX(pc, 1, 1);
+    auto res = pc->preprocessParticles();
+    calculateX(res, 1, 1);
 
     for (int j = 0; j < pc->size(); j++) {
       EXPECT_NEAR((double)j, (*(pc->begin() + j)).getX()[0], tolerance);
@@ -74,7 +75,8 @@ TEST_F(StoermerVerletTest, testCalcV) {
   }
 
   for (int i = 0; i < 5; i++) {
-    calculateV(pc, 1);
+    auto res = pc->preprocessParticles();
+    calculateV(res, 1);
 
     for (int j = 0; j < pc->size(); j++) {
       EXPECT_NEAR((double)j, (*(pc->begin() + j)).getV()[0], tolerance);
@@ -97,7 +99,8 @@ TEST_F(StoermerVerletTest, testCalcF) {
   }
 
   for (int i = 0; i < 5; i++) {
-    calculateF(pc, method);
+    auto res = pc->preprocessParticles();
+    calculateF(res, pc, method);
 
     for (int j = 0; j < pc->size(); j++) {
       EXPECT_NEAR((double)j, (*(pc->begin() + j)).getV()[0], tolerance);

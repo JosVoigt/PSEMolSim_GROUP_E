@@ -4,6 +4,7 @@
 
 #include <cmath>
 #include <utility>
+#include <vector>
 
 #include "force/Force.h"
 #include "simulation/StoermerVerlet.h"
@@ -13,14 +14,15 @@ Simulation::Simulation(std::shared_ptr<ParticleContainerInterface> &container_,
                        std::shared_ptr<PairwiseForce> method_,
                        std::shared_ptr<Writer> writer_, double dt_,
                        int outputFrequency_, std::string filename_,
-                       int dimensions_)
+                       int dimensions_, std::shared_ptr<GeneralForce> general_)
     : container(std::move(container_)),
       method(std::move(method_)),
       out(std::move(writer_)),
       dt(dt_),
       outputFrequency(outputFrequency_),
       filename(std::move(filename_)),
-      dimensions(dimensions_) {
+      dimensions(dimensions_),
+      general(general_) {
   dt_sq = std::pow(dt, 2);
 }
 
@@ -44,9 +46,14 @@ void Simulation::run(double start, double end) {
   spdlog::get("file")->debug("Expected iterations: {}", (end / dt));
 #endif
   for (int iteration = 0; iteration <= (end / dt); iteration++) {
-    calculateX(container, dt, dt_sq);
-    calculateF(container, method);
-    calculateV(container, dt);
+    std::vector<Particle> allParticles = container->preprocessParticles();
+
+    calculateX(allParticles, dt, dt_sq);
+    calculateF(allParticles, container, method);
+    if (general != nullptr) {
+      calculateGeneralF(allParticles, general);
+    }
+    calculateV(allParticles, dt);
 
     // if NO_OUT_FILE is defined, the compiler will not
     // include this line

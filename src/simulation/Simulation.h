@@ -5,6 +5,7 @@
 
 #include "force/Force.h"
 #include "outputWriter/Writer.h"
+#include "utils/Parser.h"
 
 class Simulation {
  private:
@@ -57,6 +58,7 @@ class Simulation {
   std::array<int, 3> linkedCellDimensions;
   double linkedCellSidelength;
   int dimensions;
+  std::shared_ptr<GeneralForce> general;
 
  public:
   /**
@@ -85,7 +87,7 @@ class Simulation {
   Simulation(std::shared_ptr<ParticleContainerInterface> &container_,
              std::shared_ptr<PairwiseForce> method_,
              std::shared_ptr<Writer> writer_, double dt_, int outputFrequency,
-             std::string filename_, int dimensions_ = 3);
+             std::string filename_, int dimensions_ = 3, std::shared_ptr<GeneralForce> general_ = nullptr); 
 
   /**
    * \brief
