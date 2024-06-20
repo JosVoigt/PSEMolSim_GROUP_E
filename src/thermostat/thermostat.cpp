@@ -7,15 +7,13 @@
 #include "container/Particle.h"
 #include "utils/ArrayUtils.h"
 
-double const boltzmannConstant =
-    1.380649 * 1e-23;  // https://de.wikipedia.org/wiki/Boltzmann-Konstante
+Thermostat::Thermostat(double maxChangeRate_, int dimensions_, double k_B_)
+    : maxChangeRate(maxChangeRate_), dimensions(dimensions_), k_B(k_B_){};
 
-Thermostat::Thermostat(double maxChangeRate_, int dimensions_)
-    : maxChangeRate(maxChangeRate_), dimensions(dimensions_){};
-
-Thermostat::Thermostat(int dimensions_)
+Thermostat::Thermostat(int dimensions_, double k_B_)
     : maxChangeRate(std::numeric_limits<double>::infinity()),
-      dimensions(dimensions_){};
+      dimensions(dimensions_),
+      k_B(k_B_){};
 
 void Thermostat::adaptTemperature(std::vector<Particle>& particles,
                                   double targetTemperature) {
@@ -30,7 +28,7 @@ void Thermostat::adaptTemperature(std::vector<Particle>& particles,
   int particleCount = particles.size();
 
   double temperature =
-      (2 * kinEnergySum) / (particleCount * dimensions * boltzmannConstant);
+      (2 * kinEnergySum) / (particleCount * dimensions * k_B);
 
   double temperatureGradient = std::sqrt(targetTemperature / temperature);
   double scalingFactor;

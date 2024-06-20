@@ -4,6 +4,7 @@
 class Thermostat {
  private:
   double maxChangeRate;
+  double k_B;
   int dimensions;
 
  public:
@@ -15,8 +16,10 @@ class Thermostat {
 		 * Please provide it as as percentage of the current temp (e.g a max of 20% up or down would be mCR = 0.2)
 		 * /param dimensions_
 		 * The dimensions the simulation is run in
+		 * /param k_B
+		 * Boltzmanns constant
 		 */
-  Thermostat(double maxChangeRate_, int dimensions_);
+  Thermostat(double maxChangeRate_, int dimensions_, double k_B);
 
   /**
 		 * /brief
@@ -24,8 +27,10 @@ class Thermostat {
 		 * Changerate defaults to INFINITY, so change is instant
 		 * /param dimensions
 		 * The amount of dimensions the simulation is run in
+		 * /param k_B
+		 * Boltzmanns constant
 		 */
-  Thermostat(int dimensions);
+  Thermostat(int dimensions, double k_B);
 
   /**
 		 * /brief
