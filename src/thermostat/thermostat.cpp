@@ -36,7 +36,7 @@ void Thermostat::adaptTemperature(std::vector<Particle>& particles,
 
   if (std::abs(temperature - (temperature * temperatureGradient)) >
       maxChangeRate) {
-    scalingFactor = std::sqrt((temperature + maxChangeRate) / temperature);
+    scalingFactor = std::sqrt((temperature + (temperatureGradient < 1 ? -1 : 1)  * maxChangeRate) / temperature);
   } else {
     scalingFactor = temperatureGradient;
   }
