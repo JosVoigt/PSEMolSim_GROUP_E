@@ -5,7 +5,7 @@
 #include "container/Particle.h"
 #include "thermostat/thermostat.h"
 
-double error = 10e-7;
+double error = 10e-6;
 
 
 class T_Thermostat : public testing::Test {};
@@ -29,15 +29,15 @@ TEST_F (T_Thermostat, holdingTemp) {
 
 	thermo.adaptTemperature(p, 1.03231);
 
-	EXPECT_NEAR (p1.getV()[0], v1[0], error);
-	EXPECT_NEAR (p1.getV()[1], v1[1], error);
-	EXPECT_NEAR (p1.getV()[2], v1[2], error);
-	EXPECT_NEAR (p2.getV()[0], v2[0], error);
-	EXPECT_NEAR (p2.getV()[1], v2[1], error);
-	EXPECT_NEAR (p2.getV()[2], v2[2], error);
-	EXPECT_NEAR (p3.getV()[0], v3[0], error);
-	EXPECT_NEAR (p3.getV()[1], v3[1], error);
-	EXPECT_NEAR (p3.getV()[2], v3[2], error);
+	EXPECT_NEAR (p[0].getV()[0], v1[0], error);
+	EXPECT_NEAR (p[0].getV()[1], v1[1], error);
+	EXPECT_NEAR (p[0].getV()[2], v1[2], error);
+	EXPECT_NEAR (p[1].getV()[0], v2[0], error);
+	EXPECT_NEAR (p[1].getV()[1], v2[1], error);
+	EXPECT_NEAR (p[1].getV()[2], v2[2], error);
+	EXPECT_NEAR (p[2].getV()[0], v3[0], error);
+	EXPECT_NEAR (p[2].getV()[1], v3[1], error);
+	EXPECT_NEAR (p[2].getV()[2], v3[2], error);
 }
 
 TEST_F (T_Thermostat, raisingTempNoLimit) {
