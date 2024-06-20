@@ -45,14 +45,15 @@ TEST_F (T_Thermostat, raisingTempNoLimit) {
 	std::array<double, 3> v1 = {1,1,1};
 	Particle p1 = Particle(x,v1,2,0);
 
-	std::vector<Particle> p = {p1};
+	std::vector<Particle> p; 
+	p.push_back(p1);
 
 	Thermostat thermo = Thermostat(3,1);
 
 	thermo.adaptTemperature(p, 2);
-	double expectedScale = 1.31607;
+	double expectedScale = 1.316074;
 
-	EXPECT_NEAR (p1.getV()[0],v1[0]*expectedScale,error);
-	EXPECT_NEAR (p1.getV()[1],v1[1]*expectedScale,error);
-	EXPECT_NEAR (p1.getV()[2],v1[2]*expectedScale,error);
+	EXPECT_NEAR (p[0].getV()[0],v1[0]*expectedScale,error);
+	EXPECT_NEAR (p[0].getV()[1],v1[1]*expectedScale,error);
+	EXPECT_NEAR (p[0].getV()[2],v1[2]*expectedScale,error);
 }

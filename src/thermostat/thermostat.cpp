@@ -31,8 +31,6 @@ void Thermostat::adaptTemperature(std::vector<Particle>& particles,
   double temperature =
       kinEnergySum / (particleCount * dimensions * k_B);
 
-  std::cout << temperature << std::endl;
-
   double temperatureGradient = std::sqrt(targetTemperature / temperature);
   double scalingFactor;
 
@@ -42,7 +40,6 @@ void Thermostat::adaptTemperature(std::vector<Particle>& particles,
   } else {
     scalingFactor = temperatureGradient;
   }
-  std::cout << scalingFactor << std::endl;
 
   for (Particle& p : particles) {
     p.scaleV(scalingFactor);
