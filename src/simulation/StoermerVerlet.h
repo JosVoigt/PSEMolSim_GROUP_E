@@ -3,9 +3,11 @@
 #include <memory>
 
 #include "container/Particle.h"
-#include "container/ParticleContainer.h"
+#include "container/ParticleContainerBasic.h"
+#include "container/ParticleContainerInterface.h"
 #include "force/Force.h"
 #include "utils/ArrayUtils.h"
+#include "utils/Parser.h"
 
 /** \brief
  *  Calculates the new positions according to Störmer-Verlet
@@ -22,7 +24,7 @@
  *  If dt_sq is not equal to dt^2 behaviour is undefined
  *
  */
-void calculateX(ParticleContainer& container, double dt, double dt_sq);
+void calculateX(std::vector<Particle>& particleList, double dt, double dt_sq);
 
 /** \brief
  *  Calculates the new velocities according to Störmer-Verlet
@@ -35,7 +37,7 @@ void calculateX(ParticleContainer& container, double dt, double dt_sq);
  *  The time difference between iteration steps
  *
  */
-void calculateV(ParticleContainer& container, double dt);
+void calculateV(std::vector<Particle>& particleList, double dt);
 
 /** \brief
  *  Calculates the new force for all particles in the particle container with
@@ -48,4 +50,8 @@ void calculateV(ParticleContainer& container, double dt);
  *  The force equation that describes the system
  *
  */
-void calculateF(ParticleContainer& container, std::shared_ptr<Force> method);
+void calculateF(std::vector<Particle>& particleList, std::shared_ptr<ParticleContainerInterface>& container,
+                std::shared_ptr<PairwiseForce> method);
+
+void calculateGeneralF(std::vector<Particle>& particleList,
+                       std::shared_ptr<GeneralForce>& force);

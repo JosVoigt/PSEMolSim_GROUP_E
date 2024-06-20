@@ -1,20 +1,23 @@
 #pragma once
 
+//Forward declartion of Particle for the compiler
+class Particle;
 #include <container/Particle.h>
 
 #include <array>
+#include <string>
 
 /* Interface for the force calculation
  */
-class Force {
-   public:
-    /**
+class PairwiseForce {
+ public:
+  /**
      *  \brief
      *  Destructor
      */
-    virtual ~Force() = default;
+  virtual ~PairwiseForce() = default;
 
-    /**
+  /**
      *  \brief
      *  Calculates the force between two particles
      *
@@ -27,14 +30,14 @@ class Force {
      *  \return
      *  The force vector between the two particles
      */
-    virtual std::array<double, 3> calculateForce(Particle &p1,
-                                                 Particle &p2) const = 0;
+  virtual std::array<double, 3> calculateForce(Particle &p1,
+                                               Particle &p2) const = 0;
 
-    /** \brief
+  /** \brief
      *  Returns a string representation of the force
      *
      *  \return
      *  A string representation of the force
      */
-    virtual std::string typeString() = 0;
+  virtual std::string typeString() = 0;
 };

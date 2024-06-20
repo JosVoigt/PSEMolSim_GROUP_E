@@ -4,15 +4,15 @@
 
 #include "Force.h"
 
-class Planet : public Force {
-   public:
-    /**
+class PlanetForce : public PairwiseForce {
+ public:
+  /**
      *  \brief
      *  Default constructor
      */
-    Planet() = default;
+  PlanetForce() = default;
 
-    /**
+  /**
      *  \brief
      *  Calculates the relative force between two particles as if they were planets
      *
@@ -30,14 +30,14 @@ class Planet : public Force {
      *  The force vector with |F| as described above and pointing from this
      *  planet to the other one
      */
-    std::array<double, 3> calculateForce(Particle &p1,
-                                         Particle &p2) const override;
+  std::array<double, 3> calculateForce(Particle &p1,
+                                       Particle &p2) const override;
 
-    /** \brief
+  /** \brief
      *  Returns the type of the force
      *
      *  \return
      *  The type of the force as a string
      */
-    std::string typeString() override;
+  std::string typeString() override;
 };
