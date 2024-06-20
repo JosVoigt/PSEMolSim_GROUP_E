@@ -6,6 +6,7 @@
 #include "LinkedCellBoundaryCondition/LinkedCellBoundary.h"
 #include "Particle.h"
 #include "ParticleContainerInterface.h"
+#include "LinkedCellBoundaryCondition/BoundaryConditionOutflow.h"
 
 /**
  * \brief
@@ -16,19 +17,19 @@ class LinkedCellContainer : public ParticleContainerInterface {
   /**
      * The size of the container in every axis
      **/
-  double containerSizeX, containerSizeY, containerSizeZ;
+  double containerSizeX{}, containerSizeY{}, containerSizeZ{};
 
   /**
      * The cutoff point, which also determines the cell size
      */
-  double r_c;
+  double r_c{};
 
   double cellSize = r_c * r_c;
 
   /**
      * The amount of cells for each axis
      */
-  int amountCellsX, amountCellsY, amountCellsZ;
+  int amountCellsX{}, amountCellsY{}, amountCellsZ{};
 
   /**
      * The vector of cells and the particles in each cell it contains
@@ -104,7 +105,31 @@ class LinkedCellContainer : public ParticleContainerInterface {
      * An array of boundary conditions in the following order: West, South, East, North, Up, Down
      */
   LinkedCellContainer(int amountCellsX_, int amountCellsY_, int amountCellsZ_,
-                      double r_c, std::array<BoundaryConditions, 6> conditions);
+                      double r_c, std::array<BoundaryConditions, 6> conditions, std::list<Particle> &init);
+
+
+  LinkedCellContainer(std::size_t count, std::list<Particle> &init) : ParticleContainerInterface(init) {
+     // amountCellsX = 182;
+     // amountCellsY = 92;
+     // amountCellsZ = 3;
+     // r_c = 3.0;
+     // cellSize = r_c * r_c * r_c;
+     // containerSizeX = amountCellsX * r_c;
+     // containerSizeY = amountCellsY * r_c;
+     // containerSizeZ = amountCellsZ * r_c;
+     //
+     // cellVector.resize(amountCellsX * amountCellsY * amountCellsZ);
+     //
+     // for (int i = 0; i < 6; i++) {
+     //    std::vector<int> currentHaloIndices =
+     //      retrieveHaloCellIndices(static_cast<ContainerSide>(i));
+     //
+     //    std::vector<std::vector<Particle>> haloCells = {};
+     //
+     //    cellBoundaries.push_back(std::make_shared<BoundaryConditionOutflow>(
+     //        retrieveHaloParticles(currentHaloIndices, haloCells)));
+     // }
+  };
 
   /**
      * \brief
