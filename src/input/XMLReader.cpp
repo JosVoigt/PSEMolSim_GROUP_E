@@ -26,6 +26,7 @@ void XMLReader::readData(parser::options &options) const {
   std::vector<double> epsilon, sigma;
   std::vector<int> type;
   double brownianMotionMean = 0;
+  std::list<Particle> emptyParticleList;
 
   options.writer_ = std::make_shared<outputWriter::VTKWriter>();
   options.dimensions = 2;
@@ -126,7 +127,7 @@ void XMLReader::readData(parser::options &options) const {
           LinkedCellContainer::outflow, LinkedCellContainer::outflow};
       options.container_ = std::make_shared<LinkedCellContainer>(
           amountCellsX, amountCellsY, amountCellsZ, std::stod(value),
-          conditions);
+          conditions, emptyParticleList);
     } else if (key == "MaxChangeRate") {
         maxChangeRate = std::stod(value);
     } else if (key == "Dimensions_Thermostat") {
