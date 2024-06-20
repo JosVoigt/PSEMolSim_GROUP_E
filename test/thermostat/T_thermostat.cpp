@@ -57,3 +57,20 @@ TEST_F (T_Thermostat, raisingTempNoLimit) {
 	EXPECT_NEAR (p[0].getV()[1],v1[1]*expectedScale,error);
 	EXPECT_NEAR (p[0].getV()[2],v1[2]*expectedScale,error);
 }
+TEST_F (T_Thermostat, raisingTempLimit) {
+	std::array<double, 3> x = {0,0,0};
+	std::array<double, 3> v1 = {1,1,1};
+	Particle p1 = Particle(x,v1,2,0);
+
+	std::vector<Particle> p; 
+	p.push_back(p1);
+
+	Thermostat thermo = Thermostat(0.1,3,1);
+
+	thermo.adaptTemperature(p, 2);
+	double expectedScale = 1.0424022;
+
+	EXPECT_NEAR (p[0].getV()[0],v1[0]*expectedScale,error);
+	EXPECT_NEAR (p[0].getV()[1],v1[1]*expectedScale,error);
+	EXPECT_NEAR (p[0].getV()[2],v1[2]*expectedScale,error);
+}
