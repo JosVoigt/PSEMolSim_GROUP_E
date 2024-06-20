@@ -1,5 +1,6 @@
 #pragma once
 
+#include <list>
 #include <vector>
 
 #include "Particle.h"
@@ -11,6 +12,18 @@ class ParticleContainerInterface {
      * Destructor
      */
   virtual ~ParticleContainerInterface() = default;
+
+  ParticleContainerInterface(std::list<Particle> &init) {
+     initialize(init);
+  };
+
+  void initialize(std::list<Particle> &particleList) {
+     for (Particle &p : particleList) {
+       insertParticle(p);
+     }
+  }
+
+  virtual void insertParticle(const Particle &particle) = 0;
 
   /**
      * \brief

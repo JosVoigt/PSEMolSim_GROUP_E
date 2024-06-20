@@ -21,12 +21,14 @@ class LCC_test : public testing::Test {
   Particle p2 = Particle(x2, v2, 1, 0);
   Particle p3 = Particle(x3, v3, 1, 0);
 
+  std::list<Particle> particles = {p1, p2, p3};
+
   LinkedCellContainer container = LinkedCellContainer(
       10, 10, 10, 2,
       std::array<LinkedCellContainer::BoundaryConditions, 6>(
           {LinkedCellContainer::outflow, LinkedCellContainer::outflow,
            LinkedCellContainer::outflow, LinkedCellContainer::outflow,
-           LinkedCellContainer::outflow, LinkedCellContainer::outflow}));
+           LinkedCellContainer::outflow, LinkedCellContainer::outflow}), particles);
 };
 
 TEST_F(LCC_test, insertParticle) {

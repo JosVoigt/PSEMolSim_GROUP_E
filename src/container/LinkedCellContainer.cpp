@@ -4,16 +4,16 @@
 #include <set>
 
 #include "LinkedCellBoundaryCondition/BoundCondReflection.h"
-#include "LinkedCellBoundaryCondition/BoundaryConditionOutflow.h"
 #include "force/PlanetForce.h"
 
 LinkedCellContainer::LinkedCellContainer(
     int const amountCellsX_, int const amountCellsY_, int const amountCellsZ_,
-    double const r_c, std::array<BoundaryConditions, 6> conditions)
-    : r_c(r_c),
-      amountCellsX(amountCellsX_),
+    double const r_c, std::array<BoundaryConditions, 6> conditions, std::list<Particle> &init)
+    : amountCellsX(amountCellsX_),
       amountCellsY(amountCellsY_),
-      amountCellsZ(amountCellsZ_) {
+      amountCellsZ(amountCellsZ_),
+      r_c(r_c),
+      ParticleContainerInterface(init) {
   cellSize = r_c * r_c * r_c;
 
   amountCellsX += 2;
@@ -46,8 +46,6 @@ LinkedCellContainer::LinkedCellContainer(
     std::vector<std::vector<Particle>> haloCells = {};
 
     if (conditions[i] == outflow) {
-      currentBoundaryIndices =
-          retrieveBoundaryCellIndices(static_cast<ContainerSide>(i));
       currentHaloIndices =
           retrieveHaloCellIndices(static_cast<ContainerSide>(i));
 
@@ -57,8 +55,6 @@ LinkedCellContainer::LinkedCellContainer(
      if (conditions[i] == reflection) {
       currentBoundaryIndices =
           retrieveBoundaryCellIndices(static_cast<ContainerSide>(i));
-      currentHaloIndices =
-          retrieveHaloCellIndices(static_cast<ContainerSide>(i));
 
       cellBoundaries.push_back(std::make_shared<BoundaryConditionReflection>(
           retrieveBoundaryParticles(currentBoundaryIndices, boundaryCells),
@@ -119,8 +115,8 @@ std::vector<Particle> LinkedCellContainer::retrieveNeighbors(
 
   // Find bounds of neighbouring cells (this is needed so that cellOfParticle -1
   // / +1 doesn't go out of bounds)
-  const int startX =
-      particleCellCoordinates[0] == 1 ? 1 : particleCellCoordinates[0] - 1;
+  //const int startX =
+  //    particleCellCoordinates[0] == 1 ? 1 : particleCellCoordinates[0] - 1;
   const int endX = particleCellCoordinates[0] == amountCellsX - 2
                        ? amountCellsX - 2
                        : particleCellCoordinates[0] + 1;

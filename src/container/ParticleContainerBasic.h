@@ -34,7 +34,6 @@ class ParticleContainer : public ParticleContainerInterface {
   ParticleContainer(std::size_t count, std::list<Particle>& init);
 
   ParticleContainer() = default;
-
   /**
      * \brief
      *  Destructor for the ParticleContainer
@@ -42,6 +41,9 @@ class ParticleContainer : public ParticleContainerInterface {
   ~ParticleContainer() override = default;
 
   typedef std::vector<Particle>::iterator Iterator;
+
+
+  void insertParticle(const Particle &particle) override;
 
   /**
      * \brief

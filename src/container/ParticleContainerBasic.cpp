@@ -2,16 +2,17 @@
 
 ParticleContainer::ParticleContainer(std::size_t length_,
                                      std::list<Particle>& init)
-    : length(length_) {
-  // init new array
-  particleArray.reserve(length);
-
-  for (Particle& p : init) {
-    particleArray.push_back(p);
-  }
-}
+    : length(length_),
+      ParticleContainerInterface(init){}
 
 std::size_t ParticleContainer::size() const { return length; }
+
+void ParticleContainer::insertParticle(const Particle &particle) {
+  particleArray.reserve(length);
+
+  particleArray.push_back(particle);
+}
+
 
 std::vector<Particle> ParticleContainer::preprocessParticles() {
   return particleArray;
