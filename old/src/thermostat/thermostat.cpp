@@ -27,15 +27,16 @@ void Thermostat::adaptTemperature(std::vector<Particle>& particles,
   // calculate current temperature
   int particleCount = particles.size();
 
-  double temperature =
-      kinEnergySum / (particleCount * dimensions * k_B);
+  double temperature = kinEnergySum / (particleCount * dimensions * k_B);
 
   double temperatureGradient = std::sqrt(targetTemperature / temperature);
   double scalingFactor;
 
   if (std::abs(temperature - (temperature * temperatureGradient)) >
       maxChangeRate) {
-    scalingFactor = std::sqrt((temperature + (temperatureGradient < 1 ? -1 : 1)  * maxChangeRate) / temperature);
+    scalingFactor = std::sqrt(
+        (temperature + (temperatureGradient < 1 ? -1 : 1) * maxChangeRate) /
+        temperature);
   } else {
     scalingFactor = temperatureGradient;
   }
