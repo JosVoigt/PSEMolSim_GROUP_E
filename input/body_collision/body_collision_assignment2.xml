@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<!-- just a sanity check: body collision rewritten to xml -->
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../simulation_schema.xsd">
+
+    <settings>
+        <delta_t>0.0002</delta_t>
+        <end_time>5.0</end_time>
+        <third_dimension>false</third_dimension>
+        <particle_container>
+            <directsum_container />
+        </particle_container>
+        <forces>
+            <LennardJones />
+        </forces>
+        <interceptors>
+            <FrameWriter output_format="vtu" fps="24" video_length_s="30" />
+        </interceptors>
+    </settings>
+
+
+    <particle_source>
+        <cuboid_spawner>
+            <lower_left_front_corner>
+                <x>0.0</x>
+                <y>0.0</y>
+                <z>0.0</z>
+            </lower_left_front_corner>
+            <grid_dim>
+                <x>40</x>
+                <y>8</y>
+                <z>1</z>
+            </grid_dim>
+            <grid_spacing>1.1225</grid_spacing>
+            <temperature>0.1</temperature>
+            <mass>1</mass>
+            <velocity>
+                <x>0.0</x>
+                <y>0.0</y>
+                <z>0.0</z>
+            </velocity>
+            <type>0</type>
+            <epsilon>5.0</epsilon>
+            <sigma>1.0</sigma>
+        </cuboid_spawner>
+
+        <cuboid_spawner>
+            <lower_left_front_corner>
+                <x>15.0</x>
+                <y>15.0</y>
+                <z>0.0</z>
+            </lower_left_front_corner>
+            <grid_dim>
+                <x>8</x>
+                <y>8</y>
+                <z>1</z>
+            </grid_dim>
+            <grid_spacing>1.1225</grid_spacing>
+            <temperature>0.1</temperature>
+            <mass>1</mass>
+            <velocity>
+                <x>0.0</x>
+                <y>-10.0</y>
+                <z>0.0</z>
+            </velocity>
+            <type>1</type>
+            <epsilon>5.0</epsilon>
+            <sigma>1.0</sigma>
+        </cuboid_spawner>
+
+    </particle_source>
+
+</configuration>

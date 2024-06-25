@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../simulation_schema.xsd">
+
+    <settings>
+        <delta_t>0.005</delta_t>
+        <end_time>1.0</end_time>
+        <third_dimension>false</third_dimension>
+        <particle_container>
+            <linkedcells_container>
+                <domain_size>
+                    <x>100</x>
+                    <y>100</y>
+                    <z>10</z>
+                </domain_size>
+                <cutoff_radius>3.0</cutoff_radius>
+                <boundary_conditions>
+                    <left>Reflective</left>
+                    <right>Reflective</right>
+                    <bottom>Reflective</bottom>
+                    <top>Reflective</top>
+                    <back>Reflective</back>
+                    <front>Reflective</front>
+                </boundary_conditions>
+            </linkedcells_container>
+        </particle_container>
+        <forces>
+            <LennardJones />
+        </forces>
+        <interceptors>
+        </interceptors>
+    </settings>
+
+    <particle_source>
+        <sphere_spawner>
+            <center>
+                <x>80.0</x>
+                <y>50.0</y>
+                <z>5</z>
+            </center>
+            <radius>5</radius>
+            <grid_spacing>1.1225</grid_spacing>
+            <temperature>0.1</temperature>
+            <mass>1.0</mass>
+            <velocity>
+                <x>0.0</x>
+                <y>0.0</y>
+                <z>0.0</z>
+            </velocity>
+            <type>0</type>
+            <epsilon>1.0</epsilon>
+            <sigma>1.2</sigma>
+        </sphere_spawner>
+
+        <sub_simulation path="./top_right.xml" />
+        <sub_simulation path="./bottom_right.xml" />
+    </particle_source>
+
+</configuration>

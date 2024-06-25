@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../simulation_schema.xsd">
+
+    <settings>
+        <delta_t>0</delta_t>
+        <end_time>0</end_time>
+        <third_dimension>false</third_dimension>
+        <particle_container>
+            <linkedcells_container>
+                <domain_size>
+                    <x>303</x>
+                    <y>180</y>
+                    <z>1</z>
+                </domain_size>
+                <cutoff_radius>3.0</cutoff_radius>
+                <boundary_conditions>
+                    <left>Reflective</left>
+                    <right>Reflective</right>
+                    <bottom>Reflective</bottom>
+                    <top>Reflective</top>
+                    <back>Outflow</back>
+                    <front>Outflow</front>
+                </boundary_conditions>
+            </linkedcells_container>
+        </particle_container>
+        <forces>
+            <LennardJones />
+        </forces>
+        <interceptors />
+    </settings>
+
+    <particle_source>
+        <sphere_spawner>
+            <center>
+                <x>150</x>
+                <y>150</y>
+                <z>0.5</z>
+            </center>
+            <radius>20</radius>
+            <grid_spacing>1.2</grid_spacing>
+            <temperature>0</temperature>
+            <mass>1.0</mass>
+            <velocity>
+                <x>0.0</x>
+                <y>0.0</y>
+                <z>0.0</z>
+            </velocity>
+            <type>1</type>
+            <epsilon>1.0</epsilon>
+            <sigma>1.2</sigma>
+        </sphere_spawner>
+    </particle_source>
+
+</configuration>

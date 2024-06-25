@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../input/simulation_schema.xsd">
+    <settings>
+        <delta_t>0.0014</delta_t>
+        <end_time>5.0</end_time>
+        <third_dimension>true</third_dimension>
+        <particle_container>
+            <directsum_container />
+        </particle_container>
+        <forces>
+            <LennardJones />
+        </forces>
+        <interceptors>
+            <Thermostat target_temperature="1" max_temperature_change="1"
+                application_interval="10000" />
+        </interceptors>
+    </settings>
+    <particle_source>
+        <sphere_spawner>
+            <center>
+                <x>0.0</x>
+                <y>0.0</y>
+                <z>0.0</z>
+
+            </center>
+            <radius>2</radius>
+            <grid_spacing>1</grid_spacing>
+            <temperature>5</temperature>
+            <mass>1</mass>
+            <velocity>
+                <x>0.0</x>
+                <y>0.0</y>
+                <z>0.0</z>
+            </velocity>
+            <type>1</type>
+            <epsilon>1.0</epsilon>
+            <sigma>1.2</sigma>
+        </sphere_spawner>
+    </particle_source>
+</configuration>

@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <!-- Main Element -->
+  <xs:element name="configuration" type="ConfigurationType" />
+
+  <!-- Configuration -->
+  <xs:complexType name="ConfigurationType">
+    <xs:sequence>
+      <xs:element name="settings" type="SettingsType" />
+      <xs:element name="particle_source" type="ParticleSourceType" />
+
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- Vectors -->
+  <xs:complexType name="DoubleVec3Type">
+    <xs:sequence>
+      <xs:element name="x" type="xs:double" />
+      <xs:element name="y" type="xs:double" />
+      <xs:element name="z" type="xs:double" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="IntVec3Type">
+    <xs:sequence>
+      <xs:element name="x" type="xs:int" />
+      <xs:element name="y" type="xs:int" />
+      <xs:element name="z" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+
+
+  <!-- Particle Container -->
+  <xs:complexType name="ParticleContainerType">
+    <xs:choice>
+      <xs:element name="directsum_container" type="DirectSumContainerType" />
+      <xs:element name="linkedcells_container" type="LinkedCellsContainerType" />
+    </xs:choice>
+  </xs:complexType>
+
+  <xs:complexType name="DirectSumContainerType">
+    <xs:sequence>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="LinkedCellsContainerType">
+    <xs:sequence>
+      <xs:element name="domain_size" type="DoubleVec3Type" />
+      <xs:element name="cutoff_radius" type="xs:double" />
+      <xs:element name="boundary_conditions" type="BoundaryConditionsType" />
+    </xs:sequence>
+  </xs:complexType>
+
+
+  <!-- Boundaries -->
+  <xs:complexType name="BoundaryConditionsType">
+    <xs:sequence>
+      <xs:element name="left" type="BoundaryType" />
+      <xs:element name="right" type="BoundaryType" />
+      <xs:element name="bottom" type="BoundaryType" />
+      <xs:element name="top" type="BoundaryType" />
+      <xs:element name="back" type="BoundaryType" />
+      <xs:element name="front" type="BoundaryType" />
+    </xs:sequence>
+  </xs:complexType>
+
+
+  <!-- Forces -->
+  <xs:simpleType name="BoundaryType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Outflow" />
+      <xs:enumeration value="Reflective" />
+      <xs:enumeration value="Periodic" />
+    </xs:restriction>
+  </xs:simpleType>
+
+
+  <!-- Spawners -->
+  <xs:complexType name="CuboidSpawnerType">
+    <xs:sequence>
+      <xs:element name="lower_left_front_corner" type="DoubleVec3Type" />
+      <xs:element name="grid_dim" type="IntVec3Type" />
+      <xs:element name="grid_spacing" type="xs:double" />
+      <xs:element name="temperature" type="xs:double" />
+      <xs:element name="mass" type="xs:double" />
+      <xs:element name="velocity" type="DoubleVec3Type" />
+      <xs:element name="type" type="xs:integer" />
+      <xs:element name="epsilon" type="xs:double" />
+      <xs:element name="sigma" type="xs:double" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="SphereSpawnerType">
+    <xs:sequence>
+      <xs:element name="center" type="DoubleVec3Type" />
+      <xs:element name="radius" type="xs:integer" />
+      <xs:element name="grid_spacing" type="xs:double" />
+      <xs:element name="temperature" type="xs:double" />
+      <xs:element name="mass" type="xs:double" />
+      <xs:element name="velocity" type="DoubleVec3Type" />
+      <xs:element name="type" type="xs:integer" />
+      <xs:element name="epsilon" type="xs:double" />
+      <xs:element name="sigma" type="xs:double" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="SingleParticleSpawnerType">
+    <xs:sequence>
+      <xs:element name="position" type="DoubleVec3Type" />
+      <xs:element name="temperature" type="xs:double" />
+      <xs:element name="mass" type="xs:double" />
+      <xs:element name="velocity" type="DoubleVec3Type" />
+      <xs:element name="type" type="xs:integer" />
+      <xs:element name="epsilon" type="xs:double" />
+      <xs:element name="sigma" type="xs:double" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="CheckPointLoaderType">
+    <xs:attribute name="path" type="xs:anyURI" use="required" />
+  </xs:complexType>
+
+  <xs:complexType name="SubSimulationType">
+    <xs:attribute name="path" type="xs:string" use="required" />
+  </xs:complexType>
+
+  <xs:complexType name="ParticleSourceType">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="cuboid_spawner" type="CuboidSpawnerType" />
+      <xs:element name="sphere_spawner" type="SphereSpawnerType" />
+      <xs:element name="single_particle_spawner" type="SingleParticleSpawnerType" />
+      <xs:element name="check_point_loader" type="CheckPointLoaderType" />
+      <xs:element name="sub_simulation" type="SubSimulationType" />
+    </xs:choice>
+  </xs:complexType>
+
+
+  <!-- Settings -->
+  <xs:complexType name="SettingsType">
+    <xs:sequence>
+      <xs:element name="delta_t" type="xs:double" />
+      <xs:element name="end_time" type="xs:double" />
+      <xs:element name="third_dimension" type="xs:boolean" default="true" />
+      <xs:element name="particle_container" type="ParticleContainerType" />
+      <xs:element name="forces" type="ForcesType" />
+      <xs:element name="interceptors" type="SimulationInterceptorsType" />
+      <xs:element name="log_level" type="LogLevelType" default="info" minOccurs="0" />
+    </xs:sequence>
+  </xs:complexType>
+
+
+  <!-- Inerceptors -->
+  <xs:complexType name="ParticleUpdatesPerSecondInterceptionType">
+  </xs:complexType>
+
+  <xs:complexType name="RadialDistributionFunctionInterceptionType">
+    <xs:attribute name="bin_width" type="xs:double" use="required" />
+    <xs:attribute name="sample_every_x_percent" type="xs:double" use="required" />
+  </xs:complexType>
+
+  <xs:complexType name="FrameWriterInterceptorType">
+    <xs:attribute name="output_format" type="OutputFormatType" use="required" />
+    <xs:attribute name="fps" type="xs:integer" use="required" />
+    <xs:attribute name="video_length_s" type="xs:integer" use="required" />
+  </xs:complexType>
+
+  <xs:complexType name="ThermostatInterceptorType">
+    <xs:attribute name="target_temperature" type="xs:double" use="required" />
+    <xs:attribute name="max_temperature_change" type="xs:double" use="required" />
+    <xs:attribute name="application_interval" type="xs:integer" use="required" />
+  </xs:complexType>
+
+
+  <xs:complexType name="SimulationInterceptorsType">
+    <xs:all>
+      <xs:element name="ParticleUpdatesPerSecond" type="ParticleUpdatesPerSecondInterceptionType"
+        minOccurs="0" />
+      <xs:element name="RadialDistributionFunction"
+        type="RadialDistributionFunctionInterceptionType" minOccurs="0" />
+      <xs:element name="FrameWriter" type="FrameWriterInterceptorType" minOccurs="0" />
+      <xs:element name="Thermostat" type="ThermostatInterceptorType" minOccurs="0" />
+    </xs:all>
+  </xs:complexType>
+
+
+  <!-- Forces -->
+  <xs:complexType name="LennardJonesType">
+  </xs:complexType>
+
+  <xs:complexType name="GravitationalType">
+  </xs:complexType>
+
+  <xs:complexType name="GlobalGravityType">
+    <xs:attribute name="g" type="xs:double" use="required" />
+  </xs:complexType>
+
+
+  <xs:complexType name="ForcesType">
+    <xs:all>
+      <xs:element name="LennardJones" type="LennardJonesType" minOccurs="0" />
+      <xs:element name="Gravitational" type="GravitationalType" minOccurs="0" />
+      <xs:element name="GlobalDownwardsGravity" type="GlobalGravityType" minOccurs="0" />
+    </xs:all>
+  </xs:complexType>
+
+
+  <!-- Enums -->
+
+  <xs:simpleType name="LogLevelType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="off" />
+      <xs:enumeration value="critical" />
+      <xs:enumeration value="error" />
+      <xs:enumeration value="warning" />
+      <xs:enumeration value="info" />
+      <xs:enumeration value="debug" />
+    </xs:restriction>
+  </xs:simpleType>
+
+
+  <xs:simpleType name="OutputFormatType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="vtu" />
+      <xs:enumeration value="chkpt" />
+      <xs:enumeration value="xyz" />
+      <xs:enumeration value="none" />
+    </xs:restriction>
+  </xs:simpleType>
+
+</xs:schema>
