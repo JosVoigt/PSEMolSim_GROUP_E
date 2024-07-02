@@ -10,6 +10,7 @@
 #include <algorithm>
 #include <iostream>
 #include <memory>
+#include <utility>
 
 #include "io/logger/Logger.h"
 #include "utils/ArrayUtils.h"
@@ -67,6 +68,14 @@ void Particle::setOldF(const std::array<double, 3>& old_f_arg) {
   old_f = old_f_arg;
 }
 
+void Particle::addStraightNeighbour(const std::shared_ptr<Particle>& neighbour) { straight_neighbours.emplace_back(neighbour); }
+
+void Particle::addDiagonalNeighbour(const std::shared_ptr<Particle>& neighbour) { diagonal_neighbours.emplace_back(neighbour); }
+
+std::vector<std::shared_ptr<Particle>> Particle::getStraightNeighbours() const { return straight_neighbours; }
+
+std::vector<std::shared_ptr<Particle>> Particle::getDiagonalNeighbours() const { return diagonal_neighbours; }
+
 const std::array<double, 3>& Particle::getX() const { return x; }
 
 const std::array<double, 3>& Particle::getV() const { return v; }
@@ -88,6 +97,21 @@ std::string Particle::toString() const {
   stream << "Particle: X:" << x << " v: " << v << " f: " << f
          << " old_f: " << old_f << " type: " << type;
   return stream.str();
+}
+
+bool Particle::isDirectNeighbour(Particle &particle) {
+    const auto p = particle.getStraightNeighbours();
+    return std::find(p.begin(), p.end(), std::make_shared<Particle>(*this)) != p.end();
+}
+
+bool Particle::isDiagonalNeighbour(Particle &particle) {
+    const auto p = particle.getDiagonalNeighbours();
+    return std::find(p.begin(), p.end(), std::make_shared<Particle>(*this)) != p.end();
+}
+
+bool Particle::operator==(Particle &other) {
+    return (x == other.x) and (v == other.v) and (f == other.f) and
+             (type == other.type) and (m == other.m) and (old_f == other.old_f);
 }
 
 bool Particle::operator==(const Particle& other) const {

@@ -25,22 +25,22 @@ class Particle {
   /**
      * @brief Position of the particle
      */
-  std::array<double, 3> x;
+    std::array<double, 3> x{};
 
   /**
      * @brief Velocity of the particle
      */
-  std::array<double, 3> v;
+    std::array<double, 3> v{};
 
   /**
      * @brief Force effective on this particle
      */
-  std::array<double, 3> f;
+    std::array<double, 3> f{};
 
   /**
      * @brief Force which was effective on this particle
      */
-  std::array<double, 3> old_f;
+    std::array<double, 3> old_f{};
 
   /**
      * @brief Lennard-Jones potential parameter epsilon
@@ -68,8 +68,18 @@ class Particle {
 	 */
   std::array<std::shared_ptr<Particle>, 8> neighbours;
 
- public:
-  Particle(const Particle& other);
+    /**
+     * @brief Neighbour particles which lie on a straight line, for membranes
+     */
+    std::vector<std::shared_ptr<Particle>> straight_neighbours{};
+
+    /**
+     * @brief Neighbour particles which lie on a diagonal line, for membranes
+     */
+    std::vector<std::shared_ptr<Particle>> diagonal_neighbours{};
+
+   public:
+    Particle(const Particle& other);
 
   Particle(std::array<double, 3> x_arg, std::array<double, 3> v_arg,
            double m_arg, int type = 0, double epsilon_arg = 1.0,
@@ -110,7 +120,31 @@ class Particle {
      */
   void setOldF(const std::array<double, 3>& oldF);
 
-  /**
+    /**
+     * @brief Adds a straight neighbour to the particle
+     *
+     * @param neighbour New neighbour
+     */
+    void addStraightNeighbour(const std::shared_ptr<Particle>& neighbour);
+
+    /**
+     * @brief Adds a diagonal neighbour to the particle
+     *
+     * @param neighbour New neighbour
+     */
+    void addDiagonalNeighbour(const std::shared_ptr<Particle>& neighbour);
+
+    /**
+     * @brief Gets the straight neighbours of the particle
+     */
+    [[nodiscard]] std::vector<std::shared_ptr<Particle>> getStraightNeighbours() const;
+
+    /**
+     * @brief Gets the diagonal neighbours of the particle
+     */
+    [[nodiscard]] std::vector<std::shared_ptr<Particle>> getDiagonalNeighbours() const;
+
+    /**
      * @brief Gets the position of the particle
      */
   [[nodiscard]] const std::array<double, 3>& getX() const;
@@ -155,6 +189,10 @@ class Particle {
   bool operator==(const Particle& other) const;
 
   [[nodiscard]] std::string toString() const;
+
+  bool isDirectNeighbour(Particle &particle);
+
+  bool isDiagonalNeighbour(Particle &particle);
 };
 
 std::ostream& operator<<(std::ostream& stream, Particle& p);

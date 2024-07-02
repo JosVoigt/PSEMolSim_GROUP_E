@@ -95,7 +95,7 @@ class CuboidSpawner : public ParticleSpawner {
      * @brief Estimate the number of particles to be spawned
      *
      * returns the number of particles to be spawned by this spawner
-     * this can be used to reserve enought memory in the particle container
+     * this can be used to reserve enough memory in the particle container
      */
     [[nodiscard]] size_t getEstimatedNumberOfParticles() const override;
 };
