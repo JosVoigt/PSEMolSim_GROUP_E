@@ -42,7 +42,7 @@ int MembraneSpawner::spawnParticles(std::vector<Particle>& particles) const {
                 Thermostat::setParticleTemperature(initial_temperature, particle, third_dimension ? 3 : 2);
                 particles.push_back(std::move(particle));
 
-                grid[i][j][k] = std::make_shared<Particle>(particles.back());
+                grid[i][j][k] = std::make_shared<Particle>(particle);
             }
         }
     }
