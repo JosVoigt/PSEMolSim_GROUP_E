@@ -1,11 +1,13 @@
 #include "ForcePicker.h"
 
+#include <memory>
 #include <numeric>
 
 #include "io/logger/Logger.h"
 #include "physics/pairwiseforces/GravitationalForce.h"
 #include "physics/pairwiseforces/LennardJonesForce.h"
 #include "physics/simpleforces/GlobalDownwardsGravity.h"
+#include "physics/pairwiseforces/MembraneLenJonesForce.h"
 
 const std::map<std::string, std::shared_ptr<SimpleForceSource>> get_supported_simple_forces() {
     std::map<std::string, std::shared_ptr<SimpleForceSource>> force_names;
@@ -22,10 +24,12 @@ const std::map<std::string, std::shared_ptr<PairwiseForceSource>> get_supported_
 
     auto lennardjones = std::make_shared<LennardJonesForce>();
     auto gravitational = std::make_shared<GravitationalForce>();
+	auto membrane = std::make_shared<MembraneLenJonesForce>();
     auto global_downwards_gravity = std::make_shared<GlobalDownwardsGravity>(0);
 
     force_names.insert({std::string(*lennardjones), lennardjones});
     force_names.insert({std::string(*gravitational), gravitational});
+	force_names.insert({std::string(*membrane), membrane});
 
     return force_names;
 }
