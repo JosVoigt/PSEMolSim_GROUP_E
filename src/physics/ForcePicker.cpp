@@ -24,7 +24,7 @@ const std::map<std::string, std::shared_ptr<PairwiseForceSource>> get_supported_
 
     auto lennardjones = std::make_shared<LennardJonesForce>();
     auto gravitational = std::make_shared<GravitationalForce>();
-	auto membrane = std::make_shared<MembraneLenJonesForce>();
+	auto membrane = std::make_shared<MembraneLenJonesForce>(1,1);
     auto global_downwards_gravity = std::make_shared<GlobalDownwardsGravity>(0);
 
     force_names.insert({std::string(*lennardjones), lennardjones});
