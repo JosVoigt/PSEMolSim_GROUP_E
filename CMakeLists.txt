@@ -9,7 +9,7 @@ project(PSEMolDyn_GroupC VERSION 0.0.1)
 
 # let ccmake and cmake-gui offer the default build type options
 set_property(CACHE CMAKE_BUILD_TYPE
-        PROPERTY STRINGS "Debug;Release;RelWithDebInfo;MinSizeRel")
+        PROPERTY STRINGS "Debug;Release;RelWithDebInfo;MinSizeRel;Profile")
 
 # set Release as the default build type if it is not yet set.
 if(NOT CMAKE_BUILD_TYPE)
@@ -25,6 +25,11 @@ endif(NOT CMAKE_BUILD_TYPE)
 # Add O3 for the Release build type
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
     add_compile_options(-O3)
+endif()
+
+# Add pg for the Profile build type
+if(CMAKE_BUILD_TYPE STREQUAL "Profile")
+    add_compile_options(-pg -O3)
 endif()
 
 # modules

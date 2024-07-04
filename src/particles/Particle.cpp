@@ -68,9 +68,9 @@ void Particle::setOldF(const std::array<double, 3>& old_f_arg) {
   old_f = old_f_arg;
 }
 
-void Particle::addStraightNeighbour(const std::shared_ptr<Particle>& neighbour) { straight_neighbours.emplace_back(neighbour); }
+void Particle::addStraightNeighbour(const std::shared_ptr<Particle>& neighbour) { straight_neighbours.push_back(neighbour); }
 
-void Particle::addDiagonalNeighbour(const std::shared_ptr<Particle>& neighbour) { diagonal_neighbours.emplace_back(neighbour); }
+void Particle::addDiagonalNeighbour(const std::shared_ptr<Particle>& neighbour) { diagonal_neighbours.push_back(neighbour); }
 
 std::vector<std::shared_ptr<Particle>> Particle::getStraightNeighbours() const { return straight_neighbours; }
 
