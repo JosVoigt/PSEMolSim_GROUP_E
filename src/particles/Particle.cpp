@@ -72,9 +72,9 @@ void Particle::addStraightNeighbour(const std::shared_ptr<Particle>& neighbour) 
 
 void Particle::addDiagonalNeighbour(const std::shared_ptr<Particle>& neighbour) { diagonal_neighbours.push_back(neighbour); }
 
-std::vector<std::shared_ptr<Particle>> Particle::getStraightNeighbours() const { return straight_neighbours; }
+std::vector<std::shared_ptr<Particle>> & Particle::getStraightNeighbours()  { return straight_neighbours; }
 
-std::vector<std::shared_ptr<Particle>> Particle::getDiagonalNeighbours() const { return diagonal_neighbours; }
+std::vector<std::shared_ptr<Particle>> & Particle::getDiagonalNeighbours()  { return diagonal_neighbours; }
 
 const std::array<double, 3>& Particle::getX() const { return x; }
 

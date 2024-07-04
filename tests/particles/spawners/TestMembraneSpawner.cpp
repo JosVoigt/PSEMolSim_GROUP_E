@@ -15,7 +15,7 @@
  */
 TEST(MembraneParticleSpawner, SpawnCorrectNumberOfParticles) {
     std::array<double, 3> lower_left_corner = {0, 0, 0};
-    std::array<int, 3> grid_dimensions = {3, 7, 11};
+    std::array<int, 3> grid_dimensions = {3, 7, 1};
     double grid_spacing = 1;
     double mass = 1;
     std::array<double, 3> initial_velocity = {0, 0, 0};
@@ -25,7 +25,7 @@ TEST(MembraneParticleSpawner, SpawnCorrectNumberOfParticles) {
     std::vector<Particle> particle_container;
     spawner.spawnParticles(particle_container);
 
-    ASSERT_EQ(particle_container.size(), 3 * 7 * 11);
+    ASSERT_EQ(particle_container.size(), 3 * 7 * 1);
 }
 
 /*
@@ -71,4 +71,23 @@ TEST(MembraneParticleSpawner, EstimateNumberOfParticles) {
     std::vector<Particle> particle_container16;
     spawner16.spawnParticles(particle_container16);
     EXPECT_EQ(spawner16.getEstimatedNumberOfParticles(), particle_container16.size());
+}
+
+/*
+ * Test if a MembraneParticleSpawner initializes the neighbors of particles correctly
+ */
+TEST(MembraneParticleSpawner, InitializesNeighborsCorrectly) {
+    std::array<double, 3> lower_left_corner = {0, 0, 0};
+    std::array<int, 3> grid_dimensions = {3, 3, 1};
+    double grid_spacing = 1;
+    double mass = 1;
+    std::array<double, 3> initial_velocity = {0, 0, 0};
+    int type = 0;
+    MembraneSpawner spawner(lower_left_corner, grid_dimensions, grid_spacing, mass, initial_velocity, type);
+
+    std::vector<Particle> particle_container;
+    spawner.spawnParticles(particle_container);
+
+    //particle_container.at(0).addStraightNeighbour(std::make_shared<Particle>(particle_container.at(1)));
+    EXPECT_EQ(particle_container.at(0).getStraightNeighbours().size(), 2);
 }

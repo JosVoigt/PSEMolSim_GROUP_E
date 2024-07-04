@@ -137,12 +137,12 @@ class Particle {
     /**
      * @brief Gets the straight neighbours of the particle
      */
-    [[nodiscard]] std::vector<std::shared_ptr<Particle>> getStraightNeighbours() const;
+    [[nodiscard]] std::vector<std::shared_ptr<Particle>>& getStraightNeighbours();
 
     /**
      * @brief Gets the diagonal neighbours of the particle
      */
-    [[nodiscard]] std::vector<std::shared_ptr<Particle>> getDiagonalNeighbours() const;
+    [[nodiscard]] std::vector<std::shared_ptr<Particle>>& getDiagonalNeighbours();
 
     /**
      * @brief Gets the position of the particle
