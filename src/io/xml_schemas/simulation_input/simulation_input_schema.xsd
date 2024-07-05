@@ -209,7 +209,7 @@
     <xs:attribute name="g" type="xs:double" use="required" />
   </xs:complexType>
 
-  <xs:complexType name="Membrane-LennardJonesForceType">
+  <xs:complexType name="MembraneLennardJonesForceType">
     <xs:attribute name="bondlength" type="xs:double" use="required" />
     <xs:attribute name="bondstrength" type="xs:double" use="required" />
   </xs:complexType>
@@ -220,7 +220,7 @@
       <xs:element name="LennardJones" type="LennardJonesType" minOccurs="0" />
       <xs:element name="Gravitational" type="GravitationalType" minOccurs="0" />
       <xs:element name="GlobalDownwardsGravity" type="GlobalGravityType" minOccurs="0" />
-	  <xs:element name="Membrane-LennardJonesForce" type="Membrane-LennardJonesForceType" minOccurs="0"/>
+	  <xs:element name="MembraneLennardJonesForce" type="MembraneLennardJonesForceType" minOccurs="0"/>
     </xs:all>
   </xs:complexType>
 

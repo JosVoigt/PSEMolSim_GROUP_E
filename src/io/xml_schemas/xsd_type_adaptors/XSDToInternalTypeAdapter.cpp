@@ -2,6 +2,7 @@
 
 #include "io/logger/Logger.h"
 #include "physics/pairwiseforces/GravitationalForce.h"
+#include "physics/pairwiseforces/MembraneLenJonesForce.h"
 #include "physics/pairwiseforces/LennardJonesForce.h"
 #include "physics/simpleforces/GlobalDownwardsGravity.h"
 #include "simulation/interceptors/frame_writer/FrameWriterInterceptor.h"
@@ -238,6 +239,11 @@ XSDToInternalTypeAdapter::convertToForces(const ForcesType& forces) {
         auto g = (*forces.GlobalDownwardsGravity()).g();
         simple_force_sources.push_back(std::make_shared<GlobalDownwardsGravity>(g));
     }
+	if (forces.MembraneLennardJonesForce()) {
+		auto length = (*forces.MembraneLennardJonesForce()).bondlength(); 
+		auto strength = (*forces.MembraneLennardJonesForce()).bondstrength(); 
+			pairwise_force_sources.push_back(std::make_shared<MembraneLenJonesForce>(length,strength));
+	}
 
     return {simple_force_sources, pairwise_force_sources};
 }
