@@ -64,12 +64,12 @@ private:
     /**
      * @brief Defines straight neighbours of the particles in the membrane
      */
-    std::vector<std::shared_ptr<Particle>> straight_neighbours;
+    std::vector<Particle*> straight_neighbours;
 
     /**
      * @brief Defines diagonal neighbours of the particles in the membrane
      */
-    std::vector<std::shared_ptr<Particle>> diagonal_neighbours;
+    std::vector<Particle*> diagonal_neighbours;
 
 public:
     /**
@@ -90,7 +90,7 @@ public:
     MembraneSpawner(const std::array<double, 3>& lower_left_corner, const std::array<int, 3>& grid_dimensions, double grid_spacing,
                   double mass, const std::array<double, 3>& initial_velocity, int type, double epsilon = 1.0, double sigma = 1.2,
                   bool third_dimension = true, double initial_temperature = 0.1,
-                    std::vector<std::shared_ptr<Particle>> straight_neighbours = {}, std::vector<std::shared_ptr<Particle>> diagonal_neighbours = {});
+                    std::vector<Particle*> straight_neighbours = {}, std::vector<Particle*> diagonal_neighbours = {});
 
     /**
      * @brief Spawns particles in the membrane
