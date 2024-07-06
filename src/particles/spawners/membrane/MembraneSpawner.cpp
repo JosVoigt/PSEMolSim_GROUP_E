@@ -38,7 +38,7 @@ int MembraneSpawner::spawnParticles(std::vector<Particle>& particles) const {
       std::array<double, 3> double_coord = {(double)i, (double)j, 0};
       std::array<double, 3> x = grid_spacing * double_coord + lower_left_corner;
 
-      auto particlePointer = std::make_shared<Particle>(
+	  std::shared_ptr<Particle> particlePointer = std::make_shared<Particle>(
           x, initial_velocity, mass, type, epsilon, sigma);
 
       //adjust temp
@@ -47,34 +47,55 @@ int MembraneSpawner::spawnParticles(std::vector<Particle>& particles) const {
 
       grid[i].push_back(particlePointer);
 
+	  /*
+	   * Particles are in a grid like this
+	   *
+	   * The current particle looked at is M
+	   *
+	   * pos y ->, pos x /\
+	   *
+	   *  LT T RT
+	   *  LM M RM
+	   *  LD D RD
+	   *
+	   *  If they exist we add LM, LD, D and RD
+	   *  To stay consistent we add the current particles to their respective lists
+	   *  This way we add every particles neighbours
+	   */
+
       if (j == 0 && i == 0) {
-        //lower left corner particle -> do nothing
+        //lower left corner membrane particle -> do nothing
+		//no particle we want to add exists
         continue;
       } else if (j != 0) {
-        //not on the left border -> add the left particles
-        grid[i][j - 1]->addStraightNeighbour(particlePointer);
-        particlePointer->addStraightNeighbour(grid[i][j - 1]);
+        //not on the left border -> add the left particle (LD)
+		  grid[i][j - 1]->addStraightNeighbour(particlePointer.get());
+		  particlePointer->addStraightNeighbour(grid[i][j - 1].get());
 
         //check if we are on the lower border
         if (i != 0) {
-          grid[i - 1][j - 1]->addStraightNeighbour(particlePointer);
-          particlePointer->addStraightNeighbour(grid[i - 1][j - 1]);
-          grid[i - 1][j]->addStraightNeighbour(particlePointer);
-          particlePointer->addStraightNeighbour(grid[i - 1][j]);
-          //check if we are on the left border
-          if (j + 1 == grid_dimensions[1]) {
-            grid[i - 1][j + 1]->addStraightNeighbour(particlePointer);
-            particlePointer->addStraightNeighbour(grid[i - 1][j + 1]);
+			//at least one row below exists -> we can add LD and D 
+
+			//LD
+          grid[i - 1][j - 1]->addDiagonalNeighbour(particlePointer.get());
+          particlePointer->addDiagonalNeighbour(grid[i - 1][j - 1].get());
+
+			//D
+          grid[i - 1][j]->addStraightNeighbour(particlePointer.get());
+          particlePointer->addStraightNeighbour(grid[i - 1][j].get());
+
+          //check if we are on the right border
+          if (j + 1 != grid_dimensions[1]) {
+			  //add the corner particle RD
+            grid[i - 1][j + 1]->addDiagonalNeighbour(particlePointer.get());
+            particlePointer->addStraightNeighbour(grid[i - 1][j + 1].get());
           }
         }
 
       } else {
-        grid[i - 1][j]->addStraightNeighbour(particlePointer);
-        particlePointer->addStraightNeighbour(grid[i - 1][j]);
-        if (j + 1 == grid_dimensions[1]) {
-          grid[i - 1][j + 1]->addStraightNeighbour(particlePointer);
-          particlePointer->addStraightNeighbour(grid[i - 1][j + 1]);
-        }
+		  //we are on the lower border but not the leftmost particle -> can add LM
+        grid[i - 1][j]->addStraightNeighbour(particlePointer.get());
+        particlePointer->addStraightNeighbour(grid[i - 1][j].get());
       }
     }
   }
