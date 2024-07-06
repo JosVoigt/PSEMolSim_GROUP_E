@@ -9,9 +9,6 @@
 
 #include <algorithm>
 #include <iostream>
-#include <memory>
-#include <utility>
-
 #include "io/logger/Logger.h"
 #include "utils/ArrayUtils.h"
 
@@ -68,13 +65,13 @@ void Particle::setOldF(const std::array<double, 3>& old_f_arg) {
   old_f = old_f_arg;
 }
 
-void Particle::addStraightNeighbour(const std::shared_ptr<Particle>& neighbour) { straight_neighbours.push_back(neighbour); }
+void Particle::addStraightNeighbour(Particle* neighbour) { straight_neighbours.push_back(neighbour); }
 
-void Particle::addDiagonalNeighbour(const std::shared_ptr<Particle>& neighbour) { diagonal_neighbours.push_back(neighbour); }
+void Particle::addDiagonalNeighbour(Particle* neighbour) { diagonal_neighbours.push_back(neighbour); }
 
-std::vector<std::shared_ptr<Particle>> & Particle::getStraightNeighbours()  { return straight_neighbours; }
+std::vector<Particle*> & Particle::getStraightNeighbours()  { return straight_neighbours; }
 
-std::vector<std::shared_ptr<Particle>> & Particle::getDiagonalNeighbours()  { return diagonal_neighbours; }
+std::vector<Particle*> & Particle::getDiagonalNeighbours()  { return diagonal_neighbours; }
 
 const std::array<double, 3>& Particle::getX() const { return x; }
 
@@ -101,12 +98,13 @@ std::string Particle::toString() const {
 
 bool Particle::isDirectNeighbour(Particle &particle) {
     const auto p = particle.getStraightNeighbours();
-    return std::find(p.begin(), p.end(), std::make_shared<Particle>(*this)) != p.end();
+    return std::find(p.begin(), p.end(), &particle) != p.end();
 }
 
 bool Particle::isDiagonalNeighbour(Particle &particle) {
     const auto p = particle.getDiagonalNeighbours();
-    return std::find(p.begin(), p.end(), std::make_shared<Particle>(*this)) != p.end();
+    return std::find(p.begin(), p.end(), &particle) != p.end();
+
 }
 
 bool Particle::operator==(Particle &other) {

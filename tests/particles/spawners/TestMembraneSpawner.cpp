@@ -88,6 +88,29 @@ TEST(MembraneParticleSpawner, InitializesNeighborsCorrectly) {
     std::vector<Particle> particle_container;
     spawner.spawnParticles(particle_container);
 
-    //particle_container.at(0).addStraightNeighbour(std::make_shared<Particle>(particle_container.at(1)));
-    EXPECT_EQ(particle_container.at(0).getStraightNeighbours().size(), 2);
+    //checks for the correct number of neighbors
+    EXPECT_EQ(particle_container[0].getStraightNeighbours().size(), 2);
+    EXPECT_EQ(particle_container[0].getDiagonalNeighbours().size(), 1);
+    EXPECT_EQ(particle_container[1].getStraightNeighbours().size(), 3);
+    EXPECT_EQ(particle_container[1].getDiagonalNeighbours().size(), 2);
+    EXPECT_EQ(particle_container[2].getStraightNeighbours().size(), 2);
+    EXPECT_EQ(particle_container[2].getDiagonalNeighbours().size(), 1);
+    EXPECT_EQ(particle_container[3].getStraightNeighbours().size(), 3);
+    EXPECT_EQ(particle_container[3].getDiagonalNeighbours().size(), 2);
+    EXPECT_EQ(particle_container[4].getStraightNeighbours().size(), 4);
+    EXPECT_EQ(particle_container[4].getDiagonalNeighbours().size(), 4);
+    EXPECT_EQ(particle_container[5].getStraightNeighbours().size(), 3);
+    EXPECT_EQ(particle_container[5].getDiagonalNeighbours().size(), 2);
+    EXPECT_EQ(particle_container[6].getStraightNeighbours().size(), 2);
+    EXPECT_EQ(particle_container[6].getDiagonalNeighbours().size(), 1);
+    EXPECT_EQ(particle_container[7].getStraightNeighbours().size(), 3);
+    EXPECT_EQ(particle_container[7].getDiagonalNeighbours().size(), 2);
+    EXPECT_EQ(particle_container[8].getStraightNeighbours().size(), 2);
+    EXPECT_EQ(particle_container[8].getDiagonalNeighbours().size(), 1);
+
+    //checks for the correct neighbor for the first particle
+    //(not complete, doesn't check every neighbor. Just as a test)
+    auto& straightNeighbours = particle_container[0].getStraightNeighbours();
+    bool contains = std::find(straightNeighbours.begin(), straightNeighbours.end(), &particle_container[1]) != straightNeighbours.end();
+    EXPECT_TRUE(contains);
 }

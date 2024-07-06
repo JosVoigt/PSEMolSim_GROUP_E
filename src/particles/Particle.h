@@ -71,12 +71,12 @@ class Particle {
     /**
      * @brief Neighbour particles which lie on a straight line, for membranes
      */
-    std::vector<std::shared_ptr<Particle>> straight_neighbours{};
+    std::vector<Particle*> straight_neighbours{};
 
     /**
      * @brief Neighbour particles which lie on a diagonal line, for membranes
      */
-    std::vector<std::shared_ptr<Particle>> diagonal_neighbours{};
+    std::vector<Particle*> diagonal_neighbours{};
 
    public:
     Particle(const Particle& other);
@@ -125,24 +125,24 @@ class Particle {
      *
      * @param neighbour New neighbour
      */
-    void addStraightNeighbour(const std::shared_ptr<Particle>& neighbour);
+    void addStraightNeighbour(Particle* neighbour);
 
     /**
      * @brief Adds a diagonal neighbour to the particle
      *
      * @param neighbour New neighbour
      */
-    void addDiagonalNeighbour(const std::shared_ptr<Particle>& neighbour);
+    void addDiagonalNeighbour(Particle* neighbour);
 
     /**
      * @brief Gets the straight neighbours of the particle
      */
-    [[nodiscard]] std::vector<std::shared_ptr<Particle>>& getStraightNeighbours();
+    [[nodiscard]] std::vector<Particle*>& getStraightNeighbours();
 
     /**
      * @brief Gets the diagonal neighbours of the particle
      */
-    [[nodiscard]] std::vector<std::shared_ptr<Particle>>& getDiagonalNeighbours();
+    [[nodiscard]] std::vector<Particle*>& getDiagonalNeighbours();
 
     /**
      * @brief Gets the position of the particle
@@ -190,9 +190,9 @@ class Particle {
 
   [[nodiscard]] std::string toString() const;
 
-  bool isDirectNeighbour(Particle &particle);
+  static bool isDirectNeighbour(Particle &particle);
 
-  bool isDiagonalNeighbour(Particle &particle);
+  static bool isDiagonalNeighbour(Particle &particle);
 };
 
 std::ostream& operator<<(std::ostream& stream, Particle& p);
