@@ -46,6 +46,7 @@ int MembraneSpawner::spawnParticles(std::vector<Particle>& particles) const {
                                          third_dimension ? 3 : 2);
 
       grid[i].push_back(particlePointer);
+	  particles.push_back(*particlePointer);
 
 	  /*
 	   * Particles are in a grid like this
