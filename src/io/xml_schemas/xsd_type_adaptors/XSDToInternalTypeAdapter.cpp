@@ -53,6 +53,42 @@ CuboidSpawner XSDToInternalTypeAdapter::convertToCuboidSpawner(const CuboidSpawn
         third_dimension,         temperature};
 }
 
+MembraneSpawner XSDToInternalTypeAdapter::convertToMembraneSpawner(const MembraneSpawnerType& membrane, bool third_dimension) {
+    auto lower_left_corner = convertToVector(membrane.lower_left_front_corner());
+    auto grid_dimensions = convertToVector(membrane.grid_dim());
+    auto initial_velocity = convertToVector(membrane.velocity());
+
+    auto grid_spacing = membrane.grid_spacing();
+    auto mass = membrane.mass();
+    auto type = membrane.type();
+    auto epsilon = membrane.epsilon();
+    auto sigma = membrane.sigma();
+
+    if (grid_dimensions[0] <= 0 || grid_dimensions[1] <= 0 || grid_dimensions[2] <= 0) {
+        Logger::logger->error("Cuboid grid dimensions must be positive");
+        throw std::runtime_error("Cuboid grid dimensions must be positive");
+    }
+
+    if (!third_dimension && grid_dimensions[2] > 1) {
+        Logger::logger->error("Cuboid grid dimensions must be 1 in z direction if third dimension is disabled");
+        throw std::runtime_error("Cuboid grid dimensions must be 1 in z direction if third dimension is disabled");
+    }
+
+    if (grid_spacing <= 0) {
+        Logger::logger->error("Cuboid grid spacing must be positive");
+        throw std::runtime_error("Cuboid grid spacing must be positive");
+    }
+
+    if (mass <= 0) {
+        Logger::logger->error("Cuboid mass must be positive");
+        throw std::runtime_error("Cuboid mass must be positive");
+    }
+
+    return MembraneSpawner{
+            lower_left_corner, grid_dimensions, grid_spacing, mass, initial_velocity, static_cast<int>(type), epsilon, sigma,
+            third_dimension};
+}
+
 SphereSpawner XSDToInternalTypeAdapter::convertToSphereSpawner(const SphereSpawnerType& sphere, bool third_dimension) {
     auto center = convertToVector(sphere.center());
     auto initial_velocity = convertToVector(sphere.velocity());

@@ -9,6 +9,7 @@
 #include "io/xml_schemas/simulation_input/simulation_input_schema.h"
 #include "particles/containers/linkedcells/LinkedCellsContainer.h"
 #include "particles/spawners/cuboid/CuboidSpawner.h"
+#include "particles/spawners/membrane/MembraneSpawner.h"
 #include "particles/spawners/sphere/SphereSpawner.h"
 #include "physics/thermostats/Thermostat.h"
 #include "simulation/SimulationParams.h"
@@ -26,6 +27,15 @@ class XSDToInternalTypeAdapter {
      * @return CuboidSpawner parsed from the given cuboid in the XSD format
      */
     static CuboidSpawner convertToCuboidSpawner(const CuboidSpawnerType& cuboid, bool third_dimension);
+
+    /**
+     * @brief Converts a membrane from the XSD format to the internal format
+     *
+     * @param membrane Membrane in the XSD format
+     * @param third_dimension Whether the third dimension is enabled
+     * @return MembraneSpawner parsed from the given cuboid in the XSD format
+     */
+    static MembraneSpawner convertToMembraneSpawner(const MembraneSpawnerType& membrane, bool third_dimension);
 
     /**
      * @brief Converts a sphere from the XSD format to the internal format
