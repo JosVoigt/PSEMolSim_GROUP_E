@@ -2,7 +2,7 @@
 
 #include "SimpleForceSource.h"
 
-class UpwardsForce {
+class UpwardsForce : public SimpleForceSource{
 private:
     std::array<double, 3> force;
     std::vector<int> target_particles;
