@@ -190,9 +190,9 @@ class Particle {
 
   [[nodiscard]] std::string toString() const;
 
-  static bool isDirectNeighbour(Particle &particle);
+  bool isDirectNeighbour(Particle &particle);
 
-  static bool isDiagonalNeighbour(Particle &particle);
+  bool isDiagonalNeighbour(Particle &particle);
 };
 
 std::ostream& operator<<(std::ostream& stream, Particle& p);

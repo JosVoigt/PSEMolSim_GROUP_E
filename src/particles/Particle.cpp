@@ -97,12 +97,12 @@ std::string Particle::toString() const {
 }
 
 bool Particle::isDirectNeighbour(Particle &particle) {
-    const auto p = particle.getStraightNeighbours();
+    const auto p = this->getStraightNeighbours();
     return std::find(p.begin(), p.end(), &particle) != p.end();
 }
 
 bool Particle::isDiagonalNeighbour(Particle &particle) {
-    const auto p = particle.getDiagonalNeighbours();
+    const auto p = this->getDiagonalNeighbours();
     return std::find(p.begin(), p.end(), &particle) != p.end();
 
 }
