@@ -7,7 +7,7 @@
 
 MembraneLenJonesForce::MembraneLenJonesForce(double bondDistance_,
                                              double bondStrength)
-    : bondDistance(bondDistance_), k(bondStrength){};
+    : bondDistance(bondDistance_), k(bondStrength){}
 
 std::array<double, 3> MembraneLenJonesForce::calculateForce(
     Particle& p1, Particle& p2) const {
