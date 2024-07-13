@@ -343,12 +343,15 @@ void LinkedCellsContainer::initCellNeighbourReferences() {
 void LinkedCellsContainer::initIterationOrders() {
 
     //May need to change d_x to 3
+
+    //The gaps between every cell selected for this iteration order. After 3, the algorithm starts skipping cells
     const int d_x = 2;
     const int d_y = 3;
     const int d_z = 3;
 
     std::vector<std::array<int, 3>> offsets_vector;
 
+    //We initialize a vector with all possible start offsets
     for (int x = 0; x < d_x; x++) {
         for (int y = 0; y < d_y; y++) {
             for (int z = 0; z < d_z; z++) {
@@ -357,6 +360,7 @@ void LinkedCellsContainer::initIterationOrders() {
         }
     }
 
+    //And then we actually input all cells to an iterator order, starting from the corresponding offset
     for (const auto current_offset : offsets_vector) {
 
         std::vector<Cell*> current_it_order;
