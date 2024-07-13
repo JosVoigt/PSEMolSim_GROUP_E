@@ -24,7 +24,12 @@ class LinkedCellsContainer : public ParticleContainer {
      */
     enum class BoundarySide { LEFT, RIGHT, BOTTOM, TOP, BACK, FRONT };
 
-   public:
+
+    /**
+     * @brief A list of different orders of cells, used for parallelization
+     */
+    std::vector<std::vector<Cell*>> iteration_order_vector;
+
     /**
      * @brief Construct a new Linked Cells Particle Container object
      *
@@ -247,6 +252,11 @@ class LinkedCellsContainer : public ParticleContainer {
      * @brief Sets the neighbour references for each cell in the cell vector
      */
     void initCellNeighbourReferences();
+
+    /**
+     * @brief Initializes the various iterator orders for parallelization
+     */
+    void initIterationOrders();
 
     /**
      * @brief Updates the particle references in the cells. This is necessary after a reallocation of the internal particle vector.

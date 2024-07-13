@@ -37,14 +37,19 @@ void DirectSumContainer::applySimpleForces(const std::vector<std::shared_ptr<Sim
 }
 
 void DirectSumContainer::applyPairwiseForces(const std::vector<std::shared_ptr<PairwiseForceSource>>& force_sources) {
+
+#ifdef _OPENMP
+#pragma omp parallel for schedule(static)
+#endif
     for (auto it1 = particles.begin(); it1 != particles.end(); ++it1) {
+        std::array<double, 3> total_force{0, 0, 0};
         for (auto it2 = (it1 + 1); it2 != particles.end(); ++it2) {
-            std::array<double, 3> total_force{0, 0, 0};
             for (auto& force : force_sources) {
                 total_force = total_force + force->calculateForce(*it1, *it2);
             }
-            it1->setF(it1->getF() + total_force);
-            it2->setF(it2->getF() - total_force);
         }
+        //Since parallelization would mess up Newton's third law, we leave it up to the threads to get to it
+        //hemselves at some point
+        it1->setF(it1->getF() + total_force);
     }
 }

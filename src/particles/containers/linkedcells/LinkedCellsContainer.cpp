@@ -31,6 +31,9 @@ LinkedCellsContainer::LinkedCellsContainer(const std::array<double, 3>& _domain_
     // add the neighbour references to the cells
     initCellNeighbourReferences();
 
+    //Create different lists of cells to iterate through
+    initIterationOrders();
+
     // reserve the memory for the particles to prevent reallocation during insertion
     particles.reserve(_n);
 
@@ -119,39 +122,44 @@ void LinkedCellsContainer::applyPairwiseForces(const std::vector<std::shared_ptr
         cell->clearAlreadyInfluencedBy();
     }
 
-    for (Cell* cell : occupied_cells_references) {
-        // skip halo cells
-        // if (cell->getCellType() == Cell::CellType::HALO) continue;
+    for (auto& current_it_order : iteration_order_vector) {
+#ifdef _OPENMP
+#pragma omp parallel for schedule(dynamic)
+#endif
+        for (Cell* cell : occupied_cells_references) {
+            // skip halo cells
+            // if (cell->getCellType() == Cell::CellType::HALO) continue;
 
-        for (auto it1 = cell->getParticleReferences().begin(); it1 != cell->getParticleReferences().end(); ++it1) {
-            Particle* p = *it1;
-            // calculate the forces between the particle and the particles in the same cell
-            // uses direct sum with newtons third law
-            for (auto it2 = (it1 + 1); it2 != cell->getParticleReferences().end(); ++it2) {
-                Particle* q = *it2;
-                std::array<double, 3> total_force{0, 0, 0};
-                for (auto& force : force_sources) {
-                    total_force = total_force + force->calculateForce(*p, *q);
-                }
-                p->setF(p->getF() + total_force);
-                q->setF(q->getF() - total_force);
-            }
-
-            // calculate the forces between the particle and the particles in the neighbour cells
-            for (Cell* neighbour : cell->getNeighbourReferences()) {
-                if (cell->getAlreadyInfluencedBy().contains(neighbour)) continue;
-
-                for (Particle* neighbour_particle : neighbour->getParticleReferences()) {
-                    if (ArrayUtils::L2Norm(p->getX() - neighbour_particle->getX()) > cutoff_radius) continue;
-
-                    for (const auto& force_source : force_sources) {
-                        std::array<double, 3> force = force_source->calculateForce(*p, *neighbour_particle);
-                        p->setF(p->getF() + force);
-                        neighbour_particle->setF(neighbour_particle->getF() - force);
+            for (auto it1 = cell->getParticleReferences().begin(); it1 != cell->getParticleReferences().end(); ++it1) {
+                Particle* p = *it1;
+                // calculate the forces between the particle and the particles in the same cell
+                // uses direct sum with newtons third law
+                for (auto it2 = (it1 + 1); it2 != cell->getParticleReferences().end(); ++it2) {
+                    Particle* q = *it2;
+                    std::array<double, 3> total_force{0, 0, 0};
+                    for (auto& force : force_sources) {
+                        total_force = total_force + force->calculateForce(*p, *q);
                     }
+                    p->setF(p->getF() + total_force);
+                    q->setF(q->getF() - total_force);
                 }
 
-                neighbour->addAlreadyInfluencedBy(cell);
+                // calculate the forces between the particle and the particles in the neighbour cells
+                for (Cell* neighbour : cell->getNeighbourReferences()) {
+                    if (cell->getAlreadyInfluencedBy().contains(neighbour)) continue;
+
+                    for (Particle* neighbour_particle : neighbour->getParticleReferences()) {
+                        if (ArrayUtils::L2Norm(p->getX() - neighbour_particle->getX()) > cutoff_radius) continue;
+
+                        for (const auto& force_source : force_sources) {
+                            std::array<double, 3> force = force_source->calculateForce(*p, *neighbour_particle);
+                            p->setF(p->getF() + force);
+                            neighbour_particle->setF(neighbour_particle->getF() - force);
+                        }
+                    }
+
+                    neighbour->addAlreadyInfluencedBy(cell);
+                }
             }
         }
     }
@@ -330,6 +338,40 @@ void LinkedCellsContainer::initCellNeighbourReferences() {
         }
     }
 }
+
+
+void LinkedCellsContainer::initIterationOrders() {
+
+    //May need to change d_x to 3
+    const int d_x = 2;
+    const int d_y = 3;
+    const int d_z = 3;
+
+    std::vector<std::array<int, 3>> offsets_vector;
+
+    for (int x = 0; x < d_x; x++) {
+        for (int y = 0; y < d_y; y++) {
+            for (int z = 0; z < d_z; z++) {
+                offsets_vector.push_back({x-1, y-1, z-1});
+            }
+        }
+    }
+
+    for (const auto current_offset : offsets_vector) {
+
+        std::vector<Cell*> current_it_order;
+
+        for (int x = current_offset[0]; x < domain_num_cells[0]; x += d_x) {
+            for (int y = current_offset[1]; y < domain_num_cells[1]; y += d_y) {
+                for (int z = current_offset[2]; z < domain_num_cells[2]; z += d_z) {
+                    current_it_order.push_back(&cells.at(cellCoordToCellIndex(x, y, z)));
+                }
+            }
+        }
+        iteration_order_vector.push_back(current_it_order);
+    }
+}
+
 
 void LinkedCellsContainer::updateCellsParticleReferences() {
     // clear the particle references in the cells
