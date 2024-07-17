@@ -208,6 +208,30 @@ z (const z_type& x)
 }
 
 
+// IntVector
+//
+
+IntVector::
+IntVector ()
+: ::xsd::cxx::tree::list< ::xml_schema::int_, char > (this)
+{
+}
+
+IntVector::
+IntVector (size_type n, const ::xml_schema::int_& x)
+: ::xsd::cxx::tree::list< ::xml_schema::int_, char > (n, x, this)
+{
+}
+
+IntVector::
+IntVector (const IntVector& o,
+           ::xml_schema::flags f,
+           ::xml_schema::container* c)
+: ::xml_schema::simple_type (o, f, c),
+  ::xsd::cxx::tree::list< ::xml_schema::int_, char > (o, f, this)
+{
+}
+
 // ParticleContainerType
 //
 
@@ -1869,6 +1893,76 @@ g (const g_type& x)
 }
 
 
+// UpwardsType
+//
+
+const UpwardsType::force_type& UpwardsType::
+force () const
+{
+  return this->force_.get ();
+}
+
+UpwardsType::force_type& UpwardsType::
+force ()
+{
+  return this->force_.get ();
+}
+
+void UpwardsType::
+force (const force_type& x)
+{
+  this->force_.set (x);
+}
+
+void UpwardsType::
+force (::std::unique_ptr< force_type > x)
+{
+  this->force_.set (std::move (x));
+}
+
+const UpwardsType::target_particles_type& UpwardsType::
+target_particles () const
+{
+  return this->target_particles_.get ();
+}
+
+UpwardsType::target_particles_type& UpwardsType::
+target_particles ()
+{
+  return this->target_particles_.get ();
+}
+
+void UpwardsType::
+target_particles (const target_particles_type& x)
+{
+  this->target_particles_.set (x);
+}
+
+void UpwardsType::
+target_particles (::std::unique_ptr< target_particles_type > x)
+{
+  this->target_particles_.set (std::move (x));
+}
+
+const UpwardsType::end_time_type& UpwardsType::
+end_time () const
+{
+  return this->end_time_.get ();
+}
+
+UpwardsType::end_time_type& UpwardsType::
+end_time ()
+{
+  return this->end_time_.get ();
+}
+
+void UpwardsType::
+end_time (const end_time_type& x)
+{
+  this->end_time_.set (x);
+}
+
+
 // MembraneLennardJonesForceType
 //
 
@@ -2000,6 +2094,36 @@ void ForcesType::
 GlobalDownwardsGravity (::std::unique_ptr< GlobalDownwardsGravity_type > x)
 {
   this->GlobalDownwardsGravity_.set (std::move (x));
+}
+
+const ForcesType::UpwardsForce_optional& ForcesType::
+UpwardsForce () const
+{
+  return this->UpwardsForce_;
+}
+
+ForcesType::UpwardsForce_optional& ForcesType::
+UpwardsForce ()
+{
+  return this->UpwardsForce_;
+}
+
+void ForcesType::
+UpwardsForce (const UpwardsForce_type& x)
+{
+  this->UpwardsForce_.set (x);
+}
+
+void ForcesType::
+UpwardsForce (const UpwardsForce_optional& x)
+{
+  this->UpwardsForce_ = x;
+}
+
+void ForcesType::
+UpwardsForce (::std::unique_ptr< UpwardsForce_type > x)
+{
+  this->UpwardsForce_.set (std::move (x));
 }
 
 const ForcesType::MembraneLennardJonesForce_optional& ForcesType::
@@ -2519,6 +2643,49 @@ operator= (const IntVec3Type& x)
 
 IntVec3Type::
 ~IntVec3Type ()
+{
+}
+
+// IntVector
+//
+
+IntVector::
+IntVector (const ::xercesc::DOMElement& e,
+           ::xml_schema::flags f,
+           ::xml_schema::container* c)
+: ::xml_schema::simple_type (e, f, c),
+  ::xsd::cxx::tree::list< ::xml_schema::int_, char > (e, f, this)
+{
+}
+
+IntVector::
+IntVector (const ::xercesc::DOMAttr& a,
+           ::xml_schema::flags f,
+           ::xml_schema::container* c)
+: ::xml_schema::simple_type (a, f, c),
+  ::xsd::cxx::tree::list< ::xml_schema::int_, char > (a, f, this)
+{
+}
+
+IntVector::
+IntVector (const ::std::string& s,
+           const ::xercesc::DOMElement* e,
+           ::xml_schema::flags f,
+           ::xml_schema::container* c)
+: ::xml_schema::simple_type (s, e, f, c),
+  ::xsd::cxx::tree::list< ::xml_schema::int_, char > (s, e, f, this)
+{
+}
+
+IntVector* IntVector::
+_clone (::xml_schema::flags f,
+        ::xml_schema::container* c) const
+{
+  return new class IntVector (*this, f, c);
+}
+
+IntVector::
+~IntVector ()
 {
 }
 
@@ -5556,6 +5723,158 @@ GlobalGravityType::
 {
 }
 
+// UpwardsType
+//
+
+UpwardsType::
+UpwardsType (const force_type& force,
+             const target_particles_type& target_particles,
+             const end_time_type& end_time)
+: ::xml_schema::type (),
+  force_ (force, this),
+  target_particles_ (target_particles, this),
+  end_time_ (end_time, this)
+{
+}
+
+UpwardsType::
+UpwardsType (::std::unique_ptr< force_type > force,
+             const target_particles_type& target_particles,
+             const end_time_type& end_time)
+: ::xml_schema::type (),
+  force_ (std::move (force), this),
+  target_particles_ (target_particles, this),
+  end_time_ (end_time, this)
+{
+}
+
+UpwardsType::
+UpwardsType (const UpwardsType& x,
+             ::xml_schema::flags f,
+             ::xml_schema::container* c)
+: ::xml_schema::type (x, f, c),
+  force_ (x.force_, f, this),
+  target_particles_ (x.target_particles_, f, this),
+  end_time_ (x.end_time_, f, this)
+{
+}
+
+UpwardsType::
+UpwardsType (const ::xercesc::DOMElement& e,
+             ::xml_schema::flags f,
+             ::xml_schema::container* c)
+: ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
+  force_ (this),
+  target_particles_ (this),
+  end_time_ (this)
+{
+  if ((f & ::xml_schema::flags::base) == 0)
+  {
+    ::xsd::cxx::xml::dom::parser< char > p (e, true, false, false);
+    this->parse (p, f);
+  }
+}
+
+void UpwardsType::
+parse (::xsd::cxx::xml::dom::parser< char >& p,
+       ::xml_schema::flags f)
+{
+  for (; p.more_content (); p.next_content (false))
+  {
+    const ::xercesc::DOMElement& i (p.cur_element ());
+    const ::xsd::cxx::xml::qualified_name< char > n (
+      ::xsd::cxx::xml::dom::name< char > (i));
+
+    // force
+    //
+    if (n.name () == "force" && n.namespace_ ().empty ())
+    {
+      ::std::unique_ptr< force_type > r (
+        force_traits::create (i, f, this));
+
+      if (!force_.present ())
+      {
+        this->force_.set (::std::move (r));
+        continue;
+      }
+    }
+
+    // target_particles
+    //
+    if (n.name () == "target_particles" && n.namespace_ ().empty ())
+    {
+      ::std::unique_ptr< target_particles_type > r (
+        target_particles_traits::create (i, f, this));
+
+      if (!target_particles_.present ())
+      {
+        this->target_particles_.set (::std::move (r));
+        continue;
+      }
+    }
+
+    // end_time
+    //
+    if (n.name () == "end_time" && n.namespace_ ().empty ())
+    {
+      if (!end_time_.present ())
+      {
+        this->end_time_.set (end_time_traits::create (i, f, this));
+        continue;
+      }
+    }
+
+    break;
+  }
+
+  if (!force_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "force",
+      "");
+  }
+
+  if (!target_particles_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "target_particles",
+      "");
+  }
+
+  if (!end_time_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "end_time",
+      "");
+  }
+}
+
+UpwardsType* UpwardsType::
+_clone (::xml_schema::flags f,
+        ::xml_schema::container* c) const
+{
+  return new class UpwardsType (*this, f, c);
+}
+
+UpwardsType& UpwardsType::
+operator= (const UpwardsType& x)
+{
+  if (this != &x)
+  {
+    static_cast< ::xml_schema::type& > (*this) = x;
+    this->force_ = x.force_;
+    this->target_particles_ = x.target_particles_;
+    this->end_time_ = x.end_time_;
+  }
+
+  return *this;
+}
+
+UpwardsType::
+~UpwardsType ()
+{
+}
+
 // MembraneLennardJonesForceType
 //
 
@@ -5665,6 +5984,7 @@ ForcesType ()
   LennardJones_ (this),
   Gravitational_ (this),
   GlobalDownwardsGravity_ (this),
+  UpwardsForce_ (this),
   MembraneLennardJonesForce_ (this)
 {
 }
@@ -5677,6 +5997,7 @@ ForcesType (const ForcesType& x,
   LennardJones_ (x.LennardJones_, f, this),
   Gravitational_ (x.Gravitational_, f, this),
   GlobalDownwardsGravity_ (x.GlobalDownwardsGravity_, f, this),
+  UpwardsForce_ (x.UpwardsForce_, f, this),
   MembraneLennardJonesForce_ (x.MembraneLennardJonesForce_, f, this)
 {
 }
@@ -5689,6 +6010,7 @@ ForcesType (const ::xercesc::DOMElement& e,
   LennardJones_ (this),
   Gravitational_ (this),
   GlobalDownwardsGravity_ (this),
+  UpwardsForce_ (this),
   MembraneLennardJonesForce_ (this)
 {
   if ((f & ::xml_schema::flags::base) == 0)
@@ -5750,6 +6072,20 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       }
     }
 
+    // UpwardsForce
+    //
+    if (n.name () == "UpwardsForce" && n.namespace_ ().empty ())
+    {
+      ::std::unique_ptr< UpwardsForce_type > r (
+        UpwardsForce_traits::create (i, f, this));
+
+      if (!this->UpwardsForce_)
+      {
+        this->UpwardsForce_.set (::std::move (r));
+        continue;
+      }
+    }
+
     // MembraneLennardJonesForce
     //
     if (n.name () == "MembraneLennardJonesForce" && n.namespace_ ().empty ())
@@ -5784,6 +6120,7 @@ operator= (const ForcesType& x)
     this->LennardJones_ = x.LennardJones_;
     this->Gravitational_ = x.Gravitational_;
     this->GlobalDownwardsGravity_ = x.GlobalDownwardsGravity_;
+    this->UpwardsForce_ = x.UpwardsForce_;
     this->MembraneLennardJonesForce_ = x.MembraneLennardJonesForce_;
   }
 
@@ -6473,6 +6810,25 @@ operator<< (::xercesc::DOMElement& e, const IntVec3Type& i)
 
     s << i.z ();
   }
+}
+
+void
+operator<< (::xercesc::DOMElement& e, const IntVector& i)
+{
+  e << static_cast< const ::xsd::cxx::tree::list< ::xml_schema::int_, char >& > (i);
+}
+
+void
+operator<< (::xercesc::DOMAttr& a, const IntVector& i)
+{
+  a << static_cast< const ::xsd::cxx::tree::list< ::xml_schema::int_, char >& > (i);
+}
+
+void
+operator<< (::xml_schema::list_stream& l,
+            const IntVector& i)
+{
+  l << static_cast< const ::xsd::cxx::tree::list< ::xml_schema::int_, char >& > (i);
 }
 
 void
@@ -7488,6 +7844,45 @@ operator<< (::xercesc::DOMElement& e, const GlobalGravityType& i)
 }
 
 void
+operator<< (::xercesc::DOMElement& e, const UpwardsType& i)
+{
+  e << static_cast< const ::xml_schema::type& > (i);
+
+  // force
+  //
+  {
+    ::xercesc::DOMElement& s (
+      ::xsd::cxx::xml::dom::create_element (
+        "force",
+        e));
+
+    s << i.force ();
+  }
+
+  // target_particles
+  //
+  {
+    ::xercesc::DOMElement& s (
+      ::xsd::cxx::xml::dom::create_element (
+        "target_particles",
+        e));
+
+    s << i.target_particles ();
+  }
+
+  // end_time
+  //
+  {
+    ::xercesc::DOMElement& s (
+      ::xsd::cxx::xml::dom::create_element (
+        "end_time",
+        e));
+
+    s << ::xml_schema::as_double(i.end_time ());
+  }
+}
+
+void
 operator<< (::xercesc::DOMElement& e, const MembraneLennardJonesForceType& i)
 {
   e << static_cast< const ::xml_schema::type& > (i);
@@ -7554,6 +7949,18 @@ operator<< (::xercesc::DOMElement& e, const ForcesType& i)
         e));
 
     s << *i.GlobalDownwardsGravity ();
+  }
+
+  // UpwardsForce
+  //
+  if (i.UpwardsForce ())
+  {
+    ::xercesc::DOMElement& s (
+      ::xsd::cxx::xml::dom::create_element (
+        "UpwardsForce",
+        e));
+
+    s << *i.UpwardsForce ();
   }
 
   // MembraneLennardJonesForce

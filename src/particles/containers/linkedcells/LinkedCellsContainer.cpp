@@ -169,6 +169,12 @@ void LinkedCellsContainer::applyPairwiseForces(const std::vector<std::shared_ptr
     updateCellsParticleReferences();
 }
 
+void LinkedCellsContainer::applyUpwardsForces(const std::vector<std::shared_ptr<UpwardsForce>>& upwards_force_sources) {
+    for (const auto& force_source : upwards_force_sources) {
+        force_source->calculateForce(particles);
+    }
+}
+
 void LinkedCellsContainer::reserve(size_t n) {
     Logger::logger->debug("Reserving space for {} particles", n);
 

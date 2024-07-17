@@ -1,19 +1,26 @@
 #pragma once
 
-#include "SimpleForceSource.h"
+#include <array>
+#include <vector>
 
-class UpwardsForce : public SimpleForceSource{
+#include "particles/Particle.h"
+
+class UpwardsForce {
 private:
     std::array<double, 3> force;
     std::vector<int> target_particles;
     double end_time;
 
 public:
-    UpwardsForce(std::array<double, 3> force, std::vector<int>& target_particles, double end_time);
+    explicit UpwardsForce(std::array<double, 3> force, std::vector<int> target_particles, double end_time);
+
     /**
-     * @brief Calculates the small upwards force for the given particle
-     * @param p Particle vector
-     * @param time Current time
+     * @brief Calculates the small upwards force for the given particles
+     * @param particles Particle vector
      */
-    void calculateForce(std::vector<Particle>& p, double time) const;
+    void calculateForce(std::vector<Particle>& particles) const;
+
+    explicit operator std::string() const;
+
+    [[nodiscard]] double getEndTime() const { return end_time; }
 };

@@ -36,6 +36,12 @@ void DirectSumContainer::applySimpleForces(const std::vector<std::shared_ptr<Sim
     }
 }
 
+void DirectSumContainer::applyUpwardsForces(const std::vector<std::shared_ptr<UpwardsForce>>& upwards_force_sources) {
+    for (auto& force : upwards_force_sources) {
+        force->calculateForce(particles);
+    }
+}
+
 void DirectSumContainer::applyPairwiseForces(const std::vector<std::shared_ptr<PairwiseForceSource>>& force_sources) {
 
 #ifdef _OPENMP

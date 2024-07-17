@@ -30,11 +30,9 @@
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="IntVector">
-    <xs:sequence>
-      <xs:element name="int" type="xs:int" maxOccurs="unbounded" />
-    </xs:sequence>
-  </xs:complexType>
+  <xs:simpleType name="IntVector">
+    <xs:list itemType="xs:int" />
+  </xs:simpleType>
 
   <!-- Particle Container -->
   <xs:complexType name="ParticleContainerType">

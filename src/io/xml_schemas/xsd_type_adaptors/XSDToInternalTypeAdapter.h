@@ -113,7 +113,7 @@ class XSDToInternalTypeAdapter {
      * @param forces List of forces in the XSD format
      * @return Tuple with lists of simple and pairwise forces parsed from the given list of forces in the XSD format
      */
-    static std::tuple<std::vector<std::shared_ptr<SimpleForceSource>>, std::vector<std::shared_ptr<PairwiseForceSource>>> convertToForces(
+    static std::tuple<std::vector<std::shared_ptr<SimpleForceSource>>, std::vector<std::shared_ptr<PairwiseForceSource>>, std::vector<std::shared_ptr<UpwardsForce>>> convertToForces(
         const ForcesType& forces);
 
     /**
@@ -131,4 +131,12 @@ class XSDToInternalTypeAdapter {
      * @return Vector parsed from the given vector in the XSD format
      */
     static std::array<int, 3> convertToVector(const IntVec3Type& vector);
+
+    /**
+     * @brief Converts a int vector from the XSD format to the internal format
+     *
+     * @param vector int Vector in the XSD format
+     * @return Vector parsed from the given vector in the XSD format
+     */
+    static std::vector<int> convertToVector(const IntVector& vector);
 };

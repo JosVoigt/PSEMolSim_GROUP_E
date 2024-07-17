@@ -9,6 +9,7 @@
 #include "io/output/OutputFormats.h"
 #include "physics/ForcePicker.h"
 #include "physics/simpleforces/GlobalDownwardsGravity.h"
+#include "physics/simpleforces/UpwardsForce.h"
 #include "simulation/SimulationParams.h"
 #include "utils/StringUtils.h"
 
@@ -77,7 +78,8 @@ SimulationParams::SimulationParams(const std::filesystem::path& input_file_path,
                                    const std::variant<DirectSumType, LinkedCellsType>& container_type,
                                    const std::vector<std::shared_ptr<SimulationInterceptor>>& interceptors,
                                    const std::vector<std::shared_ptr<SimpleForceSource>>& simple_forces,
-                                   const std::vector<std::shared_ptr<PairwiseForceSource>>& pairwise_forces, bool performance_test,
+                                   const std::vector<std::shared_ptr<PairwiseForceSource>>& pairwise_forces,
+                                   const std::vector<std::shared_ptr<UpwardsForce>>& upwards_forces, bool performance_test,
                                    bool fresh, const std::filesystem::path& base_path)
     : input_file_path(std::filesystem::absolute(input_file_path)),
       delta_t(delta_t),
@@ -86,6 +88,7 @@ SimulationParams::SimulationParams(const std::filesystem::path& input_file_path,
       container_type(container_type),
       simple_forces(simple_forces),
       pairwise_forces(pairwise_forces),
+      upwards_forces(upwards_forces),
       performance_test(performance_test),
       fresh(fresh) {
     if (end_time < 0) {
@@ -113,7 +116,10 @@ void SimulationParams::logSummary(int depth) const {
             [](const std::string& acc, const std::shared_ptr<SimpleForceSource>& force) { return acc + std::string(*force) + ", "; }) +
         std::accumulate(
             pairwise_forces.begin(), pairwise_forces.end(), std::string{},
-            [](const std::string& acc, const std::shared_ptr<PairwiseForceSource>& force) { return acc + std::string(*force) + ", "; });
+            [](const std::string& acc, const std::shared_ptr<PairwiseForceSource>& force) { return acc + std::string(*force) + ", "; }) +
+        std::accumulate(
+                upwards_forces.begin(), upwards_forces.end(), std::string{},
+                [](const std::string& acc, const std::shared_ptr<UpwardsForce>& force) { return acc + std::string(*force) + ", "; });
 
     Logger::logger->info("{}╔════════════════════════════════════════", indent);
     Logger::logger->info("{}╟┤{}Simulation arguments: {}", indent, ansi_yellow_bold, ansi_end);
