@@ -108,9 +108,61 @@ TEST(MembraneParticleSpawner, InitializesNeighborsCorrectly) {
     EXPECT_EQ(particle_container[8].getStraightNeighbours().size(), 2);
     EXPECT_EQ(particle_container[8].getDiagonalNeighbours().size(), 1);
 
-    //checks for the correct neighbor for the first particle
-    //(not complete, doesn't check every neighbor. Just as a test)
-    auto& straightNeighbours = particle_container[0].getStraightNeighbours();
-    bool contains = std::find(straightNeighbours.begin(), straightNeighbours.end(), &particle_container[1]) != straightNeighbours.end();
-    EXPECT_TRUE(contains);
+    //checks for the correct neighbors
+    bool neighbours_0 = particle_container[0].isDirectNeighbour(particle_container[1])
+            && particle_container[0].isDirectNeighbour(particle_container[3])
+            && particle_container[0].isDiagonalNeighbour(particle_container[4]);
+    EXPECT_TRUE(neighbours_0);
+    bool neighbours_1 = particle_container[1].isDirectNeighbour(particle_container[0])
+            && particle_container[1].isDirectNeighbour(particle_container[2])
+            && particle_container[1].isDirectNeighbour(particle_container[4])
+            && particle_container[1].isDiagonalNeighbour(particle_container[3])
+            && particle_container[1].isDiagonalNeighbour(particle_container[5]);
+    EXPECT_TRUE(neighbours_1);
+    bool neighbours_2 = particle_container[2].isDirectNeighbour(particle_container[1])
+            && particle_container[2].isDirectNeighbour(particle_container[5])
+            && particle_container[2].isDiagonalNeighbour(particle_container[4]);
+    EXPECT_TRUE(neighbours_2);
+    bool neighbours_3 = particle_container[3].isDirectNeighbour(particle_container[0])
+            && particle_container[3].isDirectNeighbour(particle_container[4])
+            && particle_container[3].isDirectNeighbour(particle_container[6])
+            && particle_container[3].isDiagonalNeighbour(particle_container[1])
+            && particle_container[3].isDiagonalNeighbour(particle_container[7]);
+    EXPECT_TRUE(neighbours_3);
+    bool neighbours_4 = particle_container[4].isDirectNeighbour(particle_container[1])
+            && particle_container[4].isDirectNeighbour(particle_container[3])
+            && particle_container[4].isDirectNeighbour(particle_container[5])
+            && particle_container[4].isDirectNeighbour(particle_container[7])
+            && particle_container[4].isDiagonalNeighbour(particle_container[0])
+            && particle_container[4].isDiagonalNeighbour(particle_container[2])
+            && particle_container[4].isDiagonalNeighbour(particle_container[6])
+            && particle_container[4].isDiagonalNeighbour(particle_container[8]);
+    EXPECT_TRUE(neighbours_4);
+    bool neighbours_5 = particle_container[5].isDirectNeighbour(particle_container[2])
+            && particle_container[5].isDirectNeighbour(particle_container[4])
+            && particle_container[5].isDirectNeighbour(particle_container[8])
+            && particle_container[5].isDiagonalNeighbour(particle_container[1])
+            && particle_container[5].isDiagonalNeighbour(particle_container[7]);
+    EXPECT_TRUE(neighbours_5);
+    bool neighbours_6 = particle_container[6].isDirectNeighbour(particle_container[3])
+            && particle_container[6].isDirectNeighbour(particle_container[7])
+            && particle_container[6].isDiagonalNeighbour(particle_container[4]);
+    EXPECT_TRUE(neighbours_6);
+    bool neighbours_7 = particle_container[7].isDirectNeighbour(particle_container[4])
+            && particle_container[7].isDirectNeighbour(particle_container[6])
+            && particle_container[7].isDirectNeighbour(particle_container[8])
+            && particle_container[7].isDiagonalNeighbour(particle_container[3])
+            && particle_container[7].isDiagonalNeighbour(particle_container[5]);
+    EXPECT_TRUE(neighbours_7);
+    bool neighbours_8 = particle_container[8].isDirectNeighbour(particle_container[5])
+            && particle_container[8].isDirectNeighbour(particle_container[7])
+            && particle_container[8].isDiagonalNeighbour(particle_container[4]);
+    EXPECT_TRUE(neighbours_8);
+
+    //checks for incorrect neighbors
+    bool incorrect_4 = particle_container[4].isDirectNeighbour(particle_container[0])
+            && particle_container[4].isDirectNeighbour(particle_container[2])
+            && particle_container[4].isDirectNeighbour(particle_container[6])
+            && particle_container[4].isDirectNeighbour(particle_container[8]);
+    EXPECT_FALSE(incorrect_4);
 }

@@ -38,16 +38,15 @@ class Simulation {
      */
     SimulationOverview runSimulation();
 
-   private:
+    /**
+      * @brief Reference to the `ParticleContainer` on whose content the simulation is performed
+      */
+    std::unique_ptr<ParticleContainer> particle_container;
+private:
     /**
      * @brief Reference to the simulation parameters object
      */
     const SimulationParams& params;
-
-    /**
-     * @brief Reference to the `ParticleContainer` on whose content the simulation is performed
-     */
-    std::unique_ptr<ParticleContainer> particle_container;
 
     /**
      * @brief Functor used to integrate the particles
