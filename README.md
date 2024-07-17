@@ -1,32 +1,19 @@
 # Molecular Dynamics Simulation
 
-[![CodeQL](https://github.com/ManuelLerchner/MolSim-WS23-24/actions/workflows/codeql.yml/badge.svg)](https://github.com/ManuelLerchner/MolSim-WS23-24/actions/workflows/codeql.yml)
-[![Tests](https://github.com/ManuelLerchner/MolSim-WS23-24/actions/workflows/tests.yml/badge.svg)](https://github.com/ManuelLerchner/MolSim-WS23-24/actions/workflows/tests.yml)
-[![Pages](https://github.com/ManuelLerchner/MolSim-WS23-24/actions/workflows/deploy-pages.yml/badge.svg)](https://github.com/ManuelLerchner/MolSim-WS23-24/actions/workflows/deploy-pages.yml)
 
-This repo contains the code for the practical course **PSE: Molecular Dynamics** by group C in WS 2023/24.
+This repo contains the code for the practical course **PSE: Molecular Dynamics** by group E in SS 2024.
 
-## Group Members and Supervisors
+## Group Members
 
-**Group Members:**
 
-- Manuel Lerchner
-- Tobias Eppacher
-- Daniel Safyan
 
-**All Contributors:**
+- Joshua Voigt
+- Luca Tänzler
+- Georgios Chatzikyriakou
 
-<!-- markdownlint-disable MD033 -->
-<a href="https://github.com/ManuelLerchner/MolSim-WS23-24/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=ManuelLerchner/MolSim-WS23-24" />
-</a>
 
-## Submissions and Presentations
 
-All the submissions for the individual sheets, the presentation slides and the project documentation is automatically deployed to [GitHub Pages](https://manuellerchner.github.io/MolSim-WS23-24) and can be accessed via the following links:
 
-- The doxygen documentation of the `master` branch can be found in [docs](https://manuellerchner.github.io/MolSim-WS23-24/docs/).
-- The submission files of the `presentations` branch can be found in [submissions](https://manuellerchner.github.io/MolSim-WS23-24/submissions/).
 
 ## Tools
 
@@ -72,7 +59,6 @@ In this section we describe how to build the project. You can use the following 
 
 - The output can be found in `build/docs/html/index.html`.
 
-- The documentation of the `master` branch can be found [here](https://manuellerchner.github.io/MolSim-WS23-24/docs/).
 
 ## Run
 
@@ -80,7 +66,7 @@ In this section we describe how to build the project. You can use the following 
 
 - Enter the `build/project` directory after building the project.
 
-- Run `./MolSim <FILENAME>` to run the program. `<FILENAME>` is the path to the input file. For more information on the possible input file formats see [Input File Formats](@ref InputFileFormats).
+- Run `./MolSim <FILENAME>` to run the program. `<FILENAME>` is the path to the input file.
 
   - Excecute `./MolSim --help` to get a detailed list of all options, parameters and their default values.
 
