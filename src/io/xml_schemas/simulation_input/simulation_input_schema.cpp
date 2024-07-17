@@ -816,6 +816,24 @@ grid_spacing (const grid_spacing_type& x)
   this->grid_spacing_.set (x);
 }
 
+const MembraneSpawnerType::temperature_type& MembraneSpawnerType::
+temperature () const
+{
+  return this->temperature_.get ();
+}
+
+MembraneSpawnerType::temperature_type& MembraneSpawnerType::
+temperature ()
+{
+  return this->temperature_.get ();
+}
+
+void MembraneSpawnerType::
+temperature (const temperature_type& x)
+{
+  this->temperature_.set (x);
+}
+
 const MembraneSpawnerType::mass_type& MembraneSpawnerType::
 mass () const
 {
@@ -3604,6 +3622,7 @@ MembraneSpawnerType::
 MembraneSpawnerType (const lower_left_front_corner_type& lower_left_front_corner,
                      const grid_dim_type& grid_dim,
                      const grid_spacing_type& grid_spacing,
+                     const temperature_type& temperature,
                      const mass_type& mass,
                      const velocity_type& velocity,
                      const type_type& type,
@@ -3613,6 +3632,7 @@ MembraneSpawnerType (const lower_left_front_corner_type& lower_left_front_corner
   lower_left_front_corner_ (lower_left_front_corner, this),
   grid_dim_ (grid_dim, this),
   grid_spacing_ (grid_spacing, this),
+  temperature_ (temperature, this),
   mass_ (mass, this),
   velocity_ (velocity, this),
   type_ (type, this),
@@ -3625,6 +3645,7 @@ MembraneSpawnerType::
 MembraneSpawnerType (::std::unique_ptr< lower_left_front_corner_type > lower_left_front_corner,
                      ::std::unique_ptr< grid_dim_type > grid_dim,
                      const grid_spacing_type& grid_spacing,
+                     const temperature_type& temperature,
                      const mass_type& mass,
                      ::std::unique_ptr< velocity_type > velocity,
                      const type_type& type,
@@ -3634,6 +3655,7 @@ MembraneSpawnerType (::std::unique_ptr< lower_left_front_corner_type > lower_lef
   lower_left_front_corner_ (std::move (lower_left_front_corner), this),
   grid_dim_ (std::move (grid_dim), this),
   grid_spacing_ (grid_spacing, this),
+  temperature_ (temperature, this),
   mass_ (mass, this),
   velocity_ (std::move (velocity), this),
   type_ (type, this),
@@ -3650,6 +3672,7 @@ MembraneSpawnerType (const MembraneSpawnerType& x,
   lower_left_front_corner_ (x.lower_left_front_corner_, f, this),
   grid_dim_ (x.grid_dim_, f, this),
   grid_spacing_ (x.grid_spacing_, f, this),
+  temperature_ (x.temperature_, f, this),
   mass_ (x.mass_, f, this),
   velocity_ (x.velocity_, f, this),
   type_ (x.type_, f, this),
@@ -3666,6 +3689,7 @@ MembraneSpawnerType (const ::xercesc::DOMElement& e,
   lower_left_front_corner_ (this),
   grid_dim_ (this),
   grid_spacing_ (this),
+  temperature_ (this),
   mass_ (this),
   velocity_ (this),
   type_ (this),
@@ -3724,6 +3748,17 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       if (!grid_spacing_.present ())
       {
         this->grid_spacing_.set (grid_spacing_traits::create (i, f, this));
+        continue;
+      }
+    }
+
+    // temperature
+    //
+    if (n.name () == "temperature" && n.namespace_ ().empty ())
+    {
+      if (!temperature_.present ())
+      {
+        this->temperature_.set (temperature_traits::create (i, f, this));
         continue;
       }
     }
@@ -3810,6 +3845,13 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       "");
   }
 
+  if (!temperature_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "temperature",
+      "");
+  }
+
   if (!mass_.present ())
   {
     throw ::xsd::cxx::tree::expected_element< char > (
@@ -3862,6 +3904,7 @@ operator= (const MembraneSpawnerType& x)
     this->lower_left_front_corner_ = x.lower_left_front_corner_;
     this->grid_dim_ = x.grid_dim_;
     this->grid_spacing_ = x.grid_spacing_;
+    this->temperature_ = x.temperature_;
     this->mass_ = x.mass_;
     this->velocity_ = x.velocity_;
     this->type_ = x.type_;
@@ -7149,6 +7192,17 @@ operator<< (::xercesc::DOMElement& e, const MembraneSpawnerType& i)
         e));
 
     s << ::xml_schema::as_double(i.grid_spacing ());
+  }
+
+  // temperature
+  //
+  {
+    ::xercesc::DOMElement& s (
+      ::xsd::cxx::xml::dom::create_element (
+        "temperature",
+        e));
+
+    s << ::xml_schema::as_double(i.temperature ());
   }
 
   // mass

@@ -3461,6 +3461,53 @@ class MembraneSpawnerType: public ::xml_schema::type
   //@}
 
   /**
+   * @name temperature
+   *
+   * @brief Accessor and modifier functions for the %temperature
+   * required element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
+  typedef ::xml_schema::double_ temperature_type;
+
+  /**
+   * @brief Element traits type.
+   */
+  typedef ::xsd::cxx::tree::traits< temperature_type, char, ::xsd::cxx::tree::schema_type::double_ > temperature_traits;
+
+  /**
+   * @brief Return a read-only (constant) reference to the element.
+   *
+   * @return A constant reference to the element.
+   */
+  const temperature_type&
+  temperature () const;
+
+  /**
+   * @brief Return a read-write reference to the element.
+   *
+   * @return A reference to the element.
+   */
+  temperature_type&
+  temperature ();
+
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
+  void
+  temperature (const temperature_type& x);
+
+  //@}
+
+  /**
    * @name mass
    *
    * @brief Accessor and modifier functions for the %mass
@@ -3718,6 +3765,7 @@ class MembraneSpawnerType: public ::xml_schema::type
   MembraneSpawnerType (const lower_left_front_corner_type&,
                        const grid_dim_type&,
                        const grid_spacing_type&,
+                       const temperature_type&,
                        const mass_type&,
                        const velocity_type&,
                        const type_type&,
@@ -3735,6 +3783,7 @@ class MembraneSpawnerType: public ::xml_schema::type
   MembraneSpawnerType (::std::unique_ptr< lower_left_front_corner_type >,
                        ::std::unique_ptr< grid_dim_type >,
                        const grid_spacing_type&,
+                       const temperature_type&,
                        const mass_type&,
                        ::std::unique_ptr< velocity_type >,
                        const type_type&,
@@ -3814,6 +3863,7 @@ class MembraneSpawnerType: public ::xml_schema::type
   ::xsd::cxx::tree::one< lower_left_front_corner_type > lower_left_front_corner_;
   ::xsd::cxx::tree::one< grid_dim_type > grid_dim_;
   ::xsd::cxx::tree::one< grid_spacing_type > grid_spacing_;
+  ::xsd::cxx::tree::one< temperature_type > temperature_;
   ::xsd::cxx::tree::one< mass_type > mass_;
   ::xsd::cxx::tree::one< velocity_type > velocity_;
   ::xsd::cxx::tree::one< type_type > type_;

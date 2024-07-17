@@ -66,6 +66,7 @@ MembraneSpawner XSDToInternalTypeAdapter::convertToMembraneSpawner(const Membran
     auto type = membrane.type();
     auto epsilon = membrane.epsilon();
     auto sigma = membrane.sigma();
+    auto temperature = membrane.temperature();
 
     if (grid_dimensions[0] <= 0 || grid_dimensions[1] <= 0 || grid_dimensions[2] <= 0) {
         Logger::logger->error("Membrane grid dimensions must be positive");
@@ -89,7 +90,7 @@ MembraneSpawner XSDToInternalTypeAdapter::convertToMembraneSpawner(const Membran
 
     return MembraneSpawner{
             lower_left_corner, grid_dimensions, grid_spacing, mass, initial_velocity, static_cast<int>(type), epsilon, sigma,
-            third_dimension};
+            third_dimension, temperature};
 }
 
 SphereSpawner XSDToInternalTypeAdapter::convertToSphereSpawner(const SphereSpawnerType& sphere, bool third_dimension) {

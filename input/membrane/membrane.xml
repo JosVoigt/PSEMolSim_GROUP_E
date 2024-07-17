@@ -30,7 +30,7 @@
                 <force>
                     <x>0.0</x>
                     <y>0.0</y>
-                    <z>50.0</z>
+                    <z>0.8</z>
                 </force>
                 <target_particles>824 825 874 875</target_particles>
                 <end_time>150</end_time>
@@ -57,6 +57,7 @@
                 <z>1</z>
             </grid_dim>
             <grid_spacing>2.2</grid_spacing>
+            <temperature>0</temperature>
             <mass>1.0</mass>
             <velocity>
                 <x>0.0</x>

@@ -99,6 +99,7 @@
       <xs:element name="lower_left_front_corner" type="DoubleVec3Type" />
       <xs:element name="grid_dim" type="IntVec3Type" />
       <xs:element name="grid_spacing" type="xs:double" />
+      <xs:element name="temperature" type="xs:double" />
       <xs:element name="mass" type="xs:double" />
       <xs:element name="velocity" type="DoubleVec3Type" />
       <xs:element name="type" type="xs:integer" />
