@@ -91,6 +91,7 @@
       <xs:element name="type" type="xs:integer" />
       <xs:element name="epsilon" type="xs:double" />
       <xs:element name="sigma" type="xs:double" />
+      <xs:element name="fixed_position" type="xs:boolean" />
     </xs:sequence>
   </xs:complexType>
 

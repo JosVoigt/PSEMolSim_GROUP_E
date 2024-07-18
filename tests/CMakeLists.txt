@@ -12,8 +12,10 @@ add_executable(tests ${TEST_SRC})
 
 target_link_libraries(
         tests
+        stdc++
         project_lib
-        GTest::gtest_main)
+        GTest::gtest_main
+        m)
 
 include(GoogleTest)
 gtest_discover_tests(tests)

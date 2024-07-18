@@ -25,6 +25,7 @@ CuboidSpawner XSDToInternalTypeAdapter::convertToCuboidSpawner(const CuboidSpawn
     auto epsilon = cuboid.epsilon();
     auto sigma = cuboid.sigma();
     auto temperature = cuboid.temperature();
+    auto fixed_position = cuboid.fixed_position();
 
     if (grid_dimensions[0] <= 0 || grid_dimensions[1] <= 0 || grid_dimensions[2] <= 0) {
         Logger::logger->error("Cuboid grid dimensions must be positive");
@@ -53,7 +54,7 @@ CuboidSpawner XSDToInternalTypeAdapter::convertToCuboidSpawner(const CuboidSpawn
 
     return CuboidSpawner{
         lower_left_front_corner, grid_dimensions, grid_spacing, mass, initial_velocity, static_cast<int>(type), epsilon, sigma,
-        third_dimension,         temperature};
+        third_dimension,         temperature, fixed_position};
 }
 
 MembraneSpawner XSDToInternalTypeAdapter::convertToMembraneSpawner(const MembraneSpawnerType& membrane, bool third_dimension) {

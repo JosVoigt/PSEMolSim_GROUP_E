@@ -78,17 +78,22 @@ class Particle {
      */
     std::vector<Particle*> diagonal_neighbours{};
 
+    /**
+     * @brief Whether the particle is fixed in position
+     */
+    bool fixed_position;
+
    public:
     Particle(const Particle& other);
 
   Particle(std::array<double, 3> x_arg, std::array<double, 3> v_arg,
            double m_arg, int type = 0, double epsilon_arg = 1.0,
-           double sigma_arg = 1.2);
+           double sigma_arg = 1.2, bool fixed_position = false);
 
   Particle(std::array<double, 3> x_arg, std::array<double, 3> v_arg,
            std::array<double, 3> f_arg, std::array<double, 3> old_f_arg,
            double m_arg, int type = 0, double epsilon_arg = 1.0,
-           double sigma_arg = 1.2);
+           double sigma_arg = 1.2, bool fixed_position = false);
 
   virtual ~Particle();
 
@@ -183,6 +188,11 @@ class Particle {
      * @brief Gets the Lennard-Jones potential parameter sigma
      */
   [[nodiscard]] double getSigma() const;
+
+    /**
+         * @brief Gets the fixed position of the particle
+         */
+    [[nodiscard]] bool getFixedPosition() const;
 
   bool operator==(Particle& other);
 

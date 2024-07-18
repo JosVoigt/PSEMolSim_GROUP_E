@@ -3170,6 +3170,53 @@ class CuboidSpawnerType: public ::xml_schema::type
   //@}
 
   /**
+   * @name fixed_position
+   *
+   * @brief Accessor and modifier functions for the %fixed_position
+   * required element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
+  typedef ::xml_schema::boolean fixed_position_type;
+
+  /**
+   * @brief Element traits type.
+   */
+  typedef ::xsd::cxx::tree::traits< fixed_position_type, char > fixed_position_traits;
+
+  /**
+   * @brief Return a read-only (constant) reference to the element.
+   *
+   * @return A constant reference to the element.
+   */
+  const fixed_position_type&
+  fixed_position () const;
+
+  /**
+   * @brief Return a read-write reference to the element.
+   *
+   * @return A reference to the element.
+   */
+  fixed_position_type&
+  fixed_position ();
+
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
+  void
+  fixed_position (const fixed_position_type& x);
+
+  //@}
+
+  /**
    * @name Constructors
    */
   //@{
@@ -3186,7 +3233,8 @@ class CuboidSpawnerType: public ::xml_schema::type
                      const velocity_type&,
                      const type_type&,
                      const epsilon_type&,
-                     const sigma_type&);
+                     const sigma_type&,
+                     const fixed_position_type&);
 
   /**
    * @brief Create an instance from the ultimate base and
@@ -3204,7 +3252,8 @@ class CuboidSpawnerType: public ::xml_schema::type
                      ::std::unique_ptr< velocity_type >,
                      const type_type&,
                      const epsilon_type&,
-                     const sigma_type&);
+                     const sigma_type&,
+                     const fixed_position_type&);
 
   /**
    * @brief Create an instance from a DOM element.
@@ -3285,6 +3334,7 @@ class CuboidSpawnerType: public ::xml_schema::type
   ::xsd::cxx::tree::one< type_type > type_;
   ::xsd::cxx::tree::one< epsilon_type > epsilon_;
   ::xsd::cxx::tree::one< sigma_type > sigma_;
+  ::xsd::cxx::tree::one< fixed_position_type > fixed_position_;
 
   //@endcond
 };

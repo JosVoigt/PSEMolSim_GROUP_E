@@ -746,6 +746,24 @@ sigma (const sigma_type& x)
   this->sigma_.set (x);
 }
 
+const CuboidSpawnerType::fixed_position_type& CuboidSpawnerType::
+fixed_position () const
+{
+  return this->fixed_position_.get ();
+}
+
+CuboidSpawnerType::fixed_position_type& CuboidSpawnerType::
+fixed_position ()
+{
+  return this->fixed_position_.get ();
+}
+
+void CuboidSpawnerType::
+fixed_position (const fixed_position_type& x)
+{
+  this->fixed_position_.set (x);
+}
+
 
 // MembraneSpawnerType
 //
@@ -3322,7 +3340,8 @@ CuboidSpawnerType (const lower_left_front_corner_type& lower_left_front_corner,
                    const velocity_type& velocity,
                    const type_type& type,
                    const epsilon_type& epsilon,
-                   const sigma_type& sigma)
+                   const sigma_type& sigma,
+                   const fixed_position_type& fixed_position)
 : ::xml_schema::type (),
   lower_left_front_corner_ (lower_left_front_corner, this),
   grid_dim_ (grid_dim, this),
@@ -3332,7 +3351,8 @@ CuboidSpawnerType (const lower_left_front_corner_type& lower_left_front_corner,
   velocity_ (velocity, this),
   type_ (type, this),
   epsilon_ (epsilon, this),
-  sigma_ (sigma, this)
+  sigma_ (sigma, this),
+  fixed_position_ (fixed_position, this)
 {
 }
 
@@ -3345,7 +3365,8 @@ CuboidSpawnerType (::std::unique_ptr< lower_left_front_corner_type > lower_left_
                    ::std::unique_ptr< velocity_type > velocity,
                    const type_type& type,
                    const epsilon_type& epsilon,
-                   const sigma_type& sigma)
+                   const sigma_type& sigma,
+                   const fixed_position_type& fixed_position)
 : ::xml_schema::type (),
   lower_left_front_corner_ (std::move (lower_left_front_corner), this),
   grid_dim_ (std::move (grid_dim), this),
@@ -3355,7 +3376,8 @@ CuboidSpawnerType (::std::unique_ptr< lower_left_front_corner_type > lower_left_
   velocity_ (std::move (velocity), this),
   type_ (type, this),
   epsilon_ (epsilon, this),
-  sigma_ (sigma, this)
+  sigma_ (sigma, this),
+  fixed_position_ (fixed_position, this)
 {
 }
 
@@ -3372,7 +3394,8 @@ CuboidSpawnerType (const CuboidSpawnerType& x,
   velocity_ (x.velocity_, f, this),
   type_ (x.type_, f, this),
   epsilon_ (x.epsilon_, f, this),
-  sigma_ (x.sigma_, f, this)
+  sigma_ (x.sigma_, f, this),
+  fixed_position_ (x.fixed_position_, f, this)
 {
 }
 
@@ -3389,7 +3412,8 @@ CuboidSpawnerType (const ::xercesc::DOMElement& e,
   velocity_ (this),
   type_ (this),
   epsilon_ (this),
-  sigma_ (this)
+  sigma_ (this),
+  fixed_position_ (this)
 {
   if ((f & ::xml_schema::flags::base) == 0)
   {
@@ -3516,6 +3540,17 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       }
     }
 
+    // fixed_position
+    //
+    if (n.name () == "fixed_position" && n.namespace_ ().empty ())
+    {
+      if (!fixed_position_.present ())
+      {
+        this->fixed_position_.set (fixed_position_traits::create (i, f, this));
+        continue;
+      }
+    }
+
     break;
   }
 
@@ -3581,6 +3616,13 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       "sigma",
       "");
   }
+
+  if (!fixed_position_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "fixed_position",
+      "");
+  }
 }
 
 CuboidSpawnerType* CuboidSpawnerType::
@@ -3605,6 +3647,7 @@ operator= (const CuboidSpawnerType& x)
     this->type_ = x.type_;
     this->epsilon_ = x.epsilon_;
     this->sigma_ = x.sigma_;
+    this->fixed_position_ = x.fixed_position_;
   }
 
   return *this;
@@ -7153,6 +7196,17 @@ operator<< (::xercesc::DOMElement& e, const CuboidSpawnerType& i)
         e));
 
     s << ::xml_schema::as_double(i.sigma ());
+  }
+
+  // fixed_position
+  //
+  {
+    ::xercesc::DOMElement& s (
+      ::xsd::cxx::xml::dom::create_element (
+        "fixed_position",
+        e));
+
+    s << i.fixed_position ();
   }
 }
 

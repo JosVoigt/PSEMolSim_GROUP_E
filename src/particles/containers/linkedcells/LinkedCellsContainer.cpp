@@ -103,6 +103,7 @@ void LinkedCellsContainer::prepareForceCalculation() {
 
 void LinkedCellsContainer::applySimpleForces(const std::vector<std::shared_ptr<SimpleForceSource>>& simple_force_sources) {
     for (Particle& p : particles) {
+        if(p.getFixedPosition()) continue;
         for (const auto& force_source : simple_force_sources) {
             p.setF(p.getF() + force_source->calculateForce(p));
         }
@@ -139,6 +140,7 @@ void LinkedCellsContainer::applyPairwiseForces(const std::vector<std::shared_ptr
                 for (auto it2 = (it1 + 1); it2 != cell->getParticleReferences().end(); ++it2) {
                     Particle* q = *it2;
                     std::array<double, 3> total_force{0, 0, 0};
+                    if(p->getFixedPosition() && q->getFixedPosition()) continue;
                     for (auto& force : force_sources) {
                         total_force = total_force + force->calculateForce(*p, *q);
                     }
@@ -155,7 +157,7 @@ void LinkedCellsContainer::applyPairwiseForces(const std::vector<std::shared_ptr
 
                     for (Particle* neighbour_particle : neighbour->getParticleReferences()) {
                         if (ArrayUtils::L2Norm(p->getX() - neighbour_particle->getX()) > cutoff_radius) continue;
-
+                        if(p->getFixedPosition() && neighbour_particle->getFixedPosition()) continue;
                         for (const auto& force_source : force_sources) {
                             std::array<double, 3> force = force_source->calculateForce(*p, *neighbour_particle);
                             p->setF(p->getF() + force);
@@ -356,7 +358,7 @@ void LinkedCellsContainer::initIterationOrders() {
     //May need to change d_x to 3
 
     //The gaps between every cell selected for this iteration order. After 3, the algorithm starts skipping cells
-    const int d_x = 2;
+    const int d_x = 3;
     const int d_y = 3;
     const int d_z = 3;
 
