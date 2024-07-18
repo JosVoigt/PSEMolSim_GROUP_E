@@ -1,0 +1,115 @@
+<?xml version="1.0"?>
+<!-- just a sanity check: body collision rewritten to xml -->
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:noNamespaceSchemaLocation="../simulation_schema.xsd">
+
+    <settings>
+        <delta_t>0.0005</delta_t>
+        <end_time>500</end_time>
+        <third_dimension>true</third_dimension>
+        <particle_container>
+            <linkedcells_container>
+                <domain_size>
+                    <x>30</x>
+                    <y>30</y>
+                    <z>12</z>
+                </domain_size>
+                <cutoff_radius>2.5</cutoff_radius>
+                <boundary_conditions>
+                    <left>Outflow</left>
+                    <right>Outflow</right>
+                    <bottom>Periodic</bottom>
+                    <top>Periodic</top>
+                    <back>Periodic</back>
+                    <front>Periodic</front>
+                </boundary_conditions>
+            </linkedcells_container>
+        </particle_container>
+        <forces>
+            <GlobalDownwardsGravity g="0.8"/>
+            <LennardJones/>
+        </forces>
+        <interceptors>
+            <Thermostat target_temperature="40" max_temperature_change="INF" application_interval="10"/>
+            <FrameWriter output_format="vtu" fps="24" video_length_s="30" />
+        </interceptors>
+    </settings>
+
+    <particle_source>
+        <cuboid_spawner>
+            <lower_left_front_corner>
+                <x>1.0</x>
+                <y>0.5</y>
+                <z>0.5</z>
+            </lower_left_front_corner>
+            <grid_dim>
+                <x>2</x>
+                <y>30</y>
+                <z>12</z>
+            </grid_dim>
+            <grid_spacing>1.0</grid_spacing>
+            <temperature>40</temperature>
+            <mass>1.0</mass>
+            <velocity>
+                <x>0</x>
+                <y>0</y>
+                <z>0</z>
+            </velocity>
+            <type>0</type>
+            <epsilon>2.0</epsilon>
+            <sigma>1.1</sigma>
+            <fixed_position>true</fixed_position>
+        </cuboid_spawner>
+
+        <cuboid_spawner>
+            <lower_left_front_corner>
+                <x>27.2</x>
+                <y>0.5</y>
+                <z>0.5</z>
+            </lower_left_front_corner>
+            <grid_dim>
+                <x>2</x>
+                <y>30</y>
+                <z>12</z>
+            </grid_dim>
+            <grid_spacing>1.0</grid_spacing>
+            <temperature>40</temperature>
+            <mass>1.0</mass>
+            <velocity>
+                <x>0</x>
+                <y>0</y>
+                <z>0</z>
+            </velocity>
+            <type>1</type>
+            <epsilon>2.0</epsilon>
+            <sigma>1.1</sigma>
+            <fixed_position>true</fixed_position>
+        </cuboid_spawner>
+
+        <cuboid_spawner>
+            <lower_left_front_corner>
+                <x>3.2</x>
+                <y>0.6</y>
+                <z>0.6</z>
+            </lower_left_front_corner>
+            <grid_dim>
+                <x>20</x>
+                <y>25</y>
+                <z>10</z>
+            </grid_dim>
+            <grid_spacing>1.2</grid_spacing>
+            <temperature>40</temperature>
+            <mass>1.0</mass>
+            <velocity>
+                <x>0</x>
+                <y>0</y>
+                <z>0</z>
+            </velocity>
+            <type>2</type>
+            <epsilon>1.0</epsilon>
+            <sigma>1.0</sigma>
+            <fixed_position>false</fixed_position>
+        </cuboid_spawner>
+    </particle_source>
+
+</configuration>
