@@ -1,137 +1,89 @@
-MolSim - Group E
-===
-
-The Molecular Dynamics teaching code from the chair of scientific computing at Technical University Munich.
-This is the implementation of the set tasks of Group E in the summer semester 2024.
-
-The code base can be found here: https://github.com/TUM-I5/MolSim
-
-The goal is to create a simple simulator for molecular dynamics.
-This is done by using Störmer-Verlet to solve the differential equation for the system.
-
-Currently there are two supported modes for particle simulation.
-First, Planet simulation for a basic understanding of Störmer-Verlet.
-Second, Molecules using the Lennard-Jones-Potential for the actual molecule simulation.
-
-For a documentation please refer to the Doxygen build information and locations further down.
-
-Required libraries
----
-- boost
-- xerces-c
-- googletest
-- spdlog (spdlog requires fmt, but that will be installed by apt or by cmake)
-
-To install all of them using apt, run this command (requires *SUDO*):
-```bash
-    apt install libboost-dev libboost-program-options-dev libxerces-c-dev libgtest-dev libspdlog-dev
-```
-To then prevent the dowload via the CMake add to the cmake prompt:
-```bash
-    -DDOWNLOAD_DEPENDENCIES=off
-```
-It is strongly recommended to download them prior as a complete fetch may be upwards off 2 minutes (longest were 20 minutes on WSL2 Ubuntu).
-
-Building with cmake
----
-Create a build folder and start the build from there:
-Every command listed here should be executed in this folder if not stated otherwise.
-
-```bash
-    mkdir {folder-name}
-    cd {folder-name}
-```
-
-To build release:
-```bash
-    cmake -DCMAKE_BUILD_TYPE=release .. 
-```
-For a non-optimized version with debug options:
-```bash
-    cmake -DCMAKE_BUILD_TYPE=debug .. 
-```
-For a release version with debug options:
-```bash
-    cmake -DCMAKE_BUILD_TYPE=relwithdebinfo .. 
-```
-For a minimal size release (not implemented):
-```bash
-    cmake -DCMAKE_BUILD_TYPE=minsizerel .. 
-```
-
-If the -DCMAKE_BUILD_TYPE flag is not set it will default to Release.
-
-This will generate a Makefile in {folder-name}.
-To compile and link with the makefile use either make or --build:
-```bash
-    make
-```
-```bash
-    cmake --build ..
-```
-
-Due to the size making use of Make's -j flag is advised.
-This may be memory and computational power consuming and should be used at your own risk.
-
-The resulting executable is located at **PSEMolSim_GROUP_E/exec/MolSim**
-
-To disable the Doxygen build add the flag BUILD_DOC flag:
-```bash
-    cmake -DCMAKE_BUILD_TYPE={type} -DBUILD_DOC=OFF .
-```
-To create the documentation run the custom make target.
-```bash
-	make doc_doxygen
-```
-The doxygen files will be created in the folder PSEMolSim_GROUP_E/doxys_documentation.
+# Molecular Dynamics Simulation
 
 
-To disable file output via the C preprocessor disable the output flag (or compile with -D NO_OUT_FILE):
-```bash
-    cmake -DCMAKE_BUILD_TYPE={type} -DOUTPUT=off ..
-```
+This repo contains the code for the practical course **PSE: Molecular Dynamics** by group E in SS 2024.
 
-Options
----
-These are the availabe command for the generated executable.
+## Group Members
 
-|Long name      |Short name |Values         			    | Defaults  	| Description												                                                                                                                |
-|---------------|-----------|-------------------------------|---------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-|--help         | -h        |               			    |           	|Prints out the help message										                                                                                                        |
-|--test         | -t        |                               |               |Executes the complete test suite                                                                                                                                           |
-|--delta	    | -d	    |double				            | 1e-5  		|Sets the stepsize for the simulation									                                                                                                    |
-|--frequency    | -f        |int            			    | 10        	|Sets the output frequency, every nth step a file will be generated					                                                                                        |
-|--start        | -s        |int            			    | 0         	|Sets the first point at which output is generated							                                                                                                |
-|--end          | -e        |int            			    | 1         	|Sets the endpoint for the simulation. After reaching will terminate					                                                                                    |
-|--file         | -F        |filepath(s)    			    |           	|Sets the input file(s) that describe the initial state of the system					                                                                                    |
-|--outformat    | -O        |vtk,xyz       			        | vtk       	|Set the output method											                                                                                                            |
-|--outfile      | -o        |string         			    | simulation	|Sets the prefix for the output files									                                                                                                    |
-|--cuboid       | -c        |string                         |               |Accepts multiple cuboids, in the form [velocity,corner,distance,mass,x,y,z,meanBrownianMotion] sperated by comma. Velocity and corner are 3D-vectors of the form [a,b,c]   |
-|--planet       |           |               			    |           	|Sets the particle type to planets and uses planet force calculation					                                                                                    |
-|--lenjonesmol  |           |epsilon (double) sigma(double)	|		        |Set the particle mode to molcule while using Lennard-Jones with the provided epsilon and sigma values	                                                                    |
+
+
+- Joshua Voigt
+- Luca Tänzler
+- Georgios Chatzikyriakou
+
+
+
+
+
+## Tools
+
+### Build tools and versions
+
+- Tested with `gcc 13.1.0`
+- Tested with `CMake 3.28.0`
+- Tested with `make 4.3`
+
+### Dependencies
+
+- Doxygen 1.10.0: `sudo apt install doxygen` (optional, only needed for documentation)
+  - Graphviz: `sudo apt install graphviz` (optional, only needed for drawing UML diagrams in doxygen)
+- Libxerces 3.2.3: `sudo apt install libxerces-c-dev`
+- Boost Program Options: `sudo apt-get install libboost-program-options-dev`
+- cmake-format: `sudo apt install cmake-format-13` (optional, only needed for formatting cmake files)
+
+## Build
+
+### Build the project
+
+In this section we describe how to build the project. You can use the following options to configure the build process:
+
+1. Create and enter into the build directory: `mkdir -p build && cd build`
+2. Configure the project with cmake:
+   - With Doxygen support: `cmake .. -D BUILD_DOC_DOXYGEN=ON`
+   - Without Doxygen support: `cmake ..`
+3. Build the project
+   - Compile project and tests: `make -j`
+   - Compile just the project: `make -j MolSim`
+   - Compile the tests: `make -j tests`
+   - Compile benchmarks: `make -j benchmarks`
+
+>*Hint: The `-j<int>` option enables parallel compilation on the given amount of cores, e.g. `-j4` for 4 cores, if no number is given the maximum amount of cores is used*
+
+### Build the documentation
+
+- Make sure the project is built **with** doxygen enabled.
+
+- Enter the `build` directory after building the project.
+
+- Run `make doc_doxygen` to build the documentation.
+
+- The output can be found in `build/docs/html/index.html`.
+
+
+## Run
+
+### Run the program
+
+- Enter the `build/project` directory after building the project.
+
+- Run `./MolSim <FILENAME>` to run the program. `<FILENAME>` is the path to the input file.
+
+  - Excecute `./MolSim --help` to get a detailed list of all options, parameters and their default values.
+
+  - An example run could look like this: `./MolSim ../../body_collision.cub -d 0.0002 -e 5`
   
+  - Further information about the possible input file formats can be found in the `/docs` directory.
+  
+    - **Note:** Input files can, and for some cases have to provide own simulation parameters. In case the user provides additional parameters via the command line, both sources of parameters are merged. If a conflict occurs, the command line parameters take precedence, since it was explicitly requested by the user. To avoid mixups, it is recommended to define all parameters in the input file and only use command line for small, temporary adjustments to avoid changing the input file.
 
-An example to calculate the path of Halley's comet using the provided data in input/:
-This would be run from the toplevel folder.
-If one would like to change the execution directory the only thing required to be adapted would be the relative path to the input data.
-```bash
-	exec/MolSim --planet --start 10 --end 1000 --delta 1 --frequency 10 --outformat vtk --outfile halley --file input/eingabe-sonne.txt
-```
+### Run the tests
 
-This is the same command, but it makes use of the shorter flags and default values.
-The arguments are provided in the same order as above.
-```bash
-	exec/MolSim --planet -s 10 -e 1000 -d 1 -o halley -F input/eingabe-sonne.txt
-```
+- Enter the `build/tests` directory after building the tests.
 
-The logs are written to the executing directory into the file logs/MolSim_[currentTime].log.
+- Run `ctest` or `./tests` to run the tests.
 
-Setting loglevel
-----------------
+### Run the benchmarks
 
-The loglevel can be set easily by setting the SPDLOG enviroment variable.
-For detailed information refer here: https://github.com/gabime/spdlog?tab=readme-ov-file#load-log-levels-from-the-env-variable-or-argv.
+- Enter the `build/benchmarks` directory after building the benchmarks.
 
-The available loggers currently available are:
-- "file": a general file logger
-- "console": a logger used mainly for outputting errors and critical information to the console
+- Execute one of the benchmarks. For example: `./2DParticleRect`

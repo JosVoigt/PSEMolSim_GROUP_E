@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../simulation_schema.xsd">
+
+    <settings>
+        <delta_t>0.0005</delta_t>
+        <end_time>15</end_time>
+        <third_dimension>false</third_dimension>
+        <particle_container>
+            <linkedcells_container>
+                <domain_size>
+                    <x>303</x>
+                    <y>180</y>
+                    <z>1</z>
+                </domain_size>
+                <cutoff_radius>3.0</cutoff_radius>
+                <boundary_conditions>
+                    <left>Reflective</left>
+                    <right>Reflective</right>
+                    <bottom>Reflective</bottom>
+                    <top>Reflective</top>
+                    <back>Outflow</back>
+                    <front>Outflow</front>
+                </boundary_conditions>
+            </linkedcells_container>
+        </particle_container>
+        <forces>
+            <LennardJones />
+            <GlobalDownwardsGravity g="12.44" />
+        </forces>
+        <interceptors>
+            <Thermostat target_temperature="0.5" max_temperature_change="INF"
+                application_interval="1000" />
+        </interceptors>
+    </settings>
+
+    <particle_source>
+        <cuboid_spawner>
+            <lower_left_front_corner>
+                <x>1.5</x>
+                <y>2</y>
+                <z>0.5</z>
+            </lower_left_front_corner>
+            <grid_dim>
+                <x>250</x>
+                <y>50</y>
+                <z>1</z>
+            </grid_dim>
+            <grid_spacing>1.2</grid_spacing>
+            <temperature>0.5</temperature>
+            <mass>1</mass>
+            <velocity>
+                <x>0</x>
+                <y>0</y>
+                <z>0</z>
+            </velocity>
+            <type>0</type>
+            <epsilon>1.0</epsilon>
+            <sigma>1.2</sigma>
+        </cuboid_spawner>
+    </particle_source>
+
+</configuration>

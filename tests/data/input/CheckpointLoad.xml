@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../input/simulation_schema.xsd">
+
+    <settings>
+        <delta_t>0.0014</delta_t>
+        <end_time>100.0</end_time>
+        <third_dimension>true</third_dimension>
+        <particle_container>
+            <directsum_container />
+        </particle_container>
+        <forces>
+            <LennardJones />
+        </forces>
+        <interceptors>
+            <FrameWriter output_format="vtu" fps="24" video_length_s="10" />
+        </interceptors>
+    </settings>
+
+    <particle_source>
+        <check_point_loader path="./ChktpExample.chkpt" />
+    </particle_source>
+
+</configuration>

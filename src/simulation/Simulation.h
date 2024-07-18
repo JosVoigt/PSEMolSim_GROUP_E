@@ -1,95 +1,66 @@
 #pragma once
 
+#include <map>
 #include <memory>
-#include <string>
+#include <vector>
 
-#include "container/ParticleContainer.h"
-#include "force/Force.h"
-#include "outputWriter/Writer.h"
+#include "integration/IntegrationMethods.h"
+#include "particles/Particle.h"
+#include "particles/containers/ParticleContainer.h"
+#include "simulation/SimulationOverview.h"
 
+class SimulationInterceptor;
+class SimulationParams;
+
+/**
+ * @brief Class to run a simulation
+ *
+ * This class collects all the components needed to run a simulation, and provides a method to run it.
+ */
 class Simulation {
-   private:
-    /**
-     * \brief
-     *  The container containing all particles for the simulation.
-     */
-    ParticleContainer container;
-
-    /**
-     * \brief
-     *  The method to calculate the force.
-     *  This will be used to calculate all forces between the particles in container.
-     */
-    std::shared_ptr<Force> method;
-
-    /**
-     * \brief
-     *  This provides the output method for the particle state.
-     */
-    std::shared_ptr<Writer> out;
-
-    /**
-     * \brief
-     *  The time difference between each step.
-     */
-    double dt;
-
-    /**
-     * \brief
-     *  The time difference dt squared.
-     *  If dt_sq is not equal to dt^2 behaviour is undefined.
-     */
-    double dt_sq;
-
-    /**
-     * \brief
-     *  The frequency at which output will be generated.
-     *  For every n-th iteration. (calculated by iteration % n)
-     */
-    int outputFrequency;
-
-    /**
-     * \brief
-     *  The prefix for the files that are going to get outputted.
-     */
-    std::string filename;
-
    public:
-   /**
-    * \brief
-    *  Construct a new Simulation object.
-    *  This will act like a struct for all the required constants.
-    *  Calling run() on the object will start the actual simulation
-    * \param container
-    *  The particle container containing all particles for the simulation.
-    * \param method_
-    *  The method to calculate the force.
-    *  This will be used to calculate all forces between the particles in container.
-    * \param writer_
-    *  This provides the output method for the particle state.
-    * \param dt_
-    *  The time difference between each step.
-    * \param outputFrequency_
-    *  The frequency at which output will be generated.
-    *  For every n-th iteration. (calculated by iteration % n)
-    * \param filename_
-    *  The prefix for the files that are going to get outputted.
-    */
-    Simulation(ParticleContainer& container_, std::shared_ptr<Force> method_,
-               std::shared_ptr<Writer> writer_, double dt_, int outputFrequency,
-               std::string filename_);
+    /**
+     * @brief Construct a new Simulation object and initialize all the necessary components
+     *
+     * @param particles Reference to the `ParticleContainer` on whose content the simulation is performed
+     * @param params Parameters for the simulation. See the class `SimulationParams` for more information
+     * @param integration_method The integration method to use for the simulation (Default: `IntegrationMethod::VERLET`)
+     */
+    Simulation(const std::vector<Particle>& particles, const SimulationParams& params,
+               IntegrationMethod integration_method = IntegrationMethod::VERLET);
+
+    ~Simulation();
 
     /**
-     * \brief
-     *  This will run the simulation.
-     *  It will call all required operations to calculate Störmer-Verlet.
-     *  The simulation object itself include all the constants that will be used.
-     * \param start
-     *  The start point at which output will be generated.
-     *  The simulation still starts at t = 0.
-     * \param end
-     *  The end point of the simulation. This will be the last time step calculated.
-     *  The function will return afterwards.
-    */
-    void run(double start, double end);
+     * @brief Runs the simulation, using the parameters given at construction and returns a `SimulationOverview` object containing some data
+     *
+     * @return SimulationOverview object containing some data about the simulation performed
+     */
+    SimulationOverview runSimulation();
+
+    /**
+      * @brief Reference to the `ParticleContainer` on whose content the simulation is performed
+      */
+    std::unique_ptr<ParticleContainer> particle_container;
+private:
+    /**
+     * @brief Reference to the simulation parameters object
+     */
+    const SimulationParams& params;
+
+    /**
+     * @brief Functor used to integrate the particles
+     */
+    std::unique_ptr<IntegrationFunctor> integration_functor;
+
+    static void savePerformanceTest(const SimulationOverview& overview, const SimulationParams& params);
+
+    /**
+     * Befriend the interceptors to allow them to access the private members of this class
+     */
+    friend class ProgressBarInterceptor;
+    friend class FrameWriterInterceptor;
+    friend class ThermostatInterceptor;
+    friend class ParticleUpdateCounterInterceptor;
+    friend class RadialDistributionFunctionInterceptor;
 };

@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../input/simulation_schema.xsd">
+
+    <settings>
+        <delta_t>0.0014</delta_t>
+        <end_time>100.0</end_time>
+        <third_dimension>true</third_dimension>
+        <particle_container>
+            <directsum_container />
+        </particle_container>
+        <forces>
+        </forces>
+        <interceptors></interceptors>
+    </settings>
+
+    <particle_source>
+    </particle_source>
+
+</configuration>

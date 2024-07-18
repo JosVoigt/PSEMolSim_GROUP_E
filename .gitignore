@@ -1,4 +1,6 @@
 build/
+debug/
+build_download/
 CMakeFiles/
 
 Release/
@@ -7,3 +9,6 @@ RelWithDebInfo/
 MinSizeRel/
 
 doxys_documentation/
+
+.clangd
+.compile-commands.json
