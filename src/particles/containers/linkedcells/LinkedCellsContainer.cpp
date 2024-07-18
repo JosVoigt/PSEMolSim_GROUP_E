@@ -126,9 +126,11 @@ void LinkedCellsContainer::applyPairwiseForces(const std::vector<std::shared_ptr
 #ifdef _OPENMP
 #pragma omp parallel for schedule(dynamic)
 #endif
-        for (Cell* cell : occupied_cells_references) {
+        for (Cell* cell : current_it_order) {
             // skip halo cells
             // if (cell->getCellType() == Cell::CellType::HALO) continue;
+
+            if (cell->getParticleReferences().empty()) continue;
 
             for (auto it1 = cell->getParticleReferences().begin(); it1 != cell->getParticleReferences().end(); ++it1) {
                 Particle* p = *it1;
@@ -146,7 +148,10 @@ void LinkedCellsContainer::applyPairwiseForces(const std::vector<std::shared_ptr
 
                 // calculate the forces between the particle and the particles in the neighbour cells
                 for (Cell* neighbour : cell->getNeighbourReferences()) {
-                    if (cell->getAlreadyInfluencedBy().contains(neighbour)) continue;
+                    //if (cell->getAlreadyInfluencedBy().contains(neighbour)) continue;
+
+                    if (cell < neighbour) continue;
+                    if (neighbour->getParticleReferences().empty()) continue;
 
                     for (Particle* neighbour_particle : neighbour->getParticleReferences()) {
                         if (ArrayUtils::L2Norm(p->getX() - neighbour_particle->getX()) > cutoff_radius) continue;
@@ -158,7 +163,7 @@ void LinkedCellsContainer::applyPairwiseForces(const std::vector<std::shared_ptr
                         }
                     }
 
-                    neighbour->addAlreadyInfluencedBy(cell);
+                    //neighbour->addAlreadyInfluencedBy(cell);
                 }
             }
         }

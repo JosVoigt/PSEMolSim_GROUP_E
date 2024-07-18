@@ -23,3 +23,6 @@ target_compile_options(
     MolSim PRIVATE 
         $<$<CXX_COMPILER_ID:GNU>:-Wall>
         $<$<CXX_COMPILER_ID:Intel>:-w3 -wd383,981,1418,1572,2259>)
+
+find_package(OpenMP)
+target_link_libraries(MolSim PUBLIC project_lib stdc++ m OpenMP::OpenMP_CXX)
