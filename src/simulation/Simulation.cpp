@@ -50,6 +50,10 @@ SimulationOverview Simulation::runSimulation() {
     particle_container->prepareForceCalculation();
     particle_container->applySimpleForces(params.simple_forces);
     particle_container->applyPairwiseForces(params.pairwise_forces);
+    // Apply upwards forces if they are active ("hard coded" for one force only)
+    if(simulated_time < params.upwards_forces[0]->getEndTime()) {
+        particle_container->applyUpwardsForces(params.upwards_forces);
+    }
 
     Logger::logger->info("Simulation started...");
 

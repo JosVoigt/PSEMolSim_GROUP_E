@@ -30,6 +30,9 @@
     </xs:sequence>
   </xs:complexType>
 
+  <xs:simpleType name="IntVector">
+    <xs:list itemType="xs:int" />
+  </xs:simpleType>
 
   <!-- Particle Container -->
   <xs:complexType name="ParticleContainerType">
@@ -88,6 +91,21 @@
       <xs:element name="type" type="xs:integer" />
       <xs:element name="epsilon" type="xs:double" />
       <xs:element name="sigma" type="xs:double" />
+      <xs:element name="fixed_position" type="xs:boolean" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="MembraneSpawnerType">
+    <xs:sequence>
+      <xs:element name="lower_left_front_corner" type="DoubleVec3Type" />
+      <xs:element name="grid_dim" type="IntVec3Type" />
+      <xs:element name="grid_spacing" type="xs:double" />
+      <xs:element name="temperature" type="xs:double" />
+      <xs:element name="mass" type="xs:double" />
+      <xs:element name="velocity" type="DoubleVec3Type" />
+      <xs:element name="type" type="xs:integer" />
+      <xs:element name="epsilon" type="xs:double" />
+      <xs:element name="sigma" type="xs:double" />
     </xs:sequence>
   </xs:complexType>
 
@@ -128,6 +146,7 @@
   <xs:complexType name="ParticleSourceType">
     <xs:choice minOccurs="0" maxOccurs="unbounded">
       <xs:element name="cuboid_spawner" type="CuboidSpawnerType" />
+      <xs:element name="membrane_spawner" type="MembraneSpawnerType" />
       <xs:element name="sphere_spawner" type="SphereSpawnerType" />
       <xs:element name="single_particle_spawner" type="SingleParticleSpawnerType" />
       <xs:element name="check_point_loader" type="CheckPointLoaderType" />
@@ -194,6 +213,19 @@
   <xs:complexType name="GlobalGravityType">
     <xs:attribute name="g" type="xs:double" use="required" />
   </xs:complexType>
+  
+  <xs:complexType name="UpwardsType">
+    <xs:sequence>
+      <xs:element name="force" type="DoubleVec3Type" />
+      <xs:element name="target_particles" type="IntVector" />
+      <xs:element name="end_time" type="xs:double" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="MembraneLennardJonesForceType">
+    <xs:attribute name="bondlength" type="xs:double" use="required" />
+    <xs:attribute name="bondstrength" type="xs:double" use="required" />
+  </xs:complexType>
 
 
   <xs:complexType name="ForcesType">
@@ -201,6 +233,8 @@
       <xs:element name="LennardJones" type="LennardJonesType" minOccurs="0" />
       <xs:element name="Gravitational" type="GravitationalType" minOccurs="0" />
       <xs:element name="GlobalDownwardsGravity" type="GlobalGravityType" minOccurs="0" />
+      <xs:element name="UpwardsForce" type="UpwardsType" minOccurs="0" />
+	  <xs:element name="MembraneLennardJonesForce" type="MembraneLennardJonesForceType" minOccurs="0"/>
     </xs:all>
   </xs:complexType>
 

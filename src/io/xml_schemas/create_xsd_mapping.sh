@@ -1,4 +1,4 @@
-#!sh
+#!/bin/bash
 
 # get input file
 file=$1

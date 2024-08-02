@@ -63,6 +63,11 @@ class CuboidSpawner : public ParticleSpawner {
      */
     const double initial_temperature;
 
+    /**
+     * @brief Defines whether the position of the particles is fixed
+     */
+    const bool fixed_position;
+
    public:
     /**
      * @brief Constructor
@@ -76,12 +81,13 @@ class CuboidSpawner : public ParticleSpawner {
      * @param sigma Lennard-Jones sigma parameter of the particles in the cuboid
      * @param third_dimension Whether to spawn particles in the third dimension
      * @param initial_temperature Initial temperature of the particles
+     * @param fixed_position Whether the position of the particles is fixed
      *
      * Constructor to initialize the cuboid spawner. The velocity of the particles is jittered by a Maxwell-Boltzmann distribution.
      */
     CuboidSpawner(const std::array<double, 3>& lower_left_corner, const std::array<int, 3>& grid_dimensions, double grid_spacing,
                   double mass, const std::array<double, 3>& initial_velocity, int type, double epsilon = 1.0, double sigma = 1.2,
-                  bool third_dimension = true, double initial_temperature = 0.1);
+                  bool third_dimension = true, double initial_temperature = 0.1, bool fixed_position = false);
 
     /**
      * @brief Spawns particles in the given container
@@ -95,7 +101,7 @@ class CuboidSpawner : public ParticleSpawner {
      * @brief Estimate the number of particles to be spawned
      *
      * returns the number of particles to be spawned by this spawner
-     * this can be used to reserve enought memory in the particle container
+     * this can be used to reserve enough memory in the particle container
      */
     [[nodiscard]] size_t getEstimatedNumberOfParticles() const override;
 };

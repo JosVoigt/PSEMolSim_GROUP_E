@@ -6,6 +6,7 @@
 #include "particles/Particle.h"
 #include "physics/pairwiseforces/PairwiseForceSource.h"
 #include "physics/simpleforces/SimpleForceSource.h"
+#include "physics/simpleforces/UpwardsForce.h"
 
 /**
  * @brief Interface for particle containers
@@ -61,6 +62,8 @@ class ParticleContainer {
      * Uses newton's third law to calculate the forces between the particles in an optimized way.
      */
     virtual void applyPairwiseForces(const std::vector<std::shared_ptr<PairwiseForceSource>>& pairwise_force_sources) = 0;
+
+    virtual void applyUpwardsForces(const std::vector<std::shared_ptr<UpwardsForce>>& upwards_force_sources) = 0;
 
     /**
      * @brief Reserves space for n particles

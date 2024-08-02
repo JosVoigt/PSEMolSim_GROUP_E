@@ -1,9 +1,13 @@
 #include "XSDToInternalTypeAdapter.h"
 
+#include <memory>
+
 #include "io/logger/Logger.h"
 #include "physics/pairwiseforces/GravitationalForce.h"
+#include "physics/pairwiseforces/MembraneLenJonesForce.h"
 #include "physics/pairwiseforces/LennardJonesForce.h"
 #include "physics/simpleforces/GlobalDownwardsGravity.h"
+#include "physics/simpleforces/UpwardsForce.h"
 #include "simulation/interceptors/frame_writer/FrameWriterInterceptor.h"
 #include "simulation/interceptors/particle_update_counter/ParticleUpdateCounterInterceptor.h"
 #include "simulation/interceptors/progress_bar/ProgressBarInterceptor.h"
@@ -21,6 +25,7 @@ CuboidSpawner XSDToInternalTypeAdapter::convertToCuboidSpawner(const CuboidSpawn
     auto epsilon = cuboid.epsilon();
     auto sigma = cuboid.sigma();
     auto temperature = cuboid.temperature();
+    auto fixed_position = cuboid.fixed_position();
 
     if (grid_dimensions[0] <= 0 || grid_dimensions[1] <= 0 || grid_dimensions[2] <= 0) {
         Logger::logger->error("Cuboid grid dimensions must be positive");
@@ -49,7 +54,44 @@ CuboidSpawner XSDToInternalTypeAdapter::convertToCuboidSpawner(const CuboidSpawn
 
     return CuboidSpawner{
         lower_left_front_corner, grid_dimensions, grid_spacing, mass, initial_velocity, static_cast<int>(type), epsilon, sigma,
-        third_dimension,         temperature};
+        third_dimension,         temperature, fixed_position};
+}
+
+MembraneSpawner XSDToInternalTypeAdapter::convertToMembraneSpawner(const MembraneSpawnerType& membrane, bool third_dimension) {
+    auto lower_left_corner = convertToVector(membrane.lower_left_front_corner());
+    auto grid_dimensions = convertToVector(membrane.grid_dim());
+    auto initial_velocity = convertToVector(membrane.velocity());
+
+    auto grid_spacing = membrane.grid_spacing();
+    auto mass = membrane.mass();
+    auto type = membrane.type();
+    auto epsilon = membrane.epsilon();
+    auto sigma = membrane.sigma();
+    auto temperature = membrane.temperature();
+
+    if (grid_dimensions[0] <= 0 || grid_dimensions[1] <= 0 || grid_dimensions[2] <= 0) {
+        Logger::logger->error("Membrane grid dimensions must be positive");
+        throw std::runtime_error("Membrane grid dimensions must be positive");
+    }
+
+    if (!third_dimension && grid_dimensions[2] > 1) {
+        Logger::logger->error("Membrane grid dimensions must be 1 in z direction if third dimension is disabled");
+        throw std::runtime_error("Membrane grid dimensions must be 1 in z direction if third dimension is disabled");
+    }
+
+    if (grid_spacing <= 0) {
+        Logger::logger->error("Membrane grid spacing must be positive");
+        throw std::runtime_error("Membrane grid spacing must be positive");
+    }
+
+    if (mass <= 0) {
+        Logger::logger->error("Membrane mass must be positive");
+        throw std::runtime_error("Membrane mass must be positive");
+    }
+
+    return MembraneSpawner{
+            lower_left_corner, grid_dimensions, grid_spacing, mass, initial_velocity, static_cast<int>(type), epsilon, sigma,
+            third_dimension, temperature};
 }
 
 SphereSpawner XSDToInternalTypeAdapter::convertToSphereSpawner(const SphereSpawnerType& sphere, bool third_dimension) {
@@ -223,10 +265,11 @@ Particle XSDToInternalTypeAdapter::convertToParticle(const ParticleType& particl
     return Particle{position, velocity, force, old_force, mass, static_cast<int>(type)};
 }
 
-std::tuple<std::vector<std::shared_ptr<SimpleForceSource>>, std::vector<std::shared_ptr<PairwiseForceSource>>>
+std::tuple<std::vector<std::shared_ptr<SimpleForceSource>>, std::vector<std::shared_ptr<PairwiseForceSource>>, std::vector<std::shared_ptr<UpwardsForce>>>
 XSDToInternalTypeAdapter::convertToForces(const ForcesType& forces) {
     std::vector<std::shared_ptr<SimpleForceSource>> simple_force_sources;
     std::vector<std::shared_ptr<PairwiseForceSource>> pairwise_force_sources;
+    std::vector<std::shared_ptr<UpwardsForce>> upwards_force_sources;
 
     if (forces.LennardJones()) {
         pairwise_force_sources.push_back(std::make_shared<LennardJonesForce>());
@@ -238,8 +281,19 @@ XSDToInternalTypeAdapter::convertToForces(const ForcesType& forces) {
         auto g = (*forces.GlobalDownwardsGravity()).g();
         simple_force_sources.push_back(std::make_shared<GlobalDownwardsGravity>(g));
     }
+    if (forces.UpwardsForce()) {
+        auto force = convertToVector((*forces.UpwardsForce()).force());
+        auto target_particles = convertToVector((*forces.UpwardsForce()).target_particles());
+        auto end_time = (*forces.UpwardsForce()).end_time();
+        upwards_force_sources.push_back(std::make_shared<UpwardsForce>(force, target_particles, end_time));
+    }
+	if (forces.MembraneLennardJonesForce()) {
+		auto length = (*forces.MembraneLennardJonesForce()).bondlength(); 
+		auto strength = (*forces.MembraneLennardJonesForce()).bondstrength(); 
+			pairwise_force_sources.push_back(std::make_shared<MembraneLenJonesForce>(length,strength));
+	}
 
-    return {simple_force_sources, pairwise_force_sources};
+    return {simple_force_sources, pairwise_force_sources, upwards_force_sources};
 }
 
 std::array<double, 3> XSDToInternalTypeAdapter::convertToVector(const DoubleVec3Type& vector) {
@@ -247,3 +301,11 @@ std::array<double, 3> XSDToInternalTypeAdapter::convertToVector(const DoubleVec3
 }
 
 std::array<int, 3> XSDToInternalTypeAdapter::convertToVector(const IntVec3Type& vector) { return {vector.x(), vector.y(), vector.z()}; }
+
+std::vector<int> XSDToInternalTypeAdapter::convertToVector(const IntVector& vector) {
+    std::vector<int> result;
+    for (auto& v : vector) {
+        result.push_back(v);
+    }
+    return result;
+}

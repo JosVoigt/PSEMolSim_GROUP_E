@@ -20,7 +20,7 @@ TEST(VTUWriter, CorrectWritingOfParticles) {
         particle_container->addParticle(Particle(pos, vel, i, i));
     }
 
-    auto params = SimulationParams("test.xml", 0, 0, SimulationParams::DirectSumType{}, {}, {}, {}, false);
+    auto params = SimulationParams("test.xml", 0, 0, SimulationParams::DirectSumType{}, {}, {}, {}, {}, false);
 
     FileOutputHandler file_output_handler{OutputFormat::VTU, params};
 

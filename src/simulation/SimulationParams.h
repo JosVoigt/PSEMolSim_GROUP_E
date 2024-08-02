@@ -11,6 +11,7 @@
 #include "particles/containers/linkedcells/LinkedCellsContainer.h"
 #include "physics/pairwiseforces/PairwiseForceSource.h"
 #include "physics/simpleforces/SimpleForceSource.h"
+#include "physics/simpleforces/UpwardsForce.h"
 #include "simulation/interceptors/SimulationInterceptor.h"
 
 /**
@@ -98,6 +99,11 @@ class SimulationParams {
     std::vector<std::shared_ptr<PairwiseForceSource>> pairwise_forces;
 
     /**
+     * @brief Upwards Forces to be applied to the particles
+     */
+    std::vector<std::shared_ptr<UpwardsForce>> upwards_forces;
+
+    /**
      * @brief Number of particles in the simulation
      */
     size_t num_particles;
@@ -122,6 +128,7 @@ class SimulationParams {
      * @param interceptors List of interceptors to be used in the simulation
      * @param simple_forces Simple Forces to be applied to the particles
      * @param pairwise_forces Forces to be applied to the particles
+     * @param upwards_forces Upwards Forces to be applied to the particles
      * @param performance_test Whether to run the simulation in performance test mode
      * @param fresh Flag to indicate whether the simulation should be run from scratch, or whether cached data should be used
      * @param base_path Base path to the output directory. This is used to construct the output directory path if none is given
@@ -131,7 +138,8 @@ class SimulationParams {
                      const std::variant<DirectSumType, LinkedCellsType>& container_type,
                      const std::vector<std::shared_ptr<SimulationInterceptor>>& interceptors,
                      const std::vector<std::shared_ptr<SimpleForceSource>>& simple_forces,
-                     const std::vector<std::shared_ptr<PairwiseForceSource>>& pairwise_forces, bool performance_test = false,
+                     const std::vector<std::shared_ptr<PairwiseForceSource>>& pairwise_forces,
+                     const std::vector<std::shared_ptr<UpwardsForce>>& upwards_forces, bool performance_test = false,
                      bool fresh = false, const std::filesystem::path& base_path = "./output");
 
     /**

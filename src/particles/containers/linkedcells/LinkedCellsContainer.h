@@ -24,7 +24,12 @@ class LinkedCellsContainer : public ParticleContainer {
      */
     enum class BoundarySide { LEFT, RIGHT, BOTTOM, TOP, BACK, FRONT };
 
-   public:
+
+    /**
+     * @brief A list of different orders of cells, used for parallelization
+     */
+    std::vector<std::vector<Cell*>> iteration_order_vector;
+
     /**
      * @brief Construct a new Linked Cells Particle Container object
      *
@@ -92,6 +97,15 @@ class LinkedCellsContainer : public ParticleContainer {
      * reduce the number of force calculations necessary, depending on the cutoff radius.
      */
     void applyPairwiseForces(const std::vector<std::shared_ptr<PairwiseForceSource>>& force_sources) override;
+
+    /**
+     * @brief Applies the given force sources to the particles
+     *
+     * @param force_sources List of force sources to be applied
+     *
+     * Applies the given force sources to the specified particles in the container.
+     */
+     void applyUpwardsForces(const std::vector<std::shared_ptr<UpwardsForce>>& force_sources) override;
 
     /**
      * @brief Reserves space for n particles. This is useful if the number of particles is known in advance
@@ -247,6 +261,11 @@ class LinkedCellsContainer : public ParticleContainer {
      * @brief Sets the neighbour references for each cell in the cell vector
      */
     void initCellNeighbourReferences();
+
+    /**
+     * @brief Initializes the various iterator orders for parallelization
+     */
+    void initIterationOrders();
 
     /**
      * @brief Updates the particle references in the cells. This is necessary after a reallocation of the internal particle vector.

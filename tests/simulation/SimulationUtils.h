@@ -13,9 +13,9 @@ const std::shared_ptr<GravitationalForce> gravitational_force = std::make_shared
 const std::shared_ptr<LennardJonesForce> lennard_jones_force = std::make_shared<LennardJonesForce>();
 
 const SimulationParams TEST_DEFAULT_PARAMS_GRAVITY(FileLoader::get_input_file_path("empty.xml"), 0.002, 5,
-                                                   SimulationParams::DirectSumType{}, {video_writer}, {}, {gravitational_force}, false,
+                                                   SimulationParams::DirectSumType{}, {video_writer}, {}, {gravitational_force}, {}, false,
                                                    true);
 
 const SimulationParams TEST_DEFAULT_PARAMS_LENNARD_JONES(FileLoader::get_input_file_path("empty.xml"), 0.002, 5,
-                                                         SimulationParams::DirectSumType{}, {video_writer}, {}, {lennard_jones_force},
+                                                         SimulationParams::DirectSumType{}, {video_writer}, {}, {lennard_jones_force}, {},
                                                          false, true);
